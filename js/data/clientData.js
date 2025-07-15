@@ -5,7 +5,7 @@ export const CLIENTS = [
     {
         id: 'homem_apressado',
         name: "Um Homem Apressado",
-        day: 1, // <<< MUDANÇA: 'chapter' foi renomeado para 'day'
+        day: 0, // <<< MUDANÇA: 'chapter' foi renomeado para 'day'
         portraitUrls: ["/media/img/p1_a.png", "/media/img/p1_b.png"],
         problem: "(O Homem Apressado, nervoso, estende um papel sujo.)\nRápido! Não tenho tempo! Preciso deste símbolo. Proteção. Um velho marinheiro me deu o desenho. Pode fazê-lo agora?",
         request: 's06_corrupted',

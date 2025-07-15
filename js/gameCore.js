@@ -91,8 +91,14 @@ class GameManager {
      * Esta função foi corrigida para parar a execução após lidar com um estado pendente.
      */
     processPendingState() {
+
         if (window.location.search) window.history.replaceState(null, '', window.location.pathname);
         
+        // <<< MUDANÇA AQUI >>>
+        // Exibe os itens da bancada sempre que a tela principal é processada.
+        // Isso garante que eles apareçam após retornar da fase noturna.
+        this.uiManager.displayPurchasedUpgrades();
+
         if (this.state.showingTutorial) {
             this.uiManager.setupTutorialUI(this.state.tutorialStep);
             this.uiManager.updateStats();
@@ -104,11 +110,9 @@ class GameManager {
             return;
         }
 
-        // <<< A CORREÇÃO ESTÁ AQUI >>>
-        // Quando um resultado de minigame é encontrado, ele é processado E a função para.
         if (this.state.lastOutcomeData) {
             this.processMinigameOutcome();
-            return; // ESTE `return` É CRUCIAL. Ele impede que o código continue e sobrescreva a tela de resultado.
+            return;
         }
 
         if (this.state.analysisChoice) {

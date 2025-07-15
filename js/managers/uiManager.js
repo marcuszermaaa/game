@@ -7,12 +7,7 @@
 import { CLIENTS_PER_DAY } from '../constants.js';
 
 export class UIManager {
-    /**
-     * Construtor do UIManager.
-     * @param {object} domRefs - Uma coleção de referências para os elementos DOM, pré-selecionados pelo GameManager.
-     * @param {object} gameState - A referência viva ao estado atual do jogo.
-     * @param {object} gameInstance - A instância principal do GameManager, usada para que os botões criados aqui possam chamar funções do jogo.
-     */
+   
     constructor(domRefs, gameState, gameInstance) {
         this.dom = domRefs;
         this.gameState = gameState;
@@ -251,5 +246,64 @@ export class UIManager {
         if (this.dom.dialogueInteractionPanel) this.dom.dialogueInteractionPanel.style.display = 'none';
         this.resetClientInterface();
         this.updateActionButtonBasedOnState();
+
+    }
+
+
+     // ===================================================================
+    // --- NOVA MECÂNICA: Exibição de Upgrades na Bancada ---
+    // ===================================================================
+
+    /**
+     * MECÂNICA: Renderização de Itens Comprados.
+     * Lê a lista de upgrades comprados do `gameState` e cria um elemento `<li>`
+     * para cada um dentro do container `#bancada`. As classes CSS permitem
+     * estilizar e posicionar cada item individualmente.
+     */
+    displayPurchasedUpgrades() {
+        const bancadaEl = this.dom.bancada;
+        // Segurança: Se o elemento #bancada não existir no HTML, a função para.
+        if (!bancadaEl) {
+            console.warn("Elemento #bancada não encontrado no DOM. Upgrades visuais não serão exibidos.");
+            return;
+        }
+
+        // 1. Limpa a bancada antes de adicionar os itens. Isso evita duplicatas
+        //    se a função for chamada várias vezes.
+        bancadaEl.innerHTML = '';
+
+        // 2. Pega a lista (Set) de upgrades comprados do estado do jogo.
+        const purchased = this.gameState.purchasedUpgrades;
+
+        // Segurança: Se nenhum upgrade foi comprado, não faz nada.
+        if (!purchased || purchased.size === 0) {
+            return;
+        }
+
+        // 3. (Opcional, mas boa prática) Usa um DocumentFragment para melhorar a performance.
+        //    Em vez de adicionar cada <li> ao DOM um por um, adicionamos todos a este
+        //    fragmento e depois adicionamos o fragmento ao DOM uma única vez.
+        const fragment = document.createDocumentFragment();
+
+        console.log("Exibindo upgrades comprados:", purchased);
+
+        // 4. Itera sobre cada ID de upgrade comprado.
+        purchased.forEach(upgradeId => {
+            // Cria um novo elemento de lista.
+            const upgradeItem = document.createElement('li');
+            
+            // Adiciona duas classes: uma genérica para estilos comuns e uma específica para o item.
+            // Exemplo: <li class="upgrade-item upgrade-lamp"></li>
+            upgradeItem.className = `upgrade-item upgrade-${upgradeId}`;
+            
+            // Adiciona um 'title' que aparece como uma dica de ferramenta ao passar o mouse.
+            upgradeItem.title = upgradeId.charAt(0).toUpperCase() + upgradeId.slice(1); // Ex: "Lamp"
+            
+            // Adiciona o item ao fragmento.
+            fragment.appendChild(upgradeItem);
+        });
+
+        // 5. Adiciona todos os itens de uma vez só à bancada no DOM.
+        bancadaEl.appendChild(fragment);
     }
 }
