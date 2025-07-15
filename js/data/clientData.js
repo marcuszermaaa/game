@@ -5,7 +5,7 @@ export const CLIENTS = [
     {
         id: 'homem_apressado',
         name: "Um Homem Apressado",
-        day: 0, // <<< MUDANÇA: 'chapter' foi renomeado para 'day'
+        day: 2, // <<< MUDANÇA: 'chapter' foi renomeado para 'day'
         portraitUrls: ["/media/img/p1_a.png", "/media/img/p1_b.png"],
         problem: "(O Homem Apressado, nervoso, estende um papel sujo.)\nRápido! Não tenho tempo! Preciso deste símbolo. Proteção. Um velho marinheiro me deu o desenho. Pode fazê-lo agora?",
         request: 's06_corrupted',
@@ -52,7 +52,7 @@ export const CLIENTS = [
     {
         id: 'sr_gilman',
         name: "Sr. Gilman",
-        day: 2, // <<< MUDANÇA
+        day: 1, // <<< MUDANÇA
         portraitUrls: ["/media/img/estivador.png"],
         problem: "(Sr. Gilman, desconfiado, fala baixo.)\nCais 7. Um contêiner de Innsmouth. Ouvi arranhões lá dentro. Abner me deu uma âncora para me manter firme. Preciso dela para o meu turno hoje à noite.",
         correctSigil: 's04',
