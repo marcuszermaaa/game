@@ -1,0 +1,46 @@
+/* Estilos para o novo painel de diálogo interativo */
+#dialogue-interaction-panel {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 2px solid #5a5a5a;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 5px;
+    display: block; /* Mude para 'none' se quiser que comece escondido por padrão */
+}
+
+#dialogue-text-container {
+    margin-bottom: 15px;
+}
+
+#dialogue-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2em;
+    color: #f0f0f0;
+    line-height: 1.5;
+}
+
+#dialogue-options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#dialogue-options-container button,
+.dialogue-option-btn {
+    width: 100%;
+    padding: 12px;
+    font-family: 'Special Elite', cursive;
+    font-size: 1em;
+    background-color: #333;
+    color: #c5c5c5;
+    border: 1px solid #666;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+#dialogue-options-container button:hover,
+.dialogue-option-btn:hover {
+    background-color: #c5c5c5;
+    color: #1a1a1a;
+}

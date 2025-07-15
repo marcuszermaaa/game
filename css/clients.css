@@ -1,0 +1,424 @@
+/* css/clients.css - Estilos específicos para a interface do cliente/jogo */
+
+/* Reset de background para o body neste contexto específico */
+body {
+    background-color: black; /* Fundo preto para a tela de jogo */
+}
+
+/* Container principal que envolve todos os elementos do jogo */
+#game-container {
+    width: 1020px; /* Largura fixa do container */
+    height: 668px; /* Altura fixa do container */
+    flex-direction: column; /* Organiza os filhos em coluna */
+    position: relative; /* Necessário para posicionamento absoluto dos filhos */
+    background-position: 7px 6px; /* Posição de background específica (pode ser um remanescente) */
+    padding-top: 0%; /* Remove padding superior */
+}
+
+/* Div que contém o background principal da tela do jogo */
+#game-background {
+    position: absolute; /* Posiciona sobre o #game-container */
+    top: 0;
+    left: 0;
+    width: 1024px; /* Largura ligeiramente maior que o container (pode cobrir bordas) */
+    height: 688px; /* Altura ligeiramente maior que o container */
+    background-image: url(/media/img/bg.png); /* Imagem de background principal */
+    background-size: inherit; /* Herda o tamanho do background do elemento pai */
+    background-repeat: no-repeat; /* Evita repetição da imagem */
+    background-position: center; /* Centraliza a imagem de background */
+    z-index: 0; /* Garante que fique no fundo de todos os elementos dentro do #game-container */
+}
+
+/* Layout principal que organiza os painéis (personagem, evento, ação) */
+#game-layout {
+    display: flex; /* Usa flexbox para organizar os painéis */
+    flex-grow: 1; /* Permite que este layout ocupe o espaço disponível */
+    background-image: url(/media/img/bg.png); /* Repete a imagem de background (pode ser redundante com #game-background) */
+    background-size: inherit;
+    background-repeat: no-repeat;
+    position: relative; /* Necessário para o z-index */
+    z-index: 1; /* Fica acima do #game-background */
+    width: 100%; /* Ocupa toda a largura do container pai */
+    padding-bottom: 80px; /* Espaço na parte inferior */
+    box-sizing: border-box; /* Inclui padding e border na largura/altura total */
+    padding-top: 5%; /* Espaçamento no topo */
+}
+
+/* Painel do personagem (lado esquerdo) */
+#character-panel {
+    width: 295px; /* Largura fixa */
+    height: 511px; /* Altura fixa */
+    padding: 3px; /* Pequeno padding interno */
+    padding-top: 3px;
+    padding-top: 6%; /* Espaçamento superior adicional */
+}
+
+/* Sprite/imagem do personagem */
+#character-sprite {
+    /* background-image: url(/media/img/p1.png); /* Originalmente comentado */
+    background-image: url(/media/img/background_cliente_sombra.png); /* Imagem substituída */
+    background-size: cover; /* Faz a imagem cobrir todo o elemento */
+    width: 342px; /* Largura definida */
+    background-position: top left; /* Posição da imagem */
+    height: 565px; /* Altura definida */
+
+    /* Propriedades comentadas:    transform: translateX(-50%); /* Ajuste fino para centralização */
+    transition: background-image 0.2s ease-in-out, background-position 0.2s ease-in-out; /* Transição suave */
+}
+
+/* Classe para aplicar um efeito de glitch ao retrato do personagem */
+.portrait-distort {
+    animation: portraitGlitch 0.3s steps(1) infinite; /* Aplica animação de glitch */
+}
+/* Nota: A animação @keyframes portraitGlitch está definida em base.css para centralização */
+
+/* Painel central que exibe eventos e diálogos */
+#event-container {
+    flex-grow: 1; /* Permite que este container ocupe o espaço restante */
+    display: flex;
+    flex-direction: column; /* Organiza os elementos internos em coluna */
+    position: relative; /* Necessário para posicionamento absoluto de filhos */
+    overflow: hidden; /* Esconde qualquer conteúdo que exceda os limites */
+    align-items: center; /* Centraliza os itens horizontalmente */
+    background-image: url(/media/img/content.png); /* Imagem de background para o painel */
+    background-repeat: no-repeat; /* Evita repetição */
+    max-width: 381px; /* Largura máxima */
+    height: 468px; /* Altura fixa */
+    background-position-x: 12px; /* Posição horizontal do background */
+    padding: 25px; /* Espaçamento interno */
+}
+
+/* Div que contém o conteúdo principal do diálogo/evento */
+#event-panel {
+    z-index: 3; /* Garante que fique acima de outros elementos do painel */
+    height: 328px; /* Altura fixa */
+    width: 320px; /* Largura fixa */
+    text-align: left; /* Alinha o texto à esquerda */
+}
+
+/* Cabeçalho do painel de evento (estatísticas, nome do personagem) */
+#event-header {
+
+    flex-direction: column; /* Organiza os elementos do cabeçalho em coluna */
+    align-items: center; /* Centraliza os itens */
+    text-align: center;
+    font-family: 'Special Elite', cursive; /* Fonte estilizada */
+    font-size: 12px; /* Tamanho da fonte */
+    margin-bottom: 0px; /* Remove margem inferior */
+    padding-top: 14%; /* Espaçamento superior */
+}
+
+/* Estatísticas do personagem dentro do cabeçalho */
+#event-header #event-stats {
+    display: flex;
+    justify-content: center; /* Centraliza as estatísticas */
+    gap: 11px; /* Espaço entre os itens de estatística */
+    font-family: monospace; /* Fonte monoespaçada para estatísticas */
+    margin-bottom: 7%; /* Margem inferior */
+    color: whitesmoke; /* Cor do texto */
+    font-size: 13px; /* Tamanho da fonte */
+}
+
+#info-day{
+position: relative;
+
+  padding: 3px;
+    padding-top: 3px;
+    padding-left: 3px;
+  display: flex;
+  padding-left: 29%;
+  padding-top: 8px;
+}
+
+#day-stat{
+    margin-right: 19px;
+}
+
+/* Nome do personagem/evento no cabeçalho */
+#event-header h2 {
+    font-size: 1.5em; /* Tamanho da fonte grande */
+    color: var(--header-color); /* Cor definida em base.css */
+    margin: 0; /* Remove margem */
+    width: 222px; /* Largura definida */
+    text-align: left; /* Alinha o título à esquerda */
+    padding-left: 5%;
+}
+
+/* Área que contém o texto do diálogo */
+#event-text-area {
+    width: 94%; /* Ocupa 94% da largura do pai */
+}
+
+/* O texto do diálogo em si */
+#event-dialogue {
+    line-height: 1.5; /* Espaçamento entre linhas */
+    font-family: "IBM Plex Serif", serif; /* Fonte específica para diálogo */
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px; /* Tamanho da fonte */
+    text-align: left; /* Alinha o texto à esquerda */
+    padding-top: 12px; /* Espaçamento superior */
+    color: papayawhip; /* Cor do texto */
+        padding-left: 5%;
+}
+
+/* Estilos para parágrafos dentro do diálogo */
+#event-dialogue p {
+    line-height: normal; /* Usa o line-height padrão do elemento */
+}
+
+/* Barra de itens (cards) na parte inferior da tela */
+#menu-bar {
+    display: flex; /* Usa flexbox */
+    height: 120px; /* Altura fixa */
+    padding: 15px 0; /* Espaçamento superior e inferior */
+    background-image: var(--sprite-cards-url); /* Background da barra usando variável CSS */
+    background-size: 94%; /* Ajusta o tamanho do background */
+    background-repeat: no-repeat;
+    background-position: center; /* Centraliza o background */
+    overflow: hidden; /* Esconde conteúdo que exceda os limites */
+    width: 100%; /* Ocupa toda a largura disponível */
+}
+
+/* Lista não ordenada para os itens da barra */
+#menu-bar ul {
+    list-style: none; /* Remove marcadores de lista */
+    text-align: center; /* Centraliza o conteúdo */
+    float: inline-end; /* Alinha à direita */
+    position: fixed; /* Posicionamento fixo */
+}
+
+/* Itens da lista (cada carta de item) */
+#menu-bar ul li {
+    list-style: none;
+    text-align: center;
+    float: inline-end;
+    width: 80px; /* Largura da carta */
+    height: 83px; /* Altura da carta */
+    margin-right: 33px; /* Margem à direita */
+    padding-top: 0px;
+    display: block;
+    text-align: center;
+    justify-content: center;
+    background-position: left bottom; /* Posição do sprite da carta */
+}
+
+/* Classe para cada carta de item */
+.item-card {
+  width: 80px !important;
+    height: 83px; /* Altura */
+    background-image: url(/media/img/cards_s.png); /* Sprite das cartas */
+ width: 80px !important;
+    background-repeat: no-repeat;
+    background-size: auto; /* Essencial para sprites, mantém a proporção */
+    cursor: pointer; /* Indica interatividade */
+}
+
+/* Efeito hover para as cartas de item */
+.item-card:hover {
+    transform: translateY(-10px); /* Efeito de elevação */
+}
+
+/* Ajustes de posição de background para cartas específicas */
+#item-ink {
+    background-position: -0px 9px !important; /* Usa !important para sobrescrever */
+}
+#item-book {
+    background-position: -206px 9px !important;
+}
+#item-workbench {
+    background-position: -206px 9px !important; /* Parece ser o mesmo sprite do livro */
+}
+
+/* Painel de ação (lado direito) */
+#action-panel {
+    width: 25%; /* Largura relativa ao container pai */
+    min-width: 150px; /* Largura mínima */
+    display: flex;
+    flex-direction: column; /* Organiza os elementos internos em coluna */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    padding: 20px; /* Espaçamento interno */
+    box-sizing: border-box;
+    z-index: 1; /* Fica acima do background, no mesmo nível do painel de evento */
+}
+
+/* Barra de status inferior */
+#status-bar {
+    z-index: 10; /* Garante que fique acima de quase tudo */
+    position: absolute; /* Posicionamento absoluto em relação ao #game-container */
+    bottom: 0;
+    left: 0;
+    width: 100%; /* Ocupa toda a largura */
+    height: 97px; /* Altura fixa */
+    background-image: url(/media/img/status.png); /* Background da barra de status */
+    background-size: cover; /* Faz o background cobrir o elemento */
+    background-position: center bottom; /* Posição do background */
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo interno */
+    align-items: center; /* Centraliza o conteúdo interno */
+    padding: 103px 0px 0px 0px; /* Padding superior para empurrar o conteúdo para baixo */
+}
+
+/* Container centralizado dentro da barra de status */
+#CENTRO_STATUS {
+    display: flex;
+    justify-content: space-between; /* Distribui o espaço entre os itens */
+    align-items: center; /* Centraliza os itens verticalmente */
+    width: 186px; /* Largura definida */
+    max-width: 221px; /* Largura máxima */
+    height: 0px; /* Altura zero (o conteúdo dentro define a altura visual) */
+    background-color: transparent; /* Sem background */
+    padding: 0 0px;
+    box-sizing: border-box;
+}
+
+/* Estilos para os itens de status (ícones) */
+.status-item {
+    background-image: url(/media/img/icons.png); /* Sprite dos ícones */
+    background-repeat: no-repeat;
+    width: 50px; /* Largura do ícone */
+    height: 80px; /* Altura do ícone */
+    background-position: -2px 3px; /* Posição do sprite */
+}
+
+/* Display de dinheiro */
+.money-display {
+    background-position: -177px 0px; /* Posição do ícone de dinheiro no sprite */
+    height: 59px; /* Altura */
+    text-align: right; /* Alinha o texto à direita */
+    width: 45px; /* Largura */
+    padding-right: 0%;
+    padding-top: 13px; /* Espaçamento superior */
+}
+
+/* Span que contém o valor do dinheiro */
+.money-display span {
+    font-size: 11px; /* Tamanho da fonte */
+    font-family: monospace; /* Fonte monoespaçada */
+}
+
+/* Estilos para as views sobrepostas (Diário, Outcome, Analysis) */
+#main-view-dynamic .view {
+    /* Estilos definidos em base.css para views genéricas */
+}
+
+/* Estilos para os cards no Diário */
+.sigil-card {
+    border: 1px solid var(--border-color); /* Borda */
+    padding: 15px;
+    background-color: var(--panel-bg-color); /* Background do painel */
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transições suaves */
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.sigil-card:hover {
+    transform: scale(1.03); /* Efeito de zoom ao passar o mouse */
+    box-shadow: 0 0 15px rgba(164, 161, 145, 0.2); /* Sombra suave */
+    border-color: var(--header-color); /* Cor da borda ao passar o mouse */
+}
+
+.sigil-card h3 {
+    margin: 0 0 10px 0; /* Margens */
+    font-family: 'Special Elite', cursive; /* Fonte estilizada */
+    color: var(--header-color); /* Cor do título */
+    font-size: 1.3em; /* Tamanho da fonte */
+}
+
+/* Estilos para os botões de ação do cliente e análise (herdando de base.css) */
+#action-panel button,
+.dialogue-options button,
+.analysis-choice-btn {
+    /* Estilos herdados de base.css */
+}
+
+/* Estilos para a área de análise de sigilos */
+#analysis-view {
+    max-width: 700px; /* Largura máxima */
+}
+
+/* Área de comparação na análise */
+.comparison-area {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Permite quebrar em telas menores */
+}
+
+/* Painel individual de documento na comparação */
+.document-panel {
+    flex: 1; /* Permite que os painéis ocupem espaço igual */
+    min-width: 250px; /* Largura mínima */
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0,0,0,0.3);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.document-panel h3 {
+    margin-top: 0;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 5px;
+    font-family: 'Special Elite', cursive;
+    color: var(--header-color);
+}
+
+/* Representação visual dos sigilos */
+.sigil-drawing {
+    background-color: #f5e8d7; /* Fundo de pergaminho */
+    border: 1px solid #a4a191;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+/* Estilo para sigilos proibidos */
+.sigil-drawing.prohibited {
+    border-color: var(--accent-color); /* Borda vermelha */
+    border-width: 2px;
+}
+
+.sigil-drawing .line { /* Linhas que conectam nós */
+    background-color: #333; /* Cor das linhas */
+    position: absolute;
+}
+
+.sigil-drawing .circle { /* Nós */
+    border: 2px solid #333; /* Borda dos nós */
+    background-color: #e0e0e0; /* Cor de preenchimento */
+    border-radius: 50%; /* Torna o elemento circular */
+    position: absolute;
+    box-sizing: border-box;
+    transform: translate(-50%, -50%); /* Centraliza o nó */
+}
+
+/* Estilos para o minigame de tatuagem */
+#tattoo-canvas {
+    background-color: #c0a890; /* Fundo do canvas */
+    border: 2px solid #5a4a3e; /* Borda rústica */
+    width: 95%;
+    max-width: 760px; /* Largura máxima */
+    height: auto; /* Altura automática para manter proporção */
+    display: block; /* Remove margem inferior */
+}
+
+#tattoo-instructions {
+    text-align: center;
+    margin: 10px 0;
+    font-style: italic;
+    font-size: 1.1em;
+    color: #ccc;
+}
+
+#tattoo-timer {
+    color: var(--header-color);
+    font-family: 'Special Elite', cursive;
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}

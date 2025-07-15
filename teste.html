@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Legado de Abner Vance</title>
+<style> /* ============================ */ /* 1. Variáveis Globais */ /* ============================ */ :root { --color-bg: #000; --color-text: #eee; --color-text-subtle: #ccc; --color-overlay-bg: rgba(0, 0, 0, 0.75); --color-button-bg: #444; --color-button-border: #666; --transition-short: 0.2s ease; --transition-medium: 0.8s ease-in-out; --transition-long: 2s ease-in-out; --transition-zoom: 10s linear; --font-family-base: 'Times New Roman', Times, serif; --border-radius-base: 8px; } /* ============================ */ /* 2. Estilos Base e de Layout */ /* ============================ */ body { margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--color-bg); font-family: var(--font-family-base); color: var(--color-text); position: relative; cursor: default; } .splash-container { position: relative; width: 100vw; height: 100vh; overflow: hidden; } /* ============================ */ /* 3. Estilos da Imagem de Splash */ /* ============================ */ .splash-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center center; opacity: 0; transition: opacity var(--transition-medium), transform var(--transition-zoom); transform: scale(1); filter: grayscale(70%) brightness(60%) contrast(120%); } .splash-image.active { opacity: 1; transform: scale(1.10); } .splash-1 { background-image: url('media/01.jpg'); } .splash-2 { background-image: url('media/02.jpg'); } .splash-3 { background-image: url('media/03.jpg'); } .splash-4 { background-image: url('media/04.jpg'); } .splash-final { background-image: url('media/intro_0.jpg'); } /* ============================ */ /* 4. Estilos da Caixa de Texto */ /* ============================ */ .text-overlay { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); width: 80%; max-width: 900px; background-color: var(--color-overlay-bg); padding: 25px 35px; border-radius: var(--border-radius-base); text-align: center; box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); opacity: 0; transition: opacity 1s ease-in-out; z-index: 10; } .text-overlay.active { opacity: 1; } .text-content { font-size: 1.4em; line-height: 1.7; margin-bottom: 20px; white-space: pre-wrap; min-height: 50px; } /* ============================ */ /* 5. Estilos de Efeitos e Botões */ /* ============================ */ .cursor { display: inline-block; background-color: var(--color-text); width: 5px; height: 1.4em; vertical-align: bottom; animation: blink 0.7s infinite; } @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } } .continue-button-image { display: block; margin: 0 auto; width: 80px; height: auto; cursor: pointer; border: none; background: none; padding: 0; transition: transform var(--transition-short), opacity 0.3s ease; } .continue-button-image:hover { transform: scale(1.1); opacity: 0.9; } #openDoorsButton { display: none; margin-top: 30px; padding: 15px 40px; background-color: var(--color-button-bg); color: #fff; border: 1px solid var(--color-button-border); border-radius: 5px; cursor: pointer; font-size: 1.5em; text-transform: uppercase; letter-spacing: 2px; transition: background-color 0.3s ease, border-color 0.3s ease, transform var(--transition-short); box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); } #openDoorsButton:hover { background-color: #666; border-color: #999; transform: translateY(-3px); } #introTitle { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); color: var(--color-text-subtle); font-size: 3em; text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); opacity: 0; transition: opacity var(--transition-long); z-index: 11; } #introTitle.active { opacity: 1; } </style>    
+</head>
+<body>
+    <div id="introTitle">O Legado de Abner Vance</div>
+    <div class="splash-container" id="splashContainer">
+        </div>
+
+    <div class="text-overlay" id="textOverlay">
+        <p class="text-content" id="textContent"></p>
+        <img id="continueButton" class="continue-button-image" src="/media/continue_icon.png" alt="Continuar">
+        <button id="openDoorsButton">Abrir as Portas</button>
+    </div>
+
+    <script>
+        const splashContainer = document.getElementById('splashContainer');
+        const textOverlay = document.getElementById('textOverlay');
+        const textContent = document.getElementById('textContent');
+        const continueButton = document.getElementById('continueButton'); // Agora é um <img>
+        const introTitle = document.getElementById('introTitle'); // Novo elemento para o título
+        const openDoorsButton = document.getElementById('openDoorsButton'); // Novo botão para a tela final
+
+        const introSplashes = [
+            {
+                imageClass: 'splash-1',
+                text: "A vida de Elias Vance sempre foi uma sombra. Marcado pelo azar, ele vivia à margem, até que a notícia inesperada de seu distante tio-avô, Abner, um homem que ele mal compreendia, o alcançou. Abner estava morto. A herança: um estúdio de tatuagens em Port Blackwood, uma cidade distante e misteriosa que Elias nunca ouvira falar."
+            },
+            {
+                imageClass: 'splash-2',
+                text: "Com a chave do estúdio, veio uma carta fria. 'Melhores explicações' o aguardavam lá. Nela, a caligrafia de Abner, estranhamente familiar, dizia: '*Sempre procurei a beleza, Elias, mas a beleza nem sempre é o que imaginamos*.' Elias hesitou. A cidade, em seu nome e fama, trazia à tona memórias perturbadoras de Abner. As histórias sussurradas sobre sua obsessão por símbolos obscuros e criaturas marinhas... Parecia que a cidade era o reflexo sombrio das coisas que sempre o assustaram em seu próprio tio, e um eco distante, quase um sussurro, parecia vir das profundezas daquela herança obscura."
+            },
+            {
+                imageClass: 'splash-3',
+                text: "As contas, no entanto, não paravam de se acumular, uma pressão real sobre a vida à margem. A herança era sua única saída. A única esperança de uma vida que não fosse marcada pelo fracasso. Um porto seguro, talvez. Uma razão para arriscar tudo e buscar as 'melhores explicações' que o aguardavam."
+            },
+            {
+                imageClass: 'splash-4',
+                text: "Com o destino e a sanidade em jogo, Elias não teve escolha. Ele fez a viagem. Os navios atracavam e os prédios decadentes surgiam entre a névoa, exatamente como os livros estranhos que Abner colecionava, uma cópia perfeita do pesadelo. Ele segurou a chave, o único elo com seu futuro incerto. Era hora de abrir o estúdio."
+            }
+        ];
+
+        let currentSplashIndex = 0;
+        let charIndex = 0;
+        let typingTimeout;
+        const typingSpeed = 50; // ms por caractere
+        let isTyping = false; // Flag para controlar se a digitação está em andamento
+
+        // O timer de auto-avanço foi removido para dar total controle ao usuário.
+
+        function showSplash(index) {
+            // Oculta o título da intro se ele estiver visível (apenas no primeiro splash)
+            if (introTitle.classList.contains('active')) {
+                introTitle.classList.remove('active');
+                introTitle.style.opacity = '0'; // Garante que ele suma
+            }
+
+            splashContainer.innerHTML = '';
+            const imgElement = document.createElement('div');
+            imgElement.classList.add('splash-image', introSplashes[index].imageClass);
+            splashContainer.appendChild(imgElement);
+
+            setTimeout(() => {
+                imgElement.classList.add('active');
+                startTextTyping(introSplashes[index].text);
+            }, 100);
+        }
+
+        function startTextTyping(text) {
+            clearTimeout(typingTimeout);
+            textContent.innerHTML = '';
+            charIndex = 0;
+            textOverlay.classList.add('active');
+            continueButton.style.display = 'none'; // Esconde o botão de continuar
+            openDoorsButton.style.display = 'none'; // Esconde o botão Abrir as Portas
+            isTyping = true;
+            
+            typeCharacter(text);
+        }
+
+        function typeCharacter(text) {
+            if (charIndex < text.length) {
+                textContent.innerHTML += text.charAt(charIndex);
+                charIndex++;
+                typingTimeout = setTimeout(() => typeCharacter(text), typingSpeed);
+            } else {
+                textContent.innerHTML += '<span class="cursor"></span>';
+                isTyping = false;
+                
+                // Sempre mostra o botão de continuar para os splashes de lore
+                // O botão "Abrir as Portas" só aparece na tela final
+                continueButton.style.display = 'block'; 
+                openDoorsButton.style.display = 'none'; 
+            }
+        }
+
+        function nextSplash() {
+            clearTimeout(typingTimeout); // Para a digitação atual
+            isTyping = false; // Garante que a flag de digitação seja resetada
+
+            currentSplashIndex++;
+
+            // Se ainda há splashes de lore para mostrar
+            if (currentSplashIndex < introSplashes.length) {
+                textOverlay.classList.remove('active');
+                setTimeout(() => {
+                    showSplash(currentSplashIndex);
+                }, 1500); // <-- TEMPO REDUZIDO: de 5 segundos para 1.5 segundos
+            } else {
+                // Fim de TODOS os splashes de lore. Agora, transição para a tela final de início do jogo.
+                textOverlay.classList.remove('active'); // Esconde o último texto do lore
+                
+                // Exibe a imagem splash-final (intro_0.jpg)
+                splashContainer.innerHTML = '';
+                const finalImgElement = document.createElement('div');
+                finalImgElement.classList.add('splash-image', 'splash-final'); 
+                splashContainer.appendChild(finalImgElement);
+                
+                // Garante um fade mais longo para a imagem final de transição
+                setTimeout(() => {
+                    finalImgElement.classList.add('active');
+                    finalImgElement.style.transition = 'opacity 3s ease-in-out, transform 10s linear'; // Fade mais lento para o final
+                }, 100);
+
+                // Exibe a frase conclusiva e o botão "Abrir as Portas"
+                setTimeout(() => {
+                    textContent.innerHTML = "O Véu se ergue... <br> A jornada começa agora."; // Frase conclusiva
+                    continueButton.style.display = 'none'; // Garante que o ícone de continuar esteja escondido
+                    openDoorsButton.style.display = 'block'; // Mostra o botão "Abrir as Portas"
+                    
+                    textOverlay.classList.add('active'); // Mostra o overlay de texto com a mensagem final
+                    textOverlay.style.textAlign = 'center';
+                    textContent.style.fontSize = '1.8em';
+
+                    // Não há auto-avanço aqui; o usuário deve clicar em "Abrir as Portas"
+                }, 3000); // Espera 3 segundos para a imagem final aparecer e fazer o fade-in antes de mostrar o texto/botão
+            }
+        }
+
+        // Evento de clique no botão de imagem "Continuar"
+        continueButton.addEventListener('click', () => {
+            nextSplash();
+        });
+
+        // Evento de clique no novo botão "Abrir as Portas" (só aparece na tela final)
+        openDoorsButton.addEventListener('click', () => {
+            // !!! IMPORTANTE: Adicione aqui o código para iniciar o jogo ou outra ação !!!
+            console.log("Intro finalizada! Iniciar jogo ou próxima ação (redirecionar para o estúdio).");
+            // Exemplo: window.location.href = 'pagina-do-estudio.html';
+            alert("AQUI INICIARIA O JOGO OU A PRÓXIMA SEÇÃO: O ESTÚDIO DE ABNER!"); // Alerta para demonstração
+        });
+
+        // Evento de teclado para avançar
+        document.addEventListener('keydown', (e) => {
+            // Se o botão "Abrir as Portas" estiver visível, significa que estamos na tela final,
+            // e qualquer tecla deve simular um clique nele.
+            if (openDoorsButton.style.display === 'block') {
+                openDoorsButton.click(); // Simula o clique no botão "Abrir as Portas"
+                return; // Sai da função para não processar mais nada
+            }
+
+            // Se a digitação estiver em andamento, pula para o final da digitação
+            if (isTyping) {
+                clearTimeout(typingTimeout);
+                textContent.innerHTML = introSplashes[currentSplashIndex].text;
+                textContent.innerHTML += '<span class="cursor"></span>';
+                continueButton.style.display = 'block'; // Mostra o botão de continuar
+                isTyping = false;
+            }
+            // Se não estiver digitando e o botão de continuar estiver visível, avança para o próximo splash/tela final
+            else if (!isTyping && continueButton.style.display === 'block') {
+                nextSplash();
+            }
+        });
+
+        // Inicia a introdução quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            // Exibe o título da introdução primeiro
+            introTitle.classList.add('active');
+            // Após alguns segundos, começa o primeiro splash
+            setTimeout(() => {
+                showSplash(currentSplashIndex);
+            }, 2000); // Título fica visível por 2 segundos antes do primeiro splash
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+/* css/mail.css - Estilos para a página de Cartas (Mail) */
+
+/* Container principal da view de Cartas */
+#mail-view-container {
+    padding: 30px; /* Espaçamento interno */
+    max-width: 800px; /* Largura máxima da view */
+    width: 90%; /* Largura responsiva */
+    display: flex; /* Usa flexbox para organizar os elementos */
+    flex-direction: column; /* Organiza os elementos em coluna */
+    align-items: center; /* Centraliza os elementos horizontalmente */
+    justify-content: center; /* Centraliza os elementos verticalmente */
+}
+
+/* Título principal da página de Cartas */
+#mail-view-container h2 {
+    color: var(--header-color); /* Cor do título definida em base.css */
+    font-family: 'Special Elite', cursive; /* Fonte estilizada */
+    font-size: 2.2em; /* Tamanho da fonte grande */
+    margin-bottom: 15px; /* Margem inferior */
+}
+
+/* Lista que exibe os cards de cartas */
+#mail-list {
+    width: 100%; /* Ocupa toda a largura disponível */
+    max-height: 400px; /* Altura máxima para a lista de cartas */
+    overflow-y: auto; /* Adiciona barra de rolagem vertical se necessário */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-right: 10px; /* Espaço para a barra de rolagem */
+    text-align: left; /* Alinha o conteúdo das cartas à esquerda */
+    display: flex; /* Usa flexbox para organizar os cards */
+    flex-direction: column; /* Organiza os cards em coluna */
+    gap: 15px; /* Espaço entre os cards */
+}
+
+/* Estilos da barra de rolagem para navegadores WebKit (Chrome, Safari) */
+#mail-list::-webkit-scrollbar {
+    width: 8px; /* Largura da barra de rolagem */
+}
+#mail-list::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.2); /* Cor de fundo da trilha */
+    border-radius: 4px; /* Bordas arredondadas para a trilha */
+}
+#mail-list::-webkit-scrollbar-thumb {
+    background: var(--border-color); /* Cor da alça da barra de rolagem */
+    border-radius: 4px; /* Bordas arredondadas para a alça */
+}
+
+/* Estilo para cada card de carta na lista */
+.mail-card {
+    background-color: var(--panel-bg-color); /* Background do painel definido em base.css */
+    border: 1px solid var(--border-color); /* Borda padrão */
+    padding: 15px; /* Espaçamento interno */
+    border-radius: 5px; /* Bordas arredondadas */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transições suaves para interações */
+    cursor: pointer; /* Indica que a carta é clicável */
+}
+
+/* Estilo para cartas que já foram lidas */
+.mail-card.read {
+    opacity: 0.7; /* Cartas lidas podem ter um visual mais sutil */
+    cursor: default; /* Não clicável se já lida */
+}
+
+/* Efeito hover para cartas não lidas */
+.mail-card:not(.read):hover {
+    transform: scale(1.03); /* Efeito de zoom leve */
+    box-shadow: 0 0 15px 7px rgba(164, 161, 145, 0.2); /* Sombra suave */
+    border-color: var(--header-color); /* Cor da borda ao passar o mouse */
+}
+
+/* Título dentro do card da carta */
+.mail-card h3 {
+    margin-top: 0; /* Remove margem superior padrão */
+    font-family: 'Special Elite', cursive; /* Fonte estilizada para títulos */
+    color: var(--header-color); /* Cor do título definida em base.css */
+    font-size: 1.3em; /* Tamanho da fonte */
+    margin-bottom: 10px; /* Margem inferior */
+}
+
+/* Parágrafo com o resumo do conteúdo da carta */
+.mail-card p {
+    font-size: 0.95em; /* Tamanho da fonte */
+    line-height: 1.5; /* Espaçamento entre linhas */
+    color: var(--text-color); /* Cor do texto definida em base.css */
+    margin-bottom: 5px; /* Espaço antes do footer */
+}
+
+/* Rodapé do card da carta (remetente, dia) */
+.mail-card .mail-footer {
+    font-size: 0.8em; /* Tamanho da fonte menor */
+    color: #888; /* Cor do texto do rodapé */
+    text-align: right; /* Alinha o texto à direita */
+    border-top: 1px dashed var(--border-color); /* Linha divisória sutil */
+    padding-top: 5px; /* Espaçamento interno superior */
+}
+
+/* Botão "Voltar ao Jogo" */
+#back-to-game-btn {
+    margin-top: 20px; /* Margem superior */
+    width: auto; /* Largura automática para caber o texto */
+    max-width: none; /* Remove a limitação de largura padrão */
+    padding: 10px 20px; /* Espaçamento interno */
+}

@@ -1,0 +1,43 @@
+/* css/minigame.css */
+#minigame-view-container {
+    padding: 30px;
+    max-width: 800px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#minigame-instructions {
+    text-align: center;
+    margin: 10px 0;
+    font-style: italic;
+    font-size: 1.1em;
+    color: #ccc;
+}
+
+#tattoo-canvas {
+    background-color: #c0a890;
+    border: 2px solid #5a4a3e;
+    width: 95%;
+    max-width: 760px;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+}
+
+#tattoo-timer {
+    color: var(--header-color);
+    font-family: 'Special Elite', cursive;
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+
+/* Botão "Voltar ao Jogo" */
+#back-to-game-btn {
+    margin-top: 20px;
+    width: auto;
+    max-width: none;
+    padding: 10px 20px;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartas Recebidas</title>
+
+    <!-- Você pode manter seus links de CSS, eles estão corretos -->
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/mail.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- A estrutura do seu HTML está ótima, vamos mantê-la -->
+    <div id="mail-container"> <!-- Mudei o ID para corresponder ao JS que corrigimos -->
+        <h2>Cartas Recebidas</h2>
+        <div id="mail-list-dynamic"> <!-- E um container dinâmico dentro -->
+            <p>Carregando cartas...</p>
+        </div>
+        <button id="back-to-game-btn">Voltar ao Jogo</button>
+    </div>
+
+    <!--
+        ******************************************************************
+        *                          A GRANDE MUDANÇA É AQUI                 *
+        ******************************************************************
+    -->
+    
+    <!-- A ÚNICA tag de script necessária é a do mail.js! -->
+    <!-- Ele se encarregará de importar os dados de que precisa (MAILS). -->
+    <script src="/js/mail.js" type="module"></script>
+
+</body>
+</html>

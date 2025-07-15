@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minigame de Tatuagem</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/minigame.css">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="minigame-view-container" class="view active">
+        <h1 id="minigame-title">Desenhe o Sigilo</h1>
+        <p id="minigame-instructions"></p> <!-- As instruções ainda serão preenchidas por JS -->
+        <canvas id="tattoo-canvas"></canvas>
+        <!-- O botão de voltar não é mais necessário, o redirecionamento será automático -->
+    </div>
+
+    <!-- Carrega APENAS a lógica do minigame, como um módulo.
+         Este script agora vai controlar toda a página. -->
+    <script src="/js/minigame.js" type="module"></script>
+</body>
+</html>

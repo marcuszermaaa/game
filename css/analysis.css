@@ -1,0 +1,98 @@
+/* Estilos específicos para a view de análise de clientes */
+
+/* Contêiner principal para a view de análise */
+#analysis-view-container {
+    padding: 30px; /* Espaçamento interno */
+    max-width: 800px; /* Largura máxima */
+    width: 90%; /* Largura responsiva */
+    display: flex; /* Usa flexbox para organizar os elementos */
+    flex-direction: column; /* Organiza os elementos em coluna */
+    align-items: center; /* Centraliza itens horizontalmente */
+    justify-content: center; /* Centraliza itens verticalmente */
+}
+
+/* Título principal da página de análise */
+#analysis-view-container h2 {
+    color: var(--header-color); /* Cor do título definida em base.css */
+    font-family: 'Special Elite', cursive; /* Fonte estilizada */
+    font-size: 2.2em; /* Tamanho da fonte grande */
+    margin-bottom: 15px; /* Margem inferior */
+}
+
+/* Parágrafos de texto na análise */
+#analysis-view-container p {
+    font-size: 1.1em;
+    color: var(--text-color); /* Cor do texto definida em base.css */
+    margin-bottom: 15px; /* Margem inferior */
+}
+
+/* Área que contém a comparação entre o pedido do cliente e o diário */
+.comparison-area {
+    display: flex; /* Usa flexbox para organizar lado a lado */
+    gap: 20px; /* Espaço entre os painéis de comparação */
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Permite que os painéis quebrem em linhas em telas menores */
+    justify-content: center; /* Centraliza os painéis na área */
+}
+
+/* Painel individual para o pedido do cliente ou o diário */
+.document-panel {
+    flex: 1; /* Permite que os painéis ocupem espaço igual */
+    min-width: 250px; /* Largura mínima para cada painel */
+    display: flex;
+    flex-direction: column; /* Organiza o conteúdo interno em coluna */
+    background-color: rgba(0,0,0,0.3); /* Fundo ligeiramente escuro para destaque */
+    border: 1px solid var(--border-color); /* Borda */
+    border-radius: 5px; /* Bordas arredondadas */
+    padding: 15px; /* Espaçamento interno */
+}
+
+/* Título dentro de cada painel de documento */
+.document-panel h3 {
+    margin-top: 0;
+    border-bottom: 1px dashed var(--border-color); /* Linha divisória sutil */
+    padding-bottom: 5px;
+    font-family: 'Special Elite', cursive; /* Fonte estilizada */
+    color: var(--header-color); /* Cor do título */
+}
+
+/* Área que contém os botões de escolha de diálogo */
+.dialogue-options {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column; /* Organiza os botões em coluna */
+    align-items: center; /* Centraliza os botões */
+    gap: 10px; /* Espaço entre os botões */
+}
+
+/* Estilos para os botões de escolha de diálogo (herdando de base.css) */
+.analysis-choice-btn {
+     /* Estilos básicos definidos em base.css */
+    width: 100%; /* Ocupa toda a largura disponível */
+    max-width: 350px; /* Largura máxima para legibilidade */
+}
+
+/* Estilos para a representação visual dos sigilos */
+.sigil-drawing {
+    background-color: #f5e8d7; /* Fundo de pergaminho */
+    border: 1px solid #a4a191; /* Borda */
+    height: 150px; /* Altura fixa */
+    position: relative; /* Necessário para posicionar linhas e círculos */
+    overflow: hidden; /* Esconde partes que saiam dos limites */
+    border-radius: 4px; /* Bordas arredondadas */
+}
+
+/* Estilo para sigilos proibidos (borda vermelha) */
+.sigil-drawing.prohibited {
+    border-color: var(--accent-color); /* Borda vermelha */
+    border-width: 2px;
+}
+
+/* Botão "Voltar ao Jogo" - Estilo padrão para botões de navegação */
+#back-to-game-btn {
+    margin-top: 25px; /* Margem superior */
+    width: auto; /* Largura automática */
+    max-width: none; /* Remove limitação de largura */
+    padding: 10px 20px; /* Espaçamento interno */
+    font-size: 1.1em;
+}

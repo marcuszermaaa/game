@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Tinta que Sussurra</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/clients.css">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-background"></div>
+        <div id="game-layout">
+            <div id="character-panel">
+                <div id="character-sprite"></div>
+            </div>
+            <div id="event-container">
+                <div id="event-background"></div>
+                <div id="event-panel">
+                    <div id="event-header">
+                        <div id="event-stats">
+                            <span id="day-stat">Dia: 1</span>
+                            <span id="client-stat">Cliente: 1/3</span>
+                        </div>
+                        <h2 id="event-client-name">Nome do Cliente</h2>
+                    </div>
+                    <div id="event-text-area">
+                        <p id="event-dialogue">O cliente entra no seu estúdio...</p>
+                    </div>
+                </div>
+                <div id="menu-bar">
+                    <ul id="item-bar">
+                        <li class="item-card" id="item-ink"></li>
+                        <li class="item-card" id="item-book"></li>
+                        <li class="item-card" id="item-workbench"></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="action-panel">
+                <!-- Botões de ação serão gerados dinamicamente -->
+            </div>
+        </div>
+        <div id="status-bar">
+            <div id="CENTRO_STATUS">
+                <div class="status-item status-ink"></div>
+                <div class="brain-progress">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+                <div class="status-item money-display">
+                    <span id="money-value">100</span>
+                </div>
+            </div>
+        </div>
+        <div id="shaky-cursor"></div>
+        <div id="screen-effect-overlay"></div>
+        <!-- Removido #main-view-dynamic -->
+    </div>
+
+    <script src="js/minigame.js" defer></script>
+    <script src="js/base.js" defer></script>
+    <script src="js/clients.js" defer></script>
+</body>
+</html>

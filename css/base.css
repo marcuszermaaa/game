@@ -1,0 +1,315 @@
+/* Definições de variáveis CSS para facilitar a manutenção e consistência visual */
+:root {
+    --background-color: #121212; /* Fundo escuro geral da página */
+    --panel-bg-color: #1a1a1a; /* Fundo para painéis de UI como diálogos, menus */
+    --text-color: #c5c5c5; /* Cor principal do texto, um tom claro de cinza */
+    --header-color: #a4a191; /* Cor para cabeçalhos, títulos e elementos importantes */
+    --accent-color: #8a0303; /* Cor de destaque, geralmente para perigo ou ênfase */
+    --border-color: #333; /* Cor padrão para bordas de elementos */
+    --button-bg: #2a2a2a; /* Cor de fundo padrão dos botões */
+    --button-hover-bg: #3a3a3a; /* Cor de fundo dos botões ao passar o mouse */
+    --node-color: rgba(164, 161, 145, 0.5); /* Cor padrão dos nós no minigame */
+    --node-hit-color: #5d995f; /* Cor de nós atingidos no minigame */
+    --line-color: #e0e0e0; /* Cor das linhas no minigame */
+
+    /* URLs para os sprites (definidas em clients.css para maior clareza) */
+    --sprite-cards-url: url(/media/img/bg_cards.png); /* Background da barra de cartas */
+    --sprite-cards-s-url: url(/media/img/cards_s.png); /* Sprite das cartas/itens */
+}
+
+/* Estilos globais para o corpo da página */
+body {
+    font-family: 'Cormorant Garamond', serif; /* Fonte principal com estilo clássico e serifado */
+    background-color: var(--background-color); /* Aplica a cor de fundo definida */
+    color: var(--text-color); /* Define a cor padrão do texto */
+    margin: 0; /* Remove margem padrão do navegador */
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+    overflow: hidden; /* Evita barras de rolagem indesejadas */
+    height: 100vh; /* Garante que o body ocupe toda a altura da viewport */
+    width: 100vw; /* Garante que o body ocupe toda a largura da viewport */
+}
+
+/* Classes utilitárias para controle de visibilidade e transição */
+.hidden { display: none !important; } /* Oculta um elemento de forma agressiva */
+.faded-out { opacity: 0; pointer-events: none; transition: opacity 0.5s ease-in-out; } /* Efeito de fade out com transição suave */
+
+/* Estilos para o container que envolve as views sobrepostas (como diário, resultado, etc.) */
+#main-view-dynamic {
+    position: absolute; /* Posiciona sobre o conteúdo principal do jogo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex; /* Usa flexbox para centralizar o conteúdo da view */
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente para escurecer o que está por baixo */
+    z-index: 100; /* Garante que fique acima de todos os elementos de jogo, mas abaixo de overlays de sistema */
+    backdrop-filter: blur(10px); /* Efeito de blur no fundo (pode não ser suportado em todos os navegadores) */
+
+    opacity: 0; /* Inicialmente invisível antes da animação */
+    pointer-events: none; /* Não captura eventos de mouse por padrão (para não interferir com o jogo) */
+    transition: opacity 0.5s ease-in-out; /* Transição suave para aparecer/desaparecer */
+}
+
+/* Classe aplicada para tornar a view sobreposta visível */
+#main-view-dynamic.visible {
+    opacity: 1; /* Torna visível */
+    pointer-events: auto; /* Captura eventos de mouse QUANDO visível */
+}
+
+/* Estilo geral para todas as views sobrepostas (usadas dentro do iframe) */
+.view {
+    background-color: var(--panel-bg-color); /* Fundo do painel da view */
+    border: 1px solid var(--border-color); /* Borda padrão */
+    border-radius: 8px; /* Bordas arredondadas */
+    padding: 30px; /* Espaçamento interno */
+    text-align: center; /* Centraliza texto */
+    max-width: 800px; /* Largura máxima da view */
+    width: 90%; /* Largura responsiva */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5); /* Sombra para dar profundidade */
+    opacity: 0; /* Inicialmente invisível antes da animação */
+    animation: fadeInView 0.5s forwards; /* Aplica animação de fade-in */
+    pointer-events: auto; /* Garante que a view interna capture eventos de mouse */
+    position: relative; /* Necessário para posicionar elementos internos como botões de fechar */
+    z-index: 101; /* Posiciona acima do #main-view-dynamic */
+}
+
+/* Animação para fazer as views aparecerem suavemente */
+@keyframes fadeInView {
+    from { opacity: 0; transform: scale(0.9); } /* Começa pequeno e invisível */
+    to { opacity: 1; transform: scale(1); } /* Termina em tamanho normal e visível */
+}
+
+/* Estilos para botões genéricos (aplicados a vários botões em diferentes contextos) */
+#action-panel button,
+.dialogue-options button,
+.analysis-choice-btn,
+#next-client-btn,
+#next-day-btn,
+#journal-btn,
+#analyze-request-btn,
+.sigil-card,
+.game-action-button /* Classe geral para botões de ação no iframe */
+{
+    font-family: 'Special Elite', cursive; /* Fonte estilizada para botões */
+    font-size: 1.1em;
+    padding: 12px 25px; /* Espaçamento interno do botão */
+    background-color: var(--button-bg); /* Cor de fundo */
+    color: var(--text-color); /* Cor do texto */
+    border: 1px solid var(--border-color); /* Borda */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Muda o cursor para indicar interatividade */
+    transition: background-color 0.3s ease, transform 0.1s ease; /* Transições suaves */
+    margin: 5px 0; /* Margem vertical */
+    width: 100%; /* Ocupa a largura disponível */
+    max-width: 250px; /* Limita a largura máxima para melhor legibilidade */
+    box-sizing: border-box; /* Garante que padding e border não afetem a largura */
+}
+/* Estilos ao passar o mouse sobre os botões */
+#action-panel button:hover,
+.dialogue-options button:hover,
+.analysis-choice-btn:hover,
+#next-client-btn:hover,
+#next-day-btn:hover,
+#journal-btn:hover,
+#analyze-request-btn:hover,
+.sigil-card:hover,
+.game-action-button:hover
+{
+    background-color: var(--button-hover-bg); /* Cor de fundo ao passar o mouse */
+    transform: translateY(-2px); /* Efeito de leve elevação */
+}
+/* Efeito ao clicar nos botões */
+#action-panel button:active,
+.dialogue-options button:active,
+.analysis-choice-btn:active,
+#next-client-btn:active,
+#next-day-btn:active,
+#journal-btn:active,
+#analyze-request-btn:active,
+.sigil-card:active,
+.game-action-button:active
+{
+    transform: translateY(0); /* Remove o efeito de elevação */
+}
+/* Estilos para botões desabilitados */
+#action-panel button:disabled,
+.dialogue-options button:disabled,
+.analysis-choice-btn:disabled,
+#next-client-btn:disabled,
+#next-day-btn:disabled,
+#journal-btn:disabled,
+#analyze-request-btn:disabled,
+.sigil-card:disabled,
+.game-action-button:disabled
+{
+    opacity: 0.6; /* Reduz a opacidade */
+    cursor: not-allowed; /* Indica que não é possível interagir */
+    transform: none; /* Remove efeitos de hover/active */
+}
+
+/* Overlay para efeitos visuais na tela (como tremor ou filtros de sanidade) */
+#screen-effect-overlay {
+    position: absolute; /* Posicionado sobre o jogo principal */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Não interfere com interações do mouse */
+    z-index: 10; /* Fica acima do conteúdo principal, mas abaixo das views sobrepostas */
+    transition: all 0.3s ease-in-out; /* Transição suave para efeitos */
+}
+
+/* Classes para aplicar efeitos de sanidade ao overlay */
+.sanity-effect-low {
+    animation: screen-shake 0.06s linear infinite alternate; /* Efeito de tremor de tela */
+    background-color: rgba(255, 0, 0, 0.05); /* Leve tom avermelhado */
+}
+.sanity-effect-medium {
+    filter: saturate(0.7) brightness(0.9); /* Reduz saturação e brilho para efeito de sanidade baixa */
+}
+
+/* Animação de tremor na tela */
+@keyframes screen-shake {
+    0% { transform: translate(-1px, 1px); }
+    50% { transform: translate(1px, -1px); }
+    100% { transform: translate(-1px, 1px); }
+}
+
+/* Animação de piscar/tremor no texto do diálogo */
+@keyframes textFlicker {
+    0% { opacity: 1; text-shadow: none; }
+    50% { opacity: 0.7; text-shadow: 1px 0 0 var(--accent-color), -1px 0 0 #0ff; } /* Sombras para simular flicker */
+    100% { opacity: 1; text-shadow: none; }
+}
+
+/* Aplica a animação de flicker a um elemento específico */
+.text-flicker {
+    animation: textFlicker 0.5s infinite alternate ease-in-out;
+}
+
+/* --- NEW CSS FOR TUTORIAL HIGHLIGHT --- */
+
+/* Animation for blinking/pulsing effect */
+@keyframes pulseHighlight {
+    0% {
+        transform: scale(1); /* Base scale */
+        opacity: 1;
+        box-shadow: none;
+    }
+    50% {
+        transform: scale(1.08); /* Slightly larger */
+        opacity: 0.8; /* Slightly transparent */
+         /* Add a subtle glow */
+        box-shadow: 0 0 15px 7px rgba(164, 161, 145, 0.7);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: none;
+    }
+}
+
+/* Class to apply the pulse animation to the item-book LI element */
+/* This targets the specific book item when it needs to be highlighted */
+#item-book.highlight-pulse {
+    animation: pulseHighlight 1.5s infinite ease-in-out;
+     /* Ensure it stands out slightly more. The base .item-card:hover
+       might add its own transform. This animation adds scale and shadow. */
+}
+/* Class for highlighting the mail item */
+#item-mail.highlight-pulse {
+    animation: pulseHighlight 1.5s infinite ease-in-out;
+     /* Ensure it stands out slightly more. The base .item-card:hover
+       might add its own transform. This animation adds scale and shadow. */
+}
+
+
+/* --- ESTILOS PARA O PAINEL DE DIÁLOGO INTERATIVO --- */
+#dialogue-interaction-panel {
+    position: absolute; /* Posicionado sobre o jogo principal */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Fundo escuro para destacar o diálogo */
+    z-index: 20; /* Acima do jogo principal e dos itens da barra, mas abaixo de modals de sistema */
+    display: none; /* Inicialmente oculto */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    backdrop-filter: blur(8px); /* Efeito de blur no fundo */
+    border: 1px solid var(--border-color); /* Borda para o painel */
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.7);
+}
+
+/* Classe para tornar o painel de diálogo visível */
+#dialogue-interaction-panel.visible {
+    display: flex;
+}
+
+/* Container para o texto do diálogo */
+#dialogue-text-container {
+    background-color: var(--panel-bg-color);
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    border-radius: 8px;
+    max-width: 700px;
+    width: 90%;
+    margin-bottom: 25px;
+    text-align: left;
+    font-size: 1.15em;
+    line-height: 1.7;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    max-height: 350px; /* Limita a altura do texto para permitir scroll */
+    overflow-y: auto; /* Adiciona scroll se o texto for muito longo */
+    font-family: 'Cormorant Garamond', serif; /* Fonte do texto do diálogo */
+}
+
+/* Remove margem padrão do parágrafo dentro do container de diálogo */
+#dialogue-text-container p {
+    margin: 0;
+}
+
+/* Container para as opções de diálogo */
+#dialogue-options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Espaço entre os botões de opção */
+    align-items: center;
+    width: 100%; /* Ocupa a largura do container pai */
+}
+
+/* Botões de escolha de diálogo */
+.dialogue-choice-btn {
+    font-family: 'Special Elite', cursive; /* Fonte para botões de diálogo */
+    font-size: 1.1em;
+    padding: 12px 25px;
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    max-width: 400px; /* Largura máxima para botões de diálogo */
+    width: 100%; /* Ocupa a largura disponível */
+    box-sizing: border-box;
+}
+
+.dialogue-choice-btn:hover {
+    background-color: var(--button-hover-bg);
+    transform: translateY(-2px);
+}
+.dialogue-choice-btn:active {
+    transform: translateY(0);
+}
+/* --- FIM ESTILOS DIÁLOGO --- */
+
+
+/* --- END NEW CSS --- */

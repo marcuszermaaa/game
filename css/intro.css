@@ -1,0 +1,208 @@
+/* ============================ */
+/* 1. Variáveis Globais */
+/* ============================ */
+:root {
+    --color-bg: #000;
+    --color-text: #eee;
+    --color-text-subtle: #ccc;
+    --color-overlay-bg: rgba(0, 0, 0, 0.75);
+    --color-button-bg: #444;
+    --color-button-border: #666;
+    --transition-short: 0.2s ease;
+    --transition-medium: 0.8s ease-in-out;
+    --transition-long: 2s ease-in-out;
+    --transition-zoom: 10s linear;
+    --font-family-base: 'Times New Roman', Times, serif;
+    --border-radius-base: 8px;
+}
+
+/* ============================ */
+/* 2. Estilos Base e de Layout */
+/* ============================ */
+body {
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--color-bg);
+    font-family: var(--font-family-base);
+    color: var(--color-text);
+    position: relative;
+    cursor: default;
+}
+
+.splash-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ============================ */
+/* 3. Estilos da Imagem de Splash */
+/* ============================ */
+.splash-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center center;
+    opacity: 0;
+    transition: opacity var(--transition-medium), transform var(--transition-zoom);
+    transform: scale(1);
+    filter: grayscale(70%) brightness(60%) contrast(120%);
+}
+
+.splash-image.active {
+    opacity: 1;
+    transform: scale(1.10);
+}
+
+.splash-1 { background-image: url('/media/01.jpg'); }
+.splash-2 { background-image: url('/media/02.jpg'); }
+.splash-3 { background-image: url('/media/03.jpg'); }
+.splash-4 { background-image: url('/media/04.jpg'); }
+.splash-final { background-image: url('/media/intro_0.jpg'); }
+
+/* ============================ */
+/* 4. Estilos da Caixa de Texto */
+/* ============================ */
+.text-overlay {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 900px;
+    background-color: var(--color-overlay-bg);
+    padding: 25px 35px;
+    border-radius: var(--border-radius-base);
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 10;
+}
+
+.text-overlay.active {
+    opacity: 1;
+}
+
+.text-content {
+    font-size: 1.4em;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    white-space: pre-wrap;
+    min-height: 50px; /* Garante que o overlay tenha uma altura mínima mesmo com pouco texto */
+}
+
+/* ============================ */
+/* 5. Estilos de Efeitos e Botões */
+/* ============================ */
+.cursor {
+    display: inline-block;
+    background-color: var(--color-text);
+    width: 5px;
+    height: 1.4em;
+    vertical-align: bottom;
+    animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.continue-button-image {
+    display: block;
+    margin: 0 auto;
+    width: 80px;
+    height: auto;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    transition: transform var(--transition-short), opacity 0.3s ease;
+}
+
+.continue-button-image:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+
+/* Estilos para os botões gerais */
+#openDoorsButton, #skip-intro-btn {
+    display: none; /* Inicialmente ocultos */
+    margin-top: 30px;
+    padding: 15px 40px;
+    background-color: var(--color-button-bg);
+    color: #fff;
+    border: 1px solid var(--color-button-border);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform var(--transition-short);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+#openDoorsButton:hover, #skip-intro-btn:hover {
+    background-color: #666;
+    border-color: #999;
+    transform: translateY(-3px);
+}
+
+/* Estilo específico para o botão de pular */
+#skip-intro-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1em;
+    padding: 10px 20px;
+    background-color: rgba(68, 68, 68, 0.7); /* Um pouco mais transparente */
+    border-color: rgba(102, 102, 102, 0.7);
+    z-index: 100; /* Para garantir que fique acima de outros elementos */
+}
+
+#introTitle {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--color-text-subtle);
+    font-size: 3em;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transition: opacity var(--transition-long);
+    z-index: 11;
+}
+
+#introTitle.active {
+    opacity: 1;
+}
+
+/* Container para o único botão final */
+.final-buttons-container {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 20; /* Acima do texto overlay */
+    width: 80%;
+    max-width: 900px;
+}
+
+/* Ajuste para o botão principal, que agora é o único do container */
+.final-buttons-container #openDoorsButton {
+    display: block; /* Garante que ele apareça */
+    margin: 0 auto; /* Centraliza se for o único botão */
+    margin-top: 0; /* Remove a margem superior que era para o segundo botão */
+    padding: 15px 40px; /* Reaplicar padding se necessário, mas já está nos estilos gerais */
+    font-size: 1.5em;
+}

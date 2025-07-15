@@ -1,0 +1,148 @@
+/* Estilos principais para a página de menu */
+body {
+    font-family: 'Cormorant Garamond', serif; /* Fonte principal com um toque clássico */
+    background-color: var(--background-color); /* Fundo escuro geral definido em base.css */
+    color: var(--text-color); /* Cor principal do texto definida em base.css */
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+    min-height: 100vh; /* Garante que o corpo ocupe pelo menos toda a altura da viewport */
+    margin: 0; /* Remove margens padrão do navegador */
+
+    /* Background com gradiente escuro e um padrão SVG sutil de textura */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><pattern id="texture" patternUnits="userSpaceOnUse" width="200" height="200"><image href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JzyAAAAAXNSR0IArs4c6QAAAAxJREFUGFdjYBgFoAABAAHl+c34AAAAAElFTkSuQmCC" width="2" height="2" /></pattern></defs><rect width="100%" height="100%" fill="url(%23texture)" /></svg>');
+    background-size: cover; /* Faz o background cobrir toda a área */
+    background-position: center; /* Centraliza o background */
+    position: relative; /* Necessário para o pseudo-elemento ::before */
+}
+
+/* Pseudo-elemento para adicionar uma camada escura adicional sobre o background */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Cor escura semi-transparente */
+    z-index: 0; /* Fica atrás do conteúdo principal */
+}
+
+/* Container principal do menu */
+#menu-container {
+    text-align: center; /* Centraliza o texto dentro do container */
+    background-color: var(--panel-bg-color); /* Fundo escuro semi-transparente para o menu, definido em base.css */
+    padding: 30px; /* Espaçamento interno, alinhando com o padrão base */
+    border-radius: 8px; /* Bordas arredondadas, alinhando com o padrão base */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5); /* Sombra, alinhando com o padrão base */
+    position: relative; /* Necessário para o z-index */
+    z-index: 1; /* Garante que o menu fique acima das camadas de background */
+    border: 1px solid var(--border-color); /* Borda padrão definida em base.css */
+}
+
+/* Título principal do menu */
+h1 {
+    font-family: 'Special Elite', cursive; /* Fonte estilizada para o título */
+    font-size: 2.5em; /* Tamanho da fonte grande, mantendo destaque */
+    color: var(--header-color); /* Cor de destaque para o título, definida em base.css */
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5); /* Sombra suave no texto */
+    margin-bottom: 25px; /* Espaçamento abaixo do título */
+}
+
+/* Estilos para os botões de opção do menu */
+#menu-options button {
+    /* Replicando e adaptando os estilos de botão de base.css */
+    font-family: 'Special Elite', cursive; /* Fonte estilizada para botões */
+    font-size: 1.1em; /* Tamanho da fonte, alinhado com botões base */
+    padding: 12px 25px; /* Espaçamento interno, alinhado com botões base */
+    margin: 5px 0; /* Margem vertical única, alinhado com botões base */
+    display: block; /* Cada botão ocupa sua própria linha */
+    width: 100%; /* Ocupa a largura disponível */
+    max-width: 250px; /* Largura máxima, alinhada com botões base */
+    background-color: var(--button-bg); /* Cor de fundo padrão dos botões */
+    color: var(--text-color); /* Cor do texto padrão */
+    border: 1px solid var(--border-color); /* Borda padrão */
+    border-radius: 5px; /* Bordas arredondadas padrão */
+    cursor: pointer; /* Indica que o elemento é clicável */
+    transition: background-color 0.3s ease, transform 0.1s ease; /* Transições suaves */
+    box-sizing: border-box; /* Garante que padding e border não afetem a largura total */
+}
+
+/* Efeito hover para os botões (exceto quando desabilitados) */
+#menu-options button:hover:not(:disabled) {
+    background-color: var(--button-hover-bg); /* Cor de fundo mais escura ao passar o mouse */
+    transform: translateY(-2px); /* Efeito de leve elevação */
+}
+
+/* Efeito ao clicar nos botões (exceto quando desabilitados) */
+#menu-options button:active:not(:disabled) {
+    transform: translateY(0); /* Retorna à posição original */
+    background-color: var(--button-hover-bg); /* Mantém a cor hover ao clicar */
+}
+
+/* Estilos para botões desabilitados */
+#menu-options button:disabled {
+    opacity: 0.6; /* Reduz a opacidade */
+    cursor: not-allowed; /* Indica que não é possível interagir */
+    transform: none; /* Remove efeitos de transform */
+}
+
+/* Mensagem geral exibida no menu */
+#menu-message {
+    font-family: 'Cormorant Garamond', serif; /* Fonte principal */
+    font-size: 1.1em; /* Tamanho da fonte, alinhado com texto base */
+    margin-top: 20px; /* Espaçamento acima da mensagem */
+    color: var(--text-color); /* Cor do texto padrão */
+    font-weight: normal;
+}
+
+/* Mensagem de confirmação */
+#confirmation-message {
+    font-family: 'Cormorant Garamond', serif; /* Fonte principal */
+    font-size: 1.1em; /* Tamanho da fonte, alinhado com texto base */
+    margin-top: 20px; /* Espaçamento acima da mensagem */
+    font-weight: bold; /* Negrito para destaque */
+    color: var(--accent-color); /* Usa a cor de acento para ênfase, definida em base.css */
+}
+
+/* Animação de piscar para elementos */
+@keyframes blink-animation {
+    0%, 100% { opacity: 1; } /* Totalmente opaco */
+    50% { opacity: 0.4; } /* Semi-transparente */
+}
+
+/* Classe para aplicar a animação de piscar */
+.blinking {
+    animation: blink-animation 1s infinite;
+}
+
+/* Media queries para responsividade */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.2em; /* Título menor em telas médias */
+    }
+    #menu-options button {
+        max-width: 200px; /* Botões menores */
+        font-size: 1.1em;
+        padding: 10px 15px;
+    }
+    #menu-container {
+        padding: 25px 35px; /* Espaçamento interno reduzido */
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8em; /* Título ainda menor em telas pequenas */
+    }
+    #menu-options button {
+        max-width: 180px; /* Botões ainda menores */
+        font-size: 1.0em;
+        padding: 8px 12px;
+        margin: 8px auto;
+    }
+    #menu-container {
+        padding: 20px 20px; /* Espaçamento interno reduzido */
+        margin: 10px; /* Adiciona margem para não colar nas bordas */
+    }
+}

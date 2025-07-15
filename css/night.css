@@ -1,0 +1,96 @@
+/* css/night.css - Estilos para a fase noturna do jogo */
+
+/* Container principal da view da fase noturna */
+#night-view-container {
+    padding: 30px; /* Espaçamento interno */
+    max-width: 800px; /* Largura máxima da view */
+    width: 90%; /* Largura responsiva */
+    display: flex; /* Usa flexbox para organizar os elementos */
+    flex-direction: column; /* Organiza os elementos em coluna */
+    align-items: center; /* Centraliza os elementos horizontalmente */
+    justify-content: center; /* Centraliza os elementos verticalmente */
+}
+
+/* Título principal da fase noturna */
+#night-view-container h2 {
+    color: var(--header-color); /* Cor do título definida em base.css */
+    font-family: 'Special Elite', cursive; /* Fonte estilizada */
+    font-size: 2.2em; /* Tamanho da fonte grande */
+    margin-bottom: 10px; /* Margem inferior */
+}
+
+/* Subtítulos na fase noturna */
+#night-view-container h3 {
+    color: var(--header-color); /* Cor do título definida em base.css */
+    margin-top: 25px; /* Margem superior */
+    margin-bottom: 10px; /* Margem inferior */
+}
+
+/* Área que revela o texto de Lore */
+#lore-reveal {
+    border: 1px dashed var(--border-color); /* Borda pontilhada */
+    padding: 15px; /* Espaçamento interno */
+    margin-bottom: 20px; /* Margem inferior */
+    background-color: rgba(0,0,0,0.3); /* Fundo ligeiramente escuro */
+    border-radius: 5px; /* Bordas arredondadas */
+    max-height: 150px; /* Altura máxima para o lore */
+    overflow-y: auto; /* Adiciona scroll vertical se o conteúdo exceder a altura */
+    text-align: left; /* Alinha o texto à esquerda */
+    font-size: 1.05em; /* Tamanho da fonte */
+    line-height: 1.5; /* Espaçamento entre linhas */
+}
+#lore-reveal h3 { margin-top: 0; } /* Remove margem superior do H3 dentro do lore-reveal */
+
+/* Container para a loja de upgrades */
+#upgrades-shop {
+    display: flex; /* Usa flexbox para organizar os cards de upgrades */
+    flex-wrap: wrap; /* Permite que os cards quebrem em novas linhas */
+    justify-content: center; /* Centraliza os cards horizontalmente */
+    gap: 15px; /* Espaço entre os cards */
+    margin-top: 10px; /* Margem superior */
+}
+
+/* Estilo para cada card de upgrade */
+.upgrade-card {
+    background-color: rgba(0,0,0,0.4); /* Background ligeiramente escuro */
+    border: 1px solid var(--border-color); /* Borda padrão */
+    padding: 15px; /* Espaçamento interno */
+    border-radius: 5px; /* Bordas arredondadas */
+    text-align: center; /* Centraliza o texto */
+    width: 200px; /* Largura fixa para os cards */
+    display: flex; /* Usa flexbox para organizar o conteúdo interno */
+    flex-direction: column; /* Organiza o conteúdo em coluna */
+    justify-content: space-between; /* Distribui espaço para empurrar o botão para baixo */
+}
+
+/* Título dentro do card de upgrade */
+.upgrade-card h4 {
+    color: var(--header-color); /* Cor do título definida em base.css */
+    font-family: 'Special Elite', cursive; /* Fonte estilizada */
+    margin-top: 0; /* Remove margem superior padrão */
+    margin-bottom: 10px; /* Margem inferior */
+}
+
+/* Parágrafo com a descrição do upgrade */
+.upgrade-card p {
+    font-size: 0.9em; /* Tamanho da fonte */
+    margin-bottom: 15px; /* Margem inferior */
+    flex-grow: 1; /* Permite que o parágrafo ocupe o espaço disponível, empurrando o botão para baixo */
+}
+
+/* Botão "Voltar ao Jogo" */
+#back-to-game-btn {
+    margin-top: 20px; /* Margem superior */
+    width: auto; /* Largura automática */
+    max-width: none; /* Remove a limitação de largura padrão */
+    padding: 10px 20px; /* Espaçamento interno */
+}
+
+/* Botão de iniciar novo dia */
+#start-new-day-btn {
+    margin-top: auto; /* Empurra o botão para o fim do container flex (caso ele seja o último elemento) */
+    width: auto; /* Largura automática */
+    max-width: none; /* Remove a limitação de largura padrão */
+    padding: 10px 20px; /* Espaçamento interno */
+    font-size: 1.1em; /* Tamanho da fonte */
+}

@@ -1,0 +1,93 @@
+/* css/journal.css - Estilos para a página do Diário */
+
+/* Container principal da view do Diário */
+#journal-view-container {
+    padding: 30px; /* Espaçamento interno */
+    max-width: 800px; /* Largura máxima da view */
+    width: 90%; /* Largura responsiva */
+    display: flex; /* Usa flexbox para organizar os elementos */
+    flex-direction: column; /* Organiza os elementos em coluna */
+    align-items: center; /* Centraliza os elementos horizontalmente */
+    justify-content: center; /* Centraliza os elementos verticalmente */
+}
+
+/* Título principal da página do Diário */
+#journal-view-container h2 {
+    color: var(--header-color); /* Cor do título definida em base.css */
+    font-family: 'Special Elite', cursive; /* Fonte estilizada */
+    font-size: 2.2em; /* Tamanho da fonte grande */
+    margin-bottom: 15px; /* Margem inferior */
+}
+
+/* Parágrafos de texto na página do Diário */
+#journal-view-container p {
+    font-size: 1.1em;
+    color: var(--text-color); /* Cor do texto definida em base.css */
+}
+
+/* Grade que exibe os cards de sigilo */
+#journal-grid {
+    display: grid; /* Usa CSS Grid para layout responsivo */
+    /* Cria colunas com no mínimo 180px de largura, e expandindo para preencher o espaço disponível */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px; /* Espaço entre os cards */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    max-height: 350px; /* Altura máxima para a grade, com scroll se necessário */
+    overflow-y: auto; /* Adiciona barra de rolagem vertical se o conteúdo exceder a altura máxima */
+    padding-right: 10px; /* Espaço para a barra de rolagem */
+}
+
+/* Estilização da barra de rolagem para navegadores WebKit (Chrome, Safari) */
+#journal-grid::-webkit-scrollbar {
+    width: 8px; /* Largura da barra de rolagem */
+}
+#journal-grid::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.2); /* Cor de fundo da trilha da barra de rolagem */
+    border-radius: 4px; /* Bordas arredondadas para a trilha */
+}
+#journal-grid::-webkit-scrollbar-thumb {
+    background: var(--border-color); /* Cor da alça da barra de rolagem */
+    border-radius: 4px; /* Bordas arredondadas para a alça */
+}
+
+/* Estilos para os cards de sigilo no diário */
+.sigil-card {
+    border: 1px solid var(--border-color); /* Borda padrão */
+    padding: 15px; /* Espaçamento interno */
+    background-color: var(--panel-bg-color); /* Background do painel definido em base.css */
+    cursor: pointer; /* Indica que o elemento é clicável */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transições suaves para interações */
+    border-radius: 5px; /* Bordas arredondadas */
+    text-align: center; /* Centraliza o texto dentro do card */
+    display: flex; /* Usa flexbox para organizar o conteúdo interno */
+    flex-direction: column; /* Organiza o conteúdo em coluna */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    min-height: 120px; /* Garante uma altura mínima para todos os cards */
+}
+
+/* Efeito hover para os cards de sigilo */
+.sigil-card:hover {
+    transform: scale(1.03); /* Efeito de zoom leve */
+    box-shadow: 0 0 15px rgba(164, 161, 145, 0.2); /* Sombra suave */
+    border-color: var(--header-color); /* Cor da borda ao passar o mouse */
+}
+
+/* Título dentro dos cards de sigilo */
+.sigil-card h3 {
+    margin: 0; /* Remove margem padrão */
+    font-family: 'Special Elite', cursive; /* Fonte estilizada para títulos */
+    color: var(--header-color); /* Cor do título definida em base.css */
+    font-size: 1.1em; /* Tamanho da fonte */
+    word-wrap: break-word; /* Quebra palavras longas que não cabem na linha */
+    hyphens: auto; /* Hifenização automática para melhor quebra de linha */
+}
+
+/* Botão "Voltar ao Jogo" */
+#back-to-game-btn {
+    margin-top: 20px; /* Margem superior */
+    width: auto; /* Largura automática para caber o texto */
+    max-width: none; /* Remove a limitação de largura padrão */
+    padding: 10px 20px; /* Espaçamento interno */
+}

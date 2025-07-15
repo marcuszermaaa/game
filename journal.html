@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diário de Abner</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/journal.css"> <!-- O CSS específico do diário -->
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="journal-view-container">
+        <h2>O Diário de Abner</h2>
+        <p>Encontre o sigilo que corresponde à aflição do cliente.</p>
+        <div id="journal-grid">
+            <!-- Os cards de sigilo serão carregados aqui pelo journal.js -->
+        </div>
+        <button id="back-to-game-btn">Voltar ao Jogo</button>
+    </div>
+
+    <!--
+      O ÚNICO SCRIPT NECESSÁRIO.
+      Ele cuidará de importar os dados de sigilos por conta própria.
+    -->
+    <script src="/js/journal.js" type="module"></script>
+</body>
+</html>

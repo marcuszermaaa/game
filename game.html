@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estúdio de Tatuagem Blackwood</title>
+    <!-- Seus links CSS (garanta que /css/ui.css exista) -->
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/clients.css">
+    <link rel="stylesheet" href="/css/ui.css">
+  <!DOCTYPE html>
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-layout">
+            <div id="character-panel"><div id="character-sprite"></div></div>
+            <div id="event-container">
+                    
+                        <div id="event-panel">
+            <div id="info-day">
+                            <div id="day-stat" ></div>
+            
+                               <div id="client-stat"></div>
+                               </div>
+                    <div id="event-header"><h2 id="event-client-name"></h2></div>
+                    <p id="event-dialogue"></p>
+                </div>
+              <div id="menu-bar">
+                    <ul id="item-bar">
+                        <!-- PRECISAMOS CRIAR O LINK DO WORKBENCK.HTML esta pagina TERA UMA NOVA LOGICA DE CRAFT DE ITENS COMPRADOS NA FASE NOTURNA -->
+                        <li class="item-card" id="item-mail"></li>
+                        <li class="item-card" id="item-book"></li>
+                        <li class="item-card" id="item-workbench"></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="action-panel"></div>
+            <div id="dialogue-interaction-panel" style="display: none;">
+                <div id="dialogue-text-container"><p id="dialogue-text"></p></div>
+                <div id="dialogue-options-container"></div>
+            </div>
+       
+        </div>
+        
+        <div id="status-bar">
+ 
+            <div id="CENTRO_STATUS" class="status-item">
+                 <div id="client-stat" class="status-item"></div>
+                <div class="brain-progress"><div class="progress-bar"></div></div>
+            </div>
+            <div class="status-item money-display">$<span id="money-value"></span></div>
+        </div>
+        <div id="item-bar">
+            <div id="item-mail" class="item-icon"></div>
+            <div id="item-book" class="item-icon"></div>
+        </div>
+    </div>
+    <script src="./js/gameCore.js" type="module"></script>
+</body>
+</html>
