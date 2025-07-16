@@ -231,8 +231,22 @@ position: relative;
 }
 
 /* Painel de ação (lado direito) */
-#action-panel {
+#side-bar{
+     
     width: 25%; /* Largura relativa ao container pai */
+    min-width: 150px; /* Largura mínima */
+    display: flex;
+    flex-direction: column; /* Organiza os elementos internos em coluna */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    padding: 20px; /* Espaçamento interno */
+    box-sizing: border-box;
+    z-index: 1; /* Fica acima do background, no mesmo nível do painel de evento */
+}
+
+#action-panel {
+
+    width: 300px; /* Largura relativa ao container pai */
     min-width: 150px; /* Largura mínima */
     display: flex;
     flex-direction: column; /* Organiza os elementos internos em coluna */
@@ -418,29 +432,62 @@ position: relative;
 }
 
 /* Estilo para ícones de upgrade na UI principal */
+#mesa{
+   /*background-color: blue;*/
+  width: 300px;
+  height: 100px;
+
+  padding-top: 66%;
+
+
+}
 .upgrade-icon {
     display: none; /* Escondido por padrão */
-    width: 40px;
-    height: 40px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    margin-left: 10px;
+
+    z-index: 3;
+ 
+}
+.upgrade-icon.active {
+    display: inline-block; /* Escondido por padrão */
+
+    z-index: 3;
+ 
 }
 /* Define a imagem específica para o ícone da lupa. */
 #upgrade-lupa-icon {
     background-image: url('/media/img/icons/lupa_icon.png');
+  width: 100px;
+  height: 70px;
+  margin-left: 10px;
+  text-align: left;
+  background-position: left;
+  background-size: 101px;
+  background-repeat: no-repeat;
 }
 
 /* Define a imagem específica para o ícone da lâmpada. */
 #upgrade-lamp-icon {
     background-image: url('/media/img/icons/lamp_icon.png');
+  width: 100px;
+  height: 70px;
+  margin-left: 10px;
+  text-align: left;
+  background-position: left;
+  background-size: 101px;
+  background-repeat: no-repeat;
 }
 
 /* --- ADICIONE ESTA REGRA --- */
 /* Define a imagem específica para o ícone da munhequeira. */
 #upgrade-brace-icon {
-    background-image: url('/media/img/icons/brace_icon.png'); /* Crie este ícone */
+ background-image: url('/media/img/icons/brace_icon.png');
+  width: 100px;
+  height: 70px;
+  margin-left: 10px;
+  text-align: left;
+  background-position: left;
+  background-size: 101px;
+  background-repeat: no-repeat;
 }
 
 /* --- ADICIONE ESTAS REGRAS --- */

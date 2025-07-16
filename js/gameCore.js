@@ -244,8 +244,94 @@ class GameManager {
         return receivedMails.some(mail => !readMailIds.has(mail.id));
     }
 
-    startAnalysis() { /* TODO: Implementar lógica de análise de pedidos */ }
-    processAnalysisChoice() { /* TODO: Implementar lógica de processamento de escolha de análise */ }
+    /**
+     * NOVO MÉTODO: Processa a escolha feita na página de análise.
+     * Chamado quando o jogador retorna de analysis.html.
+     */
+    processAnalysisChoice() {
+        const choice = this.state.analysisChoice;
+        const client = this.clientManager.getCurrentClient();
+        const requestedSigil = client ? SIGILS[client.request] : null;
+
+        if (!choice || !client || !requestedSigil) {
+            console.warn("GameManager: Nenhuma escolha de análise ou cliente/sigilo inválido para processar.");
+            this.state.analysisChoice = null; // Limpa a escolha para evitar loops
+            this.saveGameState();
+            this.uiManager.updateActionButtonBasedOnState(); // Atualiza a UI
+            return;
+        }
+
+        let outcomeTitle = "Análise Concluída";
+        let outcomeMessage = "";
+        let sanityChange = 0;
+        let moneyChange = 0;
+        let playerSigilToTattoo = null; // O sigilo que o jogador "escolheu" tatuar após a análise
+
+        switch (choice) {
+            case 'correct':
+                // Jogador escolheu corrigir um sigilo corrompido
+                sanityChange = 5;
+                outcomeMessage = "Você identificou e se propôs a corrigir o sigilo. Sua mente está mais clara.";
+                playerSigilToTattoo = requestedSigil.correctVersion; // Define o sigilo correto para tatuar
+                break;
+            case 'accept_corrupted':
+                // Jogador escolheu aceitar um sigilo corrompido
+                sanityChange = -20;
+                outcomeMessage = "Você decidiu seguir o pedido corrompido. O peso da decisão recai sobre sua sanidade.";
+                playerSigilToTattoo = requestedSigil.id; // Define o sigilo corrompido para tatuar
+                break;
+            case 'refuse':
+                // Jogador escolheu recusar um sigilo proibido
+                sanityChange = 10;
+                outcomeMessage = "Você se recusou a tatuar o símbolo proibido. Sua convicção fortalece sua mente.";
+                // Não há sigilo para tatuar, o cliente pode ir embora ou ter outro desfecho
+                // Neste caso, o cliente simplesmente vai embora e não há minigame.
+                break;
+            case 'accept_prohibited':
+                // Jogador escolheu aceitar um sigilo proibido
+                sanityChange = -50;
+                outcomeMessage = "Você cedeu à tentação e aceitou o sigilo proibido. As consequências serão terríveis.";
+                playerSigilToTattoo = requestedSigil.id; // Define o sigilo proibido para tatuar
+                break;
+            case 'accept_normal':
+                // Jogador aceitou um sigilo normal (seguro)
+                sanityChange = 0; // Geralmente não há mudança de sanidade para sigilos normais
+                outcomeMessage = "Você concordou em fazer o sigilo conforme o pedido. Um trabalho direto.";
+                playerSigilToTattoo = requestedSigil.id; // Define o sigilo normal para tatuar
+                break;
+            default:
+                console.warn(`GameManager: Escolha de análise desconhecida: ${choice}`);
+                outcomeMessage = "Algo inesperado aconteceu na análise.";
+                break;
+        }
+
+        this.changeSanity(sanityChange);
+
+        // Se uma recusa ocorreu, o cliente simplesmente vai embora.
+        if (choice === 'refuse') {
+            this.uiManager.showOutcomeView(outcomeTitle, outcomeMessage, () => {
+                this.state.analysisChoice = null; // Limpa a escolha
+                this.state.playerSigilChoice = null; // Garante que não há sigilo pendente
+                this.saveGameState();
+                this.advanceToNextClient(); // Avança para o próximo cliente sem minigame
+            });
+        } else if (playerSigilToTattoo) {
+            // Se um sigilo foi selecionado para tatuar (mesmo que corrompido/proibido)
+            this.state.playerSigilChoice = playerSigilToTattoo; // Define o sigilo para o minigame
+            this.uiManager.showOutcomeView(outcomeTitle, outcomeMessage, () => {
+                this.state.analysisChoice = null; // Limpa a escolha
+                this.saveGameState();
+                this.startMinigame(); // Inicia o minigame com o sigilo escolhido
+            });
+        } else {
+            // Caso de fallback, se não houver sigilo para tatuar e não for recusa explícita
+            this.uiManager.showOutcomeView(outcomeTitle, outcomeMessage, () => {
+                this.state.analysisChoice = null;
+                this.saveGameState();
+                this.advanceToNextClient();
+            });
+        }
+    }
 }
 
 // Ponto de entrada principal do jogo.

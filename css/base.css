@@ -216,17 +216,32 @@ body {
 /* Class to apply the pulse animation to the item-book LI element */
 /* This targets the specific book item when it needs to be highlighted */
 #item-book.highlight-pulse {
+        height: 90px;
     animation: pulseHighlight 1.5s infinite ease-in-out;
+    border-radius: 224px;
+    text-align: center;
      /* Ensure it stands out slightly more. The base .item-card:hover
        might add its own transform. This animation adds scale and shadow. */
 }
 /* Class for highlighting the mail item */
 #item-mail.highlight-pulse {
+       height: 90px;
     animation: pulseHighlight 1.5s infinite ease-in-out;
-     /* Ensure it stands out slightly more. The base .item-card:hover
-       might add its own transform. This animation adds scale and shadow. */
+    border-radius: 224px;
+    text-align: center;
 }
 
+#item-mail{
+        background-position: 10px 7px !important;
+}
+
+##item-book{
+        background-position: 10px 7px !important;
+}
+
+#item-workbench{
+        background-position: 10px 7px !important;
+}
 
 /* --- ESTILOS PARA O PAINEL DE DIÁLOGO INTERATIVO --- */
 #dialogue-interaction-panel {
