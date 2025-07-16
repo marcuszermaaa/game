@@ -422,3 +422,43 @@ position: relative;
     font-size: 1.5em;
     margin-bottom: 5px;
 }
+
+/* Estilo para ícones de upgrade na UI principal */
+.upgrade-icon {
+    display: none; /* Escondido por padrão */
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-left: 10px;
+}
+/* Define a imagem específica para o ícone da lupa. */
+#upgrade-lupa-icon {
+    background-image: url('/media/img/icons/lupa_icon.png');
+}
+
+/* Define a imagem específica para o ícone da lâmpada. */
+#upgrade-lamp-icon {
+    background-image: url('/media/img/icons/lamp_icon.png');
+}
+
+/* --- ADICIONE ESTA REGRA --- */
+/* Define a imagem específica para o ícone da munhequeira. */
+#upgrade-brace-icon {
+    background-image: url('/media/img/icons/brace_icon.png'); /* Crie este ícone */
+}
+
+/* --- ADICIONE ESTAS REGRAS --- */
+/* Estilo para a mensagem de feedback de compra */
+#purchase-feedback {
+    margin-top: 20px;
+    padding: 10px;
+    min-height: 40px; /* Garante que o layout não pule quando o texto aparece/desaparece */
+    text-align: center;
+    font-size: 1.1em;
+    font-style: italic;
+    color: #aaeec2; /* Uma cor de "sucesso" */
+    opacity: 0; /* Começa invisível */
+    transition: opacity 0.5s ease-in-out; /* Transição suave para fade-in/fade-out */
+}

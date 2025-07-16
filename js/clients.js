@@ -13,7 +13,7 @@ import { IS_TOUCH_DEVICE, CHARACTER_SPRITE_URLS, CLIENT_TRANSITION_BACKGROUND } 
 // --- IMPORTS DE GERENCIADORES ---
 import { ClientManager } from './managers/ClientManager.js';
 import { DialogueManager } from './managers/DialogueManager.js';
-import { UIManager } from './managers/UIManager.js'; // Nosso novo gerente de UI.
+import { UIManager } from './managers/uiManager.js'; // Nosso novo gerente de UI.
 
 // --- IMPORTS DE UTILIDADES DE ÁUDIO (SE ESTIVEREM EM ARQUIVO SEPARADO) ---
 // import { AudioUtils } from './audioUtils.js';
@@ -92,7 +92,7 @@ class Game {
         if (isNewGameInitiated || !this.state) {
             console.log("Configurando estado inicial para novo jogo...");
             this.state = {
-                sanity: 100, money: 50, day: 1, clientInDay: 1, currentClientIndex: 0,
+                sanity: 100, money: 5000, day: 1, clientInDay: 1, currentClientIndex: 0,
                 playerSigilChoice: null, shakeMultiplier: 1.0, sanityPerClient: 0,
                 purchasedUpgrades: new Set(), tattooFailureChanceModifier: 0,
                 activeMusic: null, maxSanity: 100,

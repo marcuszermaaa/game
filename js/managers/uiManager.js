@@ -1,62 +1,54 @@
 // js/managers/UIManager.js
-// Este gerente é o "Diretor de Arte" do seu jogo. Sua única responsabilidade
-// é manipular o DOM (os elementos HTML da página) para refletir o estado atual do jogo.
-// Ele recebe ordens do GameManager e as traduz em mudanças visuais, como mostrar
-// textos, criar botões, aplicar efeitos e animações.
 
 import { CLIENTS_PER_DAY } from '../constants.js';
 
 export class UIManager {
-   
     constructor(domRefs, gameState, gameInstance) {
         this.dom = domRefs;
         this.gameState = gameState;
         this.game = gameInstance;
+        
+        this.dom.upgradeLupaIcon = document.getElementById('upgrade-lupa-icon');
+        this.dom.upgradeLampIcon = document.getElementById('upgrade-lamp-icon');
+        this.dom.upgradeBraceIcon = document.getElementById('upgrade-brace-icon');
+
         console.log("UIManager inicializado com sucesso.");
     }
 
-    // ===================================================================
-    // --- FUNÇÃO PRIVADA CENTRAL PARA EFEITOS DE SPRITE ---
-    // ===================================================================
-
-    /**
-     * Define a imagem do sprite do personagem e aplica um efeito de FADE-IN.
-     * Esta é a função "mestre" para qualquer mudança no sprite. Usar um método
-     * privado (convenção com '_') garante que a lógica do fade seja consistente.
-     * @param {string} imageUrl - O caminho para a imagem a ser exibida.
-     * @private
-     */
     _setSpriteWithFade(imageUrl) {
         const sprite = this.dom.characterSprite;
-        if (!sprite) return; // Segurança: não faz nada se o elemento não existir.
-
-        // 1. Inicia a animação deixando o sprite transparente.
+        if (!sprite) return; 
         sprite.style.opacity = '0';
-        
-        // 2. Garante que a transição de CSS esteja definida. Pode ser feito no CSS, mas aqui garante o comportamento.
         sprite.style.transition = 'opacity 0.75s ease-in-out';
-        
-        // 3. Define a nova imagem de fundo.
         sprite.style.backgroundImage = `url('${imageUrl}')`;
-        
-        // 4. Garante que o elemento esteja visível na tela.
         sprite.style.display = 'block';
-        
-        // 5. Usa um pequeno timeout para permitir que o navegador processe as mudanças
-        //    (opacity: 0, display: block) antes de iniciar o fade para 1. Isso força a transição a ocorrer.
-        setTimeout(() => {
-            sprite.style.opacity = '1';
-        }, 10);
+        setTimeout(() => { sprite.style.opacity = '1'; }, 10);
+    }
+    
+    updateCoreUIElements(hasUnreadMail) {
+        // Lógica para o ícone da Lupa
+        if (this.dom.upgradeLupaIcon) {
+            this.dom.upgradeLupaIcon.classList.toggle('active', this.gameState.purchasedUpgrades.has('lupa_analise'));
+        }
+
+        // Lógica para o ícone da Lâmpada
+        if (this.dom.upgradeLampIcon) {
+            this.dom.upgradeLampIcon.classList.toggle('active', this.gameState.purchasedUpgrades.has('lamp'));
+        }
+
+        // Lógica para o ícone da Munhequeira
+        if (this.dom.upgradeBraceIcon) {
+            this.dom.upgradeBraceIcon.classList.toggle('active', this.gameState.purchasedUpgrades.has('brace'));
+        }
+
+        // Lógica para a notificação de e-mail
+        if (this.dom.itemMail) {
+            this.dom.itemMail.classList.toggle('highlight-pulse', hasUnreadMail);
+        }
     }
 
-    // ===================================================================
-    // --- MÉTODOS PÚBLICOS QUE USAM O FADE ---
-    // ===================================================================
-
-    /**
-     * Define o sprite de um personagem REAL.
-     * Ele apenas prepara a URL e chama a função mestre do fade.
-     */
+    // ... (O resto do arquivo UIManager.js permanece exatamente o mesmo, sem necessidade de alterações)
+    // Cole o restante do seu código UIManager aqui (updateCharacterSprite, showStartDayView, etc.)
     updateCharacterSprite(client) {
         const shouldShow = client?.portraitUrls?.length > 0;
         if (shouldShow) {
@@ -66,48 +58,33 @@ export class UIManager {
         }
     }
     
-    /**
-     * Mostra uma silhueta genérica de cliente chegando.
-     * Também utiliza a função mestre do fade para consistência.
-     */
     showSilhouetteSprite() {
         const silhouetteImageUrl = '/media/img/background_cliente_sombra.png';
         this._setSpriteWithFade(silhouetteImageUrl);
     }
 
-    /**
-     * Esconde o painel do personagem completamente.
-     */
     hideCharacterSprite() {
         const sprite = this.dom.characterSprite;
         if (sprite) {
             sprite.style.opacity = '0';
-            sprite.style.display = 'none';
+            setTimeout(() => {
+                 sprite.style.display = 'none';
+            }, 750);
         }
     }
-
-    // ===================================================================
-    // --- MÉTODOS DE CONFIGURAÇÃO DE CENAS E UI ---
-    // ===================================================================
     
-    /**
-     * Prepara a interface para um cliente ativo.
-     */
     resetClientInterface() {
         const client = this.game.clientManager.getCurrentClient();
         if (!client) return;
         if (this.dom.dialogueInteractionPanel) this.dom.dialogueInteractionPanel.style.display = 'none';
         if (this.dom.eventClientName) this.dom.eventClientName.textContent = client.name;
         if (this.dom.eventDialogue) this.dom.eventDialogue.textContent = `'${client.problem}'`;
-        this.updateCharacterSprite(client); // Usa a função que já tem o fade.
+        this.updateCharacterSprite(client);
     }
 
-    /**
-     * Configura a UI para os passos do tutorial.
-     */
     setupTutorialUI(tutorialStep) {
         this.clearActionPanel();
-        this.hideCharacterSprite(); // CRÍTICO: Garante que o painel esteja vazio durante o tutorial.
+        this.hideCharacterSprite();
         if (this.dom.dialogueInteractionPanel) this.dom.dialogueInteractionPanel.style.display = 'none';
         this.dom.itemMail?.classList.remove('highlight-pulse');
         this.dom.itemBook?.classList.remove('highlight-pulse');
@@ -123,14 +100,11 @@ export class UIManager {
         }
     }
 
-    /**
-     * Configura a UI para a tela de transição de "início de dia".
-     */
     showStartDayView(startCallback) {
         this.clearActionPanel();
         if (this.dom.dialogueInteractionPanel) this.dom.dialogueInteractionPanel.style.display = 'none';
         
-        this.showSilhouetteSprite(); // Usa a função que já tem o fade.
+        this.showSilhouetteSprite();
 
         if (this.dom.eventClientName) this.dom.eventClientName.textContent = "Um Novo Dia";
         if (this.dom.eventDialogue) this.dom.eventDialogue.textContent = "As brumas da manhã se dissipam. Você ouve o sino da porta tocar, anunciando a chegada de sua primeira alma atormentada do dia.";
@@ -141,9 +115,6 @@ export class UIManager {
         }
     }
 
-    /**
-     * Mostra a tela de resultado após uma ação.
-     */
     showOutcomeView(title, text, nextActionCallback) {
         this.hideCharacterSprite();
         this.clearActionPanel();
@@ -156,9 +127,6 @@ export class UIManager {
         }
     }
 
-    /**
-     * Lógica central para decidir o que exibir no painel de ação.
-     */
     updateActionButtonBasedOnState() {
         if (!this.dom.actionPanel) return;
         const client = this.game.clientManager.getCurrentClient();
@@ -183,9 +151,6 @@ export class UIManager {
         }
     }
 
-    /**
-     * Atualiza todas as estatísticas visíveis na tela.
-     */
     updateStats() {
         if (this.dom.dayStat) this.dom.dayStat.textContent = `Dia: ${this.gameState.day}`;
         if (this.dom.clientStat) this.dom.clientStat.textContent = `Cliente: ${this.gameState.clientInDay}/${CLIENTS_PER_DAY}`;
@@ -196,12 +161,10 @@ export class UIManager {
         }
     }
     
-    /** Limpa o painel de ação. */
     clearActionPanel() {
         if (this.dom.actionPanel) this.dom.actionPanel.innerHTML = '';
     }
 
-    /** Mostra a tela de fim de jogo. */
     showEndGameView(reason, restartCallback) {
         this.hideCharacterSprite();
         this.clearActionPanel();
@@ -215,7 +178,6 @@ export class UIManager {
         }
     }
 
-    /** Mostra o painel de diálogo. */
     displayDialogue(nodeData, client) {
         if (!this.dom.dialogueInteractionPanel || !this.dom.dialogueText || !this.dom.dialogueOptionsContainer) return;
         this.dom.dialogueInteractionPanel.style.display = 'block';
@@ -241,69 +203,8 @@ export class UIManager {
         });
     }
 
-    /** Lida com o fim de um diálogo. */
     handleDialogueEnd() {
         if (this.dom.dialogueInteractionPanel) this.dom.dialogueInteractionPanel.style.display = 'none';
-        this.resetClientInterface();
         this.updateActionButtonBasedOnState();
-
-    }
-
-
-     // ===================================================================
-    // --- NOVA MECÂNICA: Exibição de Upgrades na Bancada ---
-    // ===================================================================
-
-    /**
-     * MECÂNICA: Renderização de Itens Comprados.
-     * Lê a lista de upgrades comprados do `gameState` e cria um elemento `<li>`
-     * para cada um dentro do container `#bancada`. As classes CSS permitem
-     * estilizar e posicionar cada item individualmente.
-     */
-    displayPurchasedUpgrades() {
-        const bancadaEl = this.dom.bancada;
-        // Segurança: Se o elemento #bancada não existir no HTML, a função para.
-        if (!bancadaEl) {
-            console.warn("Elemento #bancada não encontrado no DOM. Upgrades visuais não serão exibidos.");
-            return;
-        }
-
-        // 1. Limpa a bancada antes de adicionar os itens. Isso evita duplicatas
-        //    se a função for chamada várias vezes.
-        bancadaEl.innerHTML = '';
-
-        // 2. Pega a lista (Set) de upgrades comprados do estado do jogo.
-        const purchased = this.gameState.purchasedUpgrades;
-
-        // Segurança: Se nenhum upgrade foi comprado, não faz nada.
-        if (!purchased || purchased.size === 0) {
-            return;
-        }
-
-        // 3. (Opcional, mas boa prática) Usa um DocumentFragment para melhorar a performance.
-        //    Em vez de adicionar cada <li> ao DOM um por um, adicionamos todos a este
-        //    fragmento e depois adicionamos o fragmento ao DOM uma única vez.
-        const fragment = document.createDocumentFragment();
-
-        console.log("Exibindo upgrades comprados:", purchased);
-
-        // 4. Itera sobre cada ID de upgrade comprado.
-        purchased.forEach(upgradeId => {
-            // Cria um novo elemento de lista.
-            const upgradeItem = document.createElement('li');
-            
-            // Adiciona duas classes: uma genérica para estilos comuns e uma específica para o item.
-            // Exemplo: <li class="upgrade-item upgrade-lamp"></li>
-            upgradeItem.className = `upgrade-item upgrade-${upgradeId}`;
-            
-            // Adiciona um 'title' que aparece como uma dica de ferramenta ao passar o mouse.
-            upgradeItem.title = upgradeId.charAt(0).toUpperCase() + upgradeId.slice(1); // Ex: "Lamp"
-            
-            // Adiciona o item ao fragmento.
-            fragment.appendChild(upgradeItem);
-        });
-
-        // 5. Adiciona todos os itens de uma vez só à bancada no DOM.
-        bancadaEl.appendChild(fragment);
     }
 }

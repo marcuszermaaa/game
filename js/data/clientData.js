@@ -3,13 +3,20 @@
 export const CLIENTS = [
    // --- DIA 1 ---
     {
-        id: 'homem_apressado',
-        name: "Um Homem Apressado",
-        day: 2, // <<< MUDANÇA: 'chapter' foi renomeado para 'day'
-        portraitUrls: ["/media/img/p1_a.png", "/media/img/p1_b.png"],
-        problem: "(O Homem Apressado, nervoso, estende um papel sujo.)\nRápido! Não tenho tempo! Preciso deste símbolo. Proteção. Um velho marinheiro me deu o desenho. Pode fazê-lo agora?",
-        request: 's06_corrupted',
-        successPay: 100, failPay: 20, wrongPay: 40,
+      //  id: 'homem_apressado',
+        //name: "Um Homem Apressado",
+        //day: 3, // <<< MUDANÇA: 'chapter' foi renomeado para 'day'
+        //portraitUrls: ["/media/img/p1_a.png", "/media/img/p1_b.png"],
+        //problem: "(O Homem Apressado, nervoso, estende um papel sujo.)\nRápido! Não tenho tempo! Preciso deste símbolo. Proteção. Um velho marinheiro me deu o desenho. Pode fazê-lo agora?",
+      //request: 's06_corrupted',
+       //successPay: 100, failPay: 20, wrongPay: 40,
+           id: 'marcus',
+        name: "Arthur, o Estudante",
+        day: 1, // <<< MUDANÇA
+        portraitUrls: ["/media/img/estudante.png", "/media/img/estudante_perdido.png"],
+        problem: "(Arthur estende o braço, o desenho de uma âncora trêmulo.)\nA maré sobe em minha mente. Abner começou esta âncora para me prender à realidade, mas as linhas estão fracas. Por favor, complete-a.",
+        correctSigil: 's04',
+        successPay: 40, failPay: 0, wrongPay: 20,
     },
     {
         id: 'arthur_estudante',
@@ -52,7 +59,7 @@ export const CLIENTS = [
     {
         id: 'sr_gilman',
         name: "Sr. Gilman",
-        day: 1, // <<< MUDANÇA
+        day: 2, // <<< MUDANÇA
         portraitUrls: ["/media/img/estivador.png"],
         problem: "(Sr. Gilman, desconfiado, fala baixo.)\nCais 7. Um contêiner de Innsmouth. Ouvi arranhões lá dentro. Abner me deu uma âncora para me manter firme. Preciso dela para o meu turno hoje à noite.",
         correctSigil: 's04',
