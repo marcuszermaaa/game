@@ -28,12 +28,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- ALTERAÇÃO ---
     // Corrigido o ID para corresponder ao HTML padrão.
-    const mailContainerElement = document.getElementById('mail-container'); 
+    const mailContainerElement = document.getElementById('mail-container');
     if (!mailContainerElement) {
         // Adicionado um h1 para o caso de o elemento principal não ser encontrado.
         document.body.innerHTML = '<h1>Erro: Container de e-mail não encontrado. Verifique o ID no seu arquivo mail.html.</h1>';
         console.error("Elemento 'mail-container' não encontrado no DOM!");
         return;
+    }
+
+    // --- Elementos do Modal (Adicionados) ---
+    const modalOverlay = document.getElementById('messageModalOverlay');
+    const closeModalButton = document.getElementById('closeModalButton');
+    const modalContentArea = document.getElementById('modalContentArea');
+
+    // --- Funções do Modal (Adicionadas) ---
+    function openMessageModal(title, content) {
+        modalContentArea.innerHTML = `<h2>${title}</h2>${content}`;
+        modalOverlay.style.display = 'flex';
+        modalContentArea.scrollTop = 0; // Reinicia a rolagem do modal
+    }
+
+    function closeMessageModal() {
+        modalOverlay.style.display = 'none';
+    }
+
+    // Atribui evento de clique para fechar o modal (Adicionado)
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', closeMessageModal);
+    }
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (e) => {
+            // Fecha o modal se clicar fora do conteúdo
+            if (e.target === modalOverlay) {
+                closeMessageModal();
+            }
+        });
     }
 
     /**
@@ -73,17 +102,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             mailCard.innerHTML = `
                 <h3>${mail.subject} ${!isMailRead ? '<span class="new-badge">Novo</span>' : ''}</h3>
-                <p>${mail.content.replace(/\n/g, '<br>')}</p>
                 <div class="mail-footer">
                     De: ${mail.sender} | Dia ${mail.receivedDay}
                 </div>
             `;
-            
+
             mailCard.addEventListener('click', () => {
+                // Abre o modal com o conteúdo da carta
+                openMessageModal(mail.subject, mail.content.replace(/\n/g, '<br>'));
+
                 if (isMailRead) return; // Não faz nada se o e-mail já foi lido.
 
                 readMailIds.add(mail.id); // Adiciona ao Set de e-mails lidos.
-                
+
                 // Atualiza visualmente
                 mailCard.classList.remove('unread');
                 mailCard.classList.add('read');
@@ -94,10 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     gameState.tutorialStep = 'read_mail_then_diary';
                     console.log("Tutorial avançado para: read_mail_then_diary");
                 }
-                
-                // --- ALTERAÇÃO ---
-                // A lógica de `window.game` foi removida.
-                // Apenas atualizamos o estado que será salvo.
 
                 console.log(`E-mail ${mail.id} marcado como lido.`);
             });
@@ -113,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         backButton.addEventListener('click', () => {
             // Atualiza o gameState com a lista final de e-mails lidos antes de sair.
             gameState.readMailIds = Array.from(readMailIds);
-            
+
             // Salva o gameState no localStorage.
             localStorage.setItem('gameState', JSON.stringify(gameState));
             console.log("Voltando ao jogo. Estado com e-mails lidos foi salvo.");

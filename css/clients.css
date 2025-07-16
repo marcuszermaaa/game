@@ -328,12 +328,6 @@ position: relative;
     font-size: 1.3em; /* Tamanho da fonte */
 }
 
-/* Estilos para os botões de ação do cliente e análise (herdando de base.css) */
-#action-panel button,
-.dialogue-options button,
-.analysis-choice-btn {
-    /* Estilos herdados de base.css */
-}
 
 /* Estilos para a área de análise de sigilos */
 #analysis-view {

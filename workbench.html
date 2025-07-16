@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesa de Crafting: Sigilos Lovecraftianos</title>
+    <style>
+        /* --- CSS para a Interface do Jogo --- */
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            color: #c084fc; /* Roxo místico */
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px rgba(192, 132, 252, 0.7);
+        }
+
+        .container {
+            background-color: #2a2a4a;
+            border: 2px solid #5d3f8e;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 0 15px rgba(93, 63, 142, 0.5);
+        }
+
+        .section-title {
+            color: #a78bfa;
+            border-bottom: 1px solid #a78bfa;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        #elementosDisponiveis, #tintasDisponiveis {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .item {
+            width: 100px;
+            height: 100px;
+            background-color: #3f3f6c;
+            border: 1px solid #7c68a5;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            padding: 5px;
+            box-sizing: border-box;
+            font-size: 0.85em;
+        }
+
+        .item:hover {
+            background-color: #52528b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .item.selected {
+            border: 2px solid #66ff66; /* Verde para selecionado */
+            box-shadow: 0 0 10px #66ff66;
+            background-color: #4a6a4a; /* Um tom mais escuro quando selecionado */
+        }
+
+        #craftingTable {
+            border: 2px dashed #9d52ff;
+            background-color: #353555;
+            padding: 20px;
+            min-height: 120px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        #craftingTable .item {
+            background-color: #555588;
+            border: 1px solid #a78bfa;
+            cursor: default;
+        }
+
+        #craftingTable .item:hover {
+             transform: none;
+             box-shadow: none;
+        }
+
+        button {
+            background-color: #c084fc;
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.2s, transform 0.1s;
+            display: block;
+            margin: 20px auto 0;
+        }
+
+        button:hover {
+            background-color: #a78bfa;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #resultDisplay {
+            border: 1px solid #7c68a5;
+            background-color: #353555;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #resultDisplay p {
+            margin-bottom: 10px;
+        }
+
+        .result-status {
+            font-weight: bold;
+            font-size: 1.2em;
+            text-transform: uppercase;
+        }
+
+        .status-bom { color: #66ff66; } /* Verde para bom */
+        .status-ruim { color: #ffcc66; } /* Laranja para ruim */
+        .status-corrupto { color: #ff6666; } /* Vermelho para corrupto */
+        .status-neutro { color: #aaaaaa; } /* Cinza para neutro */
+
+        .tooltip {
+            visibility: hidden;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 100%; /* Acima do elemento */
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none; /* Permite clicar através do tooltip */
+        }
+
+        .item:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mesa de Crafting: Sigilos Lovecraftianos</h1>
+
+    <div class="container">
+        <h2 class="section-title">Elementos Arcanos</h2>
+        <div id="elementosDisponiveis">
+            </div>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">Tinta Viva (Um tipo por vez)</h2>
+        <div id="tintasDisponiveis">
+            </div>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">Mesa de Invocação (Max: 3 Elementos + 1 Tinta)</h2>
+        <div id="craftingTable">
+            <p style="color: #bbb; font-style: italic;">Arraste ou clique nos elementos e na tinta para adicioná-los aqui.</p>
+        </div>
+        <button id="craftButton">Infundir Sigilo!</button>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">Resultado da Invocação</h2>
+        <div id="resultDisplay">
+            <p>Aguardando a manifestação das forças cósmicas...</p>
+        </div>
+    </div>
+
+    <script>
+        // --- JavaScript para a Lógica do Jogo ---
+
+        const craftingTable = document.getElementById('craftingTable');
+        const elementosDisponiveisDiv = document.getElementById('elementosDisponiveis');
+        const tintasDisponiveisDiv = document.getElementById('tintasDisponiveis');
+        const craftButton = document.getElementById('craftButton');
+        const resultDisplay = document.getElementById('resultDisplay');
+
+        // Estado atual dos elementos e tinta na mesa
+        let elementosNaMesa = [];
+        let tintaNaMesa = null;
+
+        // --- Definição de Dados do Jogo ---
+        const elementos = {
+            "poeiraEstelar": {
+                afinidade: { bom: 2, ruim: 0, corrupto: 0.5 },
+                descricao: "Brilhos de estrelas mortas, com um resquício de ordem cósmica."
+            },
+            "fragmentoDeCometa": {
+                afinidade: { bom: 1, ruim: 1, corrupto: 1.5 },
+                descricao: "Cacos de corpos celestes errantes, trazem imprevisibilidade."
+            },
+            "seivaDeYggdrasil": {
+                afinidade: { bom: 3, ruim: 0.5, corrupto: 0.1 },
+                descricao: "A essência da Árvore Mundo, pura vitalidade ancestral."
+            },
+            "olhoDeShoggoth": {
+                afinidade: { bom: 0, ruim: 2.5, corrupto: 4 },
+                descricao: "Um órgão pulsante de uma massa amorfa, ecoa o caos primário."
+            },
+            "cristalDeKadath": {
+                afinidade: { bom: 1.5, ruim: 0.5, corrupto: 2.5 },
+                descricao: "Formado nas profundezas oníricas, conecta-se a realidades distorcidas."
+            },
+            "ossoDeProfundo": {
+                afinidade: { bom: 0.5, ruim: 1.8, corrupto: 2.2 },
+                descricao: "Remanescente de uma criatura abissal, porta segredos aquáticos e sombrios."
+            },
+            "póDeSonhos": {
+                afinidade: { bom: 1.8, ruim: 0.2, corrupto: 1 },
+                descricao: "Partículas coletadas de reinos oníricos, podem ser imprevisíveis."
+            }
+        };
+
+        const tintas = {
+            "tintaDeShoggoth": {
+                afinidadeMod: { bom: -1, ruim: 2, corrupto: 3 },
+                descricao: "Pulsante e viscosa, extraída de uma abominação. Amplifica o horror.",
+                color: "#ff6666" // Cor para o display no jogo
+            },
+            "tintaEstelar": {
+                afinidadeMod: { bom: 1.5, ruim: -0.5, corrupto: -0.8 },
+                descricao: "Luminosa e etérea, conjurada da luz das estrelas. Tende ao benevolente.",
+                color: "#66ff66"
+            },
+            "tintaEldritch": {
+                afinidadeMod: { bom: 0.5, ruim: 1.5, corrupto: 2 },
+                descricao: "Uma mescla de pesadelos e sussurros, perverte a realidade.",
+                color: "#c084fc"
+            }
+        };
+
+        // As receitas devem incluir a tinta se ela for um componente essencial
+        const receitas = [
+            {
+                combinacao: ["poeiraEstelar", "seivaDeYggdrasil"],
+                tinta: "tintaEstelar", // Receita que exige uma tinta específica
+                resultado: { tipo: "Amuleto da Proteção Arcana", descricao: "Um amuleto que irradia paz e afasta sombras.", status: "bom" }
+            },
+            {
+                combinacao: ["olhoDeShoggoth", "fragmentoDeCometa"],
+                tinta: "tintaDeShoggoth",
+                resultado: { tipo: "Portal da Aberração", descricao: "Um rasgo na realidade se abre, revelando horrores inimagináveis.", status: "corrupto" }
+            },
+            {
+                combinacao: ["cristalDeKadath", "ossoDeProfundo"],
+                tinta: "tintaEldritch",
+                resultado: { tipo: "Visão dos Abismos", descricao: "A mente vacila diante do que foi revelado, um conhecimento proibido.", status: "ruim" }
+            },
+            // Adicione mais receitas complexas aqui se desejar
+        ];
+
+        // --- Funções de Renderização e Interação ---
+
+        // Renderiza os elementos disponíveis
+        function renderizarItens(container, items, type) {
+            container.innerHTML = '';
+            for (const key in items) {
+                const item = items[key];
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('item');
+                itemDiv.dataset.itemName = key;
+                itemDiv.dataset.itemType = type; // 'elemento' ou 'tinta'
+
+                // Adiciona a imagem ou ícone (exemplo simples com texto)
+                itemDiv.innerHTML = `<span style="font-size: 2em; margin-bottom: 5px;">${type === 'elemento' ? '⚛️' : '💧'}</span>${formatName(key)}<span class="tooltip">${item.descricao}</span>`;
+
+                if (type === 'tinta') {
+                    itemDiv.style.borderColor = item.color; // Mudar a cor da borda para a cor da tinta
+                    itemDiv.style.color = item.color;
+                }
+
+                itemDiv.addEventListener('click', () => {
+                    adicionarOuRemoverDaMesa(key, type);
+                });
+                container.appendChild(itemDiv);
+            }
+        }
+
+        // Adiciona/Remove itens da mesa de crafting
+        function adicionarOuRemoverDaMesa(itemName, itemType) {
+            const itemElement = document.querySelector(`.item[data-item-name="${itemName}"][data-item-type="${itemType}"]`);
+
+            if (itemType === 'elemento') {
+                if (elementosNaMesa.includes(itemName)) {
+                    elementosNaMesa = elementosNaMesa.filter(item => item !== itemName);
+                    itemElement.classList.remove('selected');
+                } else if (elementosNaMesa.length < 3) { // Limite de 3 elementos
+                    elementosNaMesa.push(itemName);
+                    itemElement.classList.add('selected');
+                } else {
+                    alert('Você pode selecionar no máximo 3 elementos.');
+                }
+            } else if (itemType === 'tinta') {
+                if (tintaNaMesa === itemName) {
+                    tintaNaMesa = null;
+                    itemElement.classList.remove('selected');
+                } else {
+                    // Remover seleção da tinta anterior, se houver
+                    if (tintaNaMesa) {
+                        const prevTintaElement = document.querySelector(`.item[data-item-name="${tintaNaMesa}"][data-item-type="tinta"]`);
+                        if (prevTintaElement) prevTintaElement.classList.remove('selected');
+                    }
+                    tintaNaMesa = itemName;
+                    itemElement.classList.add('selected');
+                }
+            }
+            renderizarMesaDeCrafting();
+        }
+
+        // Renderiza os itens atualmente na mesa de crafting
+        function renderizarMesaDeCrafting() {
+            craftingTable.innerHTML = ''; // Limpa a mesa
+
+            if (elementosNaMesa.length === 0 && tintaNaMesa === null) {
+                craftingTable.innerHTML = '<p style="color: #bbb; font-style: italic;">Arraste ou clique nos elementos e na tinta para adicioná-los aqui.</p>';
+                return;
+            }
+
+            // Adiciona elementos
+            elementosNaMesa.forEach(itemName => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('item');
+                itemDiv.dataset.itemName = itemName;
+                itemDiv.dataset.itemType = 'elemento';
+                itemDiv.innerHTML = `<span style="font-size: 2em; margin-bottom: 5px;">⚛️</span>${formatName(itemName)}`;
+                itemDiv.title = elementos[itemName].descricao; // Tooltip simples ao passar o mouse
+                craftingTable.appendChild(itemDiv);
+            });
+
+            // Adiciona tinta
+            if (tintaNaMesa) {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('item');
+                itemDiv.dataset.itemName = tintaNaMesa;
+                itemDiv.dataset.itemType = 'tinta';
+                itemDiv.innerHTML = `<span style="font-size: 2em; margin-bottom: 5px; color: ${tintas[tintaNaMesa].color};">💧</span>${formatName(tintaNaMesa)}`;
+                itemDiv.title = tintas[tintaNaMesa].descricao;
+                itemDiv.style.borderColor = tintas[tintaNaMesa].color;
+                itemDiv.style.color = tintas[tintaNaMesa].color;
+                craftingTable.appendChild(itemDiv);
+            }
+        }
+
+        // Formata nomes (ex: "poeiraEstelar" para "Poeira Estelar")
+        function formatName(name) {
+            return name.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        }
+
+        // --- Lógica Principal do Crafting ---
+        function gerarResultadoGlobal() {
+            let pontuacaoBom = 0;
+            let pontuacaoRuim = 0;
+            let pontuacaoCorrupto = 0;
+
+            // 1. Verificar Receitas Pré-definidas
+            const elementosOrdenados = [...elementosNaMesa].sort();
+            for (const receita of receitas) {
+                const receitaCombinacaoOrdenada = [...receita.combinacao].sort();
+                const tintaMatch = !receita.tinta || receita.tinta === tintaNaMesa; // Verifica se a tinta bate ou se não é exigida
+                if (JSON.stringify(elementosOrdenados) === JSON.stringify(receitaCombinacaoOrdenada) && tintaMatch) {
+                    return receita.resultado;
+                }
+            }
+
+            // 2. Calcular Pontuações com base nas Afinidades dos Elementos
+            for (const elementoNome of elementosNaMesa) {
+                if (elementos[elementoNome]) {
+                    pontuacaoBom += elementos[elementoNome].afinidade.bom;
+                    pontuacaoRuim += elementos[elementoNome].afinidade.ruim;
+                    pontuacaoCorrupto += elementos[elementoNome].afinidade.corrupto;
+                }
+            }
+
+            // 3. Aplicar Modificador da Tinta Viva
+            if (tintaNaMesa && tintas[tintaNaMesa]) {
+                const mod = tintas[tintaNaMesa].afinidadeMod;
+                pontuacaoBom += mod.bom;
+                pontuacaoRuim += mod.ruim;
+                pontuacaoCorrupto += mod.corrupto;
+            }
+
+            // Garante que as pontuações não sejam negativas
+            pontuacaoBom = Math.max(0, pontuacaoBom);
+            pontuacaoRuim = Math.max(0, pontuacaoRuim);
+            pontuacaoCorrupto = Math.max(0, pontuacaoCorrupto);
+
+            // 4. Determinar o Resultado Final
+            let statusFinal = "neutro";
+            let tipoResultado = "Manifestação Desconhecida";
+            let descricaoResultado = "As energias se chocam em um padrão imprevisível.";
+
+            if (pontuacaoBom > pontuacaoRuim && pontuacaoBom > pontuacaoCorrupto) {
+                statusFinal = "bom";
+                tipoResultado = "Bênção Eldritch";
+                descricaoResultado = "Uma energia positiva irradia, trazendo proteção e insights.";
+            } else if (pontuacaoCorrupto > pontuacaoBom && pontuacaoCorrupto > pontuacaoRuim) {
+                statusFinal = "corrupto";
+                tipoResultado = "Aberração Cósmica";
+                descricaoResultado = "A realidade se distorce, e algo de outro plano é despertado. A loucura se aproxima.";
+            } else if (pontuacaoRuim > pontuacaoBom && pontuacaoRuim > pontuacaoCorrupto) {
+                statusFinal = "ruim";
+                tipoResultado = "Maldição Antiga";
+                descricaoResultado = "Um presságio sombrio se abate, o infortúnio se aproxima lentamente.";
+            } else if (pontuacaoBom === pontuacaoRuim && pontuacaoBom > pontuacaoCorrupto) {
+                statusFinal = "neutro"; // Equilíbrio entre bom e ruim
+                tipoResultado = "Equilíbrio Tênue";
+                descricaoResultado = "Um balanço delicado entre a fortuna e o desastre. Um resultado ambíguo.";
+            } else if (pontuacaoCorrupto === pontuacaoRuim && pontuacaoCorrupto > pontuacaoBom) {
+                statusFinal = "corrupto"; // Corrupção forte, mesmo com um toque ruim
+                tipoResultado = "Decadência Inevitável";
+                descricaoResultado = "O sigilo se manifesta com uma presença maligna e decadente.";
+            } else if (pontuacaoBom === pontuacaoCorrupto && pontuacaoBom > pontuacaoRuim) {
+                statusFinal = "neutro"; // Mistura de bom e corrupto (caótico neutro?)
+                tipoResultado = "Caos Ordenado";
+                descricaoResultado = "Uma força paradoxal emerge, perigosa, mas com um toque de beleza estranha.";
+            } else { // Caso de empates ou baixas pontuações em geral
+                statusFinal = "neutro";
+                tipoResultado = "Manifestação Inesperada";
+                descricaoResultado = "As estrelas se alinham de uma forma estranha, gerando um efeito imprevisto.";
+            }
+
+            return { tipo: tipoResultado, descricao: descricaoResultado, status: statusFinal };
+        }
+
+        // --- Event Listeners e Inicialização ---
+        craftButton.addEventListener('click', () => {
+            if (elementosNaMesa.length === 0 && tintaNaMesa === null) {
+                resultDisplay.innerHTML = '<p style="color: #ffcc66;">Selecione pelo menos um elemento ou uma tinta para infundir o sigilo!</p>';
+                return;
+            }
+
+            const resultado = gerarResultadoGlobal();
+            resultDisplay.innerHTML = `
+                <p><strong>Tipo de Manifestação:</strong> ${resultado.tipo}</p>
+                <p><strong>Status Geral:</strong> <span class="result-status status-${resultado.status}">${resultado.status.toUpperCase()}</span></p>
+                <p><strong>Descrição:</strong> ${resultado.descricao}</p>
+            `;
+            
+            // Limpa a mesa após o crafting
+            elementosNaMesa.forEach(itemName => {
+                const elementDiv = document.querySelector(`.item[data-item-name="${itemName}"][data-item-type="elemento"]`);
+                if (elementDiv) elementDiv.classList.remove('selected');
+            });
+            if (tintaNaMesa) {
+                const tintaDiv = document.querySelector(`.item[data-item-name="${tintaNaMesa}"][data-item-type="tinta"]`);
+                if (tintaDiv) tintaDiv.classList.remove('selected');
+            }
+            elementosNaMesa = [];
+            tintaNaMesa = null;
+            renderizarMesaDeCrafting();
+        });
+
+        // Inicializa a interface do jogo
+        renderizarItens(elementosDisponiveisDiv, elementos, 'elemento');
+        renderizarItens(tintasDisponiveisDiv, tintas, 'tinta');
+        renderizarMesaDeCrafting(); // Para exibir a mensagem inicial
+    </script>
+</body>
+</html>

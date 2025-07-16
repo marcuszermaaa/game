@@ -3,33 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartas Recebidas</title>
+    <title>Painel de Mensagens - Diário Ocultista</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Permanent+Marker&family=Roboto+Mono&display=swap" rel="stylesheet">
 
-    <!-- Você pode manter seus links de CSS, eles estão corretos -->
+
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/mail.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- A estrutura do seu HTML está ótima, vamos mantê-la -->
-    <div id="mail-container"> <!-- Mudei o ID para corresponder ao JS que corrigimos -->
-        <h2>Cartas Recebidas</h2>
-        <div id="mail-list-dynamic"> <!-- E um container dinâmico dentro -->
-            <p>Carregando cartas...</p>
+    <div class="message-dashboard">
+        <div class="corner-bottom-left"></div>
+        <div class="corner-bottom-right"></div>
+
+        <div class="left-panel">
+            <div class="panel-section header-section">
+                <h3 class="section-title-handwriting">Diário Oculto</h3>
+                <p class="section-subtitle">
+                    "O conhecimento que espreita nas sombras da razão."
+                </p>
+            </div>
+
+            <div class="left-panel-content">
+                <img src="https://via.placeholder.com/280x200/c0b090/3e2723?text=Selo+Arcano" alt="Selo Arcano" class="left-panel-illustration">
+                <p class="left-panel-text">
+                    Use este diário para acompanhar suas investigações. Cada tomo e anotação pode conter pistas cruciais sobre os mistérios que se desenrolam. Não confie em nada que seus olhos veem, nem em nada que seus ouvidos ouvem...
+                </p>
+                </div>
         </div>
-        <button id="back-to-game-btn">Voltar ao Jogo</button>
+
+        <div class="right-panel">
+            <div class="panel-section lore-list-container">
+                <h3>Tomos Proibidos</h3>
+                <ul class="panel-list lore-list" id="lore-list">
+                    </ul>
+            </div>
+
+            <div class="panel-section mail-container" id="mail-container">
+                <h3>Caixa de Entrada</h3>
+                <ul class="panel-list mail-list" id="mail-list">
+                    <p id="mail-list-dynamic"></p>
+                    </ul>
+            </div>
+        </div>
+           <button id="back-to-game-btn">Voltar ao Jogo</button>
     </div>
 
-    <!--
-        ******************************************************************
-        *                          A GRANDE MUDANÇA É AQUI                 *
-        ******************************************************************
-    -->
-    
-    <!-- A ÚNICA tag de script necessária é a do mail.js! -->
-    <!-- Ele se encarregará de importar os dados de que precisa (MAILS). -->
-    <script src="/js/mail.js" type="module"></script>
+    <div class="modal-overlay" id="messageModalOverlay">
+        <div class="message-modal">
+            <button class="modal-close-button" id="closeModalButton">X</button>
+            <div class="modal-content-area" id="modalContentArea">
+                </div>
+        </div>
+    </div>
 
+    <script type="module" src="./js/managers/loreManager.js"></script>
+    <script type="module" src="./js/mail.js"></script>
+
+ 
 </body>
+
 </html>
