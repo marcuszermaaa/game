@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abner Vance: Interface do Jogo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a; /* Fundo mais escuro */
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden; /* Para evitar scroll principal do body */
+        }
+
+        #game-container {
+            width: 1020px;
+            height: 668px;
+            background-color: #2b2b2b; /* Fundo do container do jogo */
+            border: 2px solid #555;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            display: flex; /* Para organizar menu principal, área de conteúdo e menu lateral */
+            flex-direction: column;
+            position: relative;
+            background-image: url('https://via.placeholder.com/1020x668/2b2b2b/FFFFFF?text=Fundo+Palco'); /* Exemplo de imagem de fundo */
+            background-size: cover;
+            background-position: center;
+            padding-top: 0;
+            overflow: hidden; /* Para garantir que nada saia do container principal */
+        }
+
+        /* --- Menu Principal do Jogo (fixo no topo do game-container) --- */
+        .main-game-menu {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #1a1a1a;
+            padding: 10px 0;
+            border-bottom: 1px solid #444;
+            flex-shrink: 0; /* Não permite que o menu diminua */
+        }
+
+        .main-game-menu a {
+            color: #88c0d0; /* Azul suave para links do menu */
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .main-game-menu a:hover {
+            background-color: #3a3a3a;
+            color: #f0ead6;
+        }
+
+        /* --- Área de Conteúdo Principal e Menu Lateral --- */
+        .main-content-area {
+            display: flex;
+            flex-grow: 1; /* Ocupa o espaço restante */
+            padding: 15px;
+            position: relative;
+        }
+
+        /* Seções de Conteúdo (Crônicas, Inventário, Sigilos, Vínculos) */
+        .content-section {
+            flex-grow: 1;
+            background-color: rgba(51, 51, 51, 0.9); /* Levemente transparente */
+            border: 2px solid #555;
+            padding: 0; /* Removido padding direto para controlar internamente */
+            display: none; /* Esconde todas as seções por padrão */
+            max-width: calc(100% - 250px); /* Espaço para o menu lateral */
+            transition: background-color 0.5s ease; /* Transição para opacidade */
+            display: flex; /* Para que o conteúdo interno possa usar flexbox para scroll */
+            flex-direction: column; /* Conteúdo interno empilhado */
+        }
+
+        .content-section.active {
+            display: flex; /* Mostra a seção ativa */
+            background-color: #333; /* Fundo opaco quando ativo */
+        }
+
+        /* --- Menu de Navegação de Conteúdo (aparece apenas em Vínculos) --- */
+        .content-navigation-menu {
+            display: none; /* Escondido por padrão */
+            justify-content: space-around;
+            align-items: center;
+            background-color: #2a2a2a; /* Ligeiramente diferente para distinguir */
+            padding: 8px 0;
+            border-bottom: 1px solid #555;
+            flex-shrink: 0;
+        }
+
+        .content-navigation-menu.active {
+            display: flex; /* Mostra apenas quando a seção de Vínculos está ativa */
+        }
+
+        .content-navigation-menu a {
+            color: #b48ead; /* Roxo suave para links internos */
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .content-navigation-menu a:hover {
+            background-color: #4a4a4a;
+            color: #f0ead6;
+        }
+
+        /* Wrapper para o conteúdo que terá scroll */
+        .scrollable-content {
+            flex-grow: 1; /* Permite que este div ocupe todo o espaço restante */
+            overflow-y: auto; /* A barra de rolagem vertical aqui! */
+            padding: 25px; /* Adicionado o padding de volta aqui para o conteúdo */
+        }
+
+        /* Estilo da barra de rolagem para as seções de conteúdo */
+        .scrollable-content::-webkit-scrollbar { width: 12px; background-color: #1a1a1a; }
+        .scrollable-content::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); background-color: #1a1a1a; border-radius: 6px; }
+        .scrollable-content::-webkit-scrollbar-thumb { border-radius: 6px; background-color: #4CAF50; border: 2px solid #3e2723; }
+        .scrollable-content::-webkit-scrollbar-corner { background-color: #1a1a1a; }
+        .scrollable-content { scrollbar-width: thin; scrollbar-color: #4CAF50 #1a1a1a; } /* Firefox */
+
+        /* --- Menu Lateral Direito --- */
+        .right-sidebar {
+            width: 200px; /* Largura fixa para a sidebar */
+            background-color: rgba(34, 34, 34, 0.9); /* Levemente transparente */
+            border-left: 1px solid #444;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0; /* Não permite que a sidebar diminua */
+            transition: background-color 0.5s ease; /* Transição para opacidade */
+        }
+
+        /* Fundo opaco para a sidebar quando uma seção de conteúdo está ativa */
+        .content-section.active + .right-sidebar {
+            background-color: #222;
+        }
+
+
+        .avatar-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .avatar-container img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%; /* Círculo para o avatar */
+            border: 3px solid #4CAF50;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.6); /* Brilho verde */
+            object-fit: cover; /* Para garantir que a imagem preencha o círculo */
+        }
+
+        .sanity-bar-container {
+            width: 90%;
+            background-color: #555;
+            border-radius: 10px;
+            height: 20px;
+            margin-bottom: 25px;
+            overflow: hidden; /* Esconde o excesso da barra interna */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .sanity-bar {
+            height: 100%;
+            width: 80%; /* Exemplo: 80% de sanidade */
+            background: linear-gradient(to right, #4CAF50, #8bc34a); /* Gradiente verde */
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.8); /* Brilho verde na barra */
+            transition: width 0.5s ease-in-out;
+        }
+
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 20px; /* Espaço antes do botão de salvar */
+        }
+
+        .sidebar-links a, .sidebar-button {
+            color: #f0ead6;
+            text-decoration: none;
+            background-color: #444;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: 1px solid #666;
+            cursor: pointer; /* Indica que é clicável */
+            -webkit-appearance: none; /* Reset para botões em alguns browsers */
+            -moz-appearance: none;
+            appearance: none;
+            font-size: 1em; /* Garante que o texto do botão seja consistente */
+        }
+
+        .sidebar-links a:hover, .sidebar-button:hover {
+            background-color: #555;
+            transform: translateY(-2px);
+            color: #88c0d0;
+        }
+
+        /* Estilo para o botão de salvar */
+        .save-button {
+            background-color: #d35400; /* Laranja escuro para salvar */
+            border-color: #e67e22;
+        }
+
+        .save-button:hover {
+            background-color: #e67e22;
+            color: #f0ead6;
+        }
+
+
+        /* --- Estilos de Conteúdo --- */
+        h1, h2, h3 {
+            color: #f0ead6;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #555;
+            padding-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+            text-align: justify; /* Justificar o texto para melhor leitura */
+        }
+
+        .mail-content {
+            background-color: #444;
+            border: 1px solid #666;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .mail-content strong {
+            color: #88c0d0;
+        }
+
+        .mail-content em {
+            color: #b48ead;
+        }
+
+        .separator {
+            height: 2px;
+            background-color: #555;
+            margin: 40px 0;
+            border-radius: 1px;
+        }
+
+        /* --- Estilos para Inventário --- */
+        #inventory-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #inventory-section li {
+            background-color: #444;
+            border: 1px solid #666;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column; /* Para nome e descrição em linhas separadas */
+            align-items: flex-start; /* Alinha o texto à esquerda */
+        }
+
+        #inventory-section li span.item-name {
+            color: #f0ead6;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        #inventory-section li span.item-desc {
+            font-size: 0.9em;
+            color: #ccc;
+        }
+
+        /* --- Estilos para Sigilos --- */
+        #sigils-section .scrollable-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            height: 100%; /* Ocupa toda a altura disponível */
+        }
+
+        /* Container para os 3 sigilos no centro */
+        .sigils-grid-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px; /* Espaçamento entre os sigilos */
+            flex-wrap: wrap; /* Permite quebrar linha se não houver espaço */
+        }
+
+        .sigil-box {
+            background-color: #444;
+            border: 2px solid #666;
+            border-radius: 10px;
+            padding: 15px; /* Reduzi um pouco o padding */
+            text-align: center;
+            width: 180px; /* Largura dos boxes de sigilo */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            cursor: pointer; /* Indica que é selecionável */
+            transition: all 0.2s ease-in-out;
+        }
+
+        .sigil-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.7); /* Brilho verde ao passar o mouse */
+        }
+
+        .sigil-box.selected {
+            border-color: #4CAF50; /* Borda verde para sigilo selecionado */
+            box-shadow: 0 0 25px rgba(76, 175, 80, 0.9), 0 0 10px #4CAF50; /* Brilho mais intenso */
+            background-color: #3a3a3a;
+            transform: scale(1.05); /* Levemente maior */
+        }
+
+        .sigil-box img {
+            width: 120px; /* Reduzi o tamanho da imagem */
+            height: 120px;
+            object-fit: contain; /* Para garantir que a imagem se ajuste */
+            margin-bottom: 10px;
+            border: 1px solid #88c0d0;
+            border-radius: 5px;
+            background-color: #2b2b2b;
+        }
+
+        .sigil-box h3 {
+            color: #88c0d0;
+            margin-top: 0;
+            padding-bottom: 5px;
+            border-bottom: 1px dotted #555;
+            font-size: 1.1em; /* Tamanho do título do sigilo */
+        }
+
+        .sigil-box p {
+            font-size: 0.8em; /* Texto menor para descrição */
+            color: #ccc;
+            line-height: 1.4;
+            text-align: center; /* Centralizar texto do sigilo */
+        }
+
+        /* Estilo para áreas ocultas, tornando-as mais transparentes */
+        .main-content-area > .content-section:not(.active) {
+            background-color: rgba(51, 51, 51, 0.4); /* Fundo mais transparente */
+            border-color: rgba(85, 85, 85, 0.4); /* Borda mais transparente */
+            pointer-events: none; /* Desabilita interações com áreas ocultas */
+        }
+        .main-content-area > .content-section:not(.active) .mail-content,
+        .main-content-area > .content-section:not(.active) .sigil-box,
+        .main-content-area > .content-section:not(.active) #inventory-section li {
+            background-color: rgba(68, 68, 68, 0.3); /* Conteúdo interno também mais transparente */
+            border-color: rgba(102, 102, 102, 0.3);
+        }
+        /* Garantir que o scrollbar em áreas inativas não seja tão opaco */
+        .main-content-area > .content-section:not(.active) .scrollable-content::-webkit-scrollbar-thumb {
+            background-color: rgba(76, 175, 80, 0.5); /* Polegar mais transparente */
+        }
+        .main-content-area > .content-section:not(.active) .scrollable-content {
+            scrollbar-color: rgba(76, 175, 80, 0.5) rgba(26, 26, 26, 0.5); /* Firefox */
+        }
+        /* Sidebar quando o conteúdo não é Vínculos (mantém a sidebar menos opaca) */
+        .content-section:not(#characters-section).active + .right-sidebar {
+            background-color: #222; /* Volta a ser opaca se outra seção estiver ativa */
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div class="main-game-menu">
+            <a href="#" data-section="chronicles">Crônicas</a>
+            <a href="#" data-section="inventory">Inventário</a>
+            <a href="#" data-section="sigils">Sigilos</a>
+            <a href="#" data-section="characters">Vínculos</a>
+        </div>
+
+        <div class="main-content-area">
+            <div id="chronicles-section" class="content-section">
+                <div class="scrollable-content">
+                    <h1>Crônicas do Abismo</h1>
+                    <p>Bem-vindo aos registros fragmentados que compõem o conhecimento deste mundo sombrio e misterioso. Aqui, você encontrará os pensamentos de Abner Vance, o criador dos sigilos, e as mensagens que chegam à sua porta, revelando a natureza da sua arte e os perigos que a cercam.</p>
+
+                    <div class="separator"></div>
+
+                    <h2>Diário de Abner Vance</h2>
+                    <h3>Do Diário de Abner - Dia 1</h3>
+                    <p>A tinta... ela não é uma simples mistura. É um Icor. Um sangue doentio que vaza de uma ferida no tecido da realidade, escondida nas profundezas desta cidade. Sinto seus murmúrios em meus ossos.</p>
+
+                    <h3>Do Diário de Abner - Dia 2</h3>
+                    <p>Cada sigilo é uma barreira ou uma chave. Cada linha correta fortalece o Véu. Cada erro... convida o que está do outro lado a olhar mais de perto. A prática é a única mestra aqui.</p>
+
+                    <h3>Do Diário de Abner - Dia 3</h3>
+                    <p>Eles vêm com seus próprios desenhos agora. Imitações, corrupções. Alguns são erros inocentes, frutos de mentes confusas. Outros... outros são sussurros do abismo, tentando enganar o tatuador para que ele mesmo abra a fechadura. Devo ser vigilante.</p>
+
+                    <div class="separator"></div>
+
+                    <h2>Correspondências Recebidas</h2>
+                    <div class="mail-content">
+                        <h3><strong>Assunto:</strong> Um Encontro Estranho</h3>
+                        <p><strong>De:</strong> Abner | <em>Dia 0</em></p>
+                        <p>Caro Tatuador,</p>
+                        <p>Algo perturbador aconteceu. Sinto que as sombras estão se estendendo. Se você receber esta carta, significa que o Véu está mais fino do que eu esperava. Mantenha os olhos abertos. Os sigilos que você desenha... eles são mais do que apenas tinta.</p>
+                    </div>
+
+                    <div class="mail-content">
+                        <h3><strong>Assunto:</strong> Obrigado</h3>
+                        <p><strong>De:</strong> O Pescador Jonas | <em>Dia 1</em></p>
+                        <p>O selo funcionou. Dormi pela primeira vez em semanas. Os sons do mar não me atormentam mais. Obrigado pela sua arte.</p>
+                    </div>
+
+                    <div class="mail-content">
+                        <h3><strong>Assunto:</strong> Um Pedido Urgente</h3>
+                        <p><strong>De:</strong> Arthur, o Estudante | <em>Dia 2</em></p>
+                        <p>Preciso da sua ajuda com um trabalho... As exigências são estranhas, mas a recompensa é alta. Ouvi dizer que você lida com o incomum.</p>
+                    </div>
+
+                    <div class="mail-content">
+                        <h3><strong>Assunto:</strong> Sussurros na Névoa</h3>
+                        <p><strong>De:</strong> Desconhecido | <em>Dia 2</em></p>
+                        <p>Eles dizem que a tinta tem memória. Que os símbolos que você cria ecoam nos planos inferiores. Cuidado com o que você evoca.</p>
+                    </div>
+                    <p style="text-align: center; margin-top: 30px;">Fim dos registros conhecidos.</p>
+                </div>
+            </div>
+
+            <div id="inventory-section" class="content-section">
+                <div class="scrollable-content">
+                    <h2>Inventário</h2>
+                    <p>Aqui estão os itens que você coletou em suas jornadas e os recursos à sua disposição.</p>
+                    <ul>
+                        <li>
+                            <span class="item-name">Frasco de Tinta de Icor</span>
+                            <span class="item-desc">Uma tinta de cor púrpura escura, murmura levemente ao toque. Essencial para criar sigilos.</span>
+                        </li>
+                        <li>
+                            <span class="item-name">Amuleto Quebrado</span>
+                            <span class="item-desc">Um pedaço de metal frio, com marcas desbotadas de um sigilo antigo. Parece inativo.</span>
+                        </li>
+                        <li>
+                            <span class="item-name">Carta Antiga Selada</span>
+                            <span class="item-desc">Uma carta com um selo desconhecido. Conteúdo ainda não lido.</span>
+                        </li>
+                        <li>
+                            <span class="item-name">Ervas Misteriosas (x5)</span>
+                            <span class="item-desc">Folhas escuras com um aroma estranho. Potencialmente úteis para rituais.</span>
+                        </li>
+                        <li>
+                            <span class="item-name">Fragmento de Cristal Obsidiana</span>
+                            <span class="item-desc">Uma lasca de rocha vulcânica que irradia uma energia fria e sutil. Pode ser usada para focar ou amplificar energias.</span>
+                        </li>
+                        <li>
+                            <span class="item-name">Moeda Antiga</span>
+                            <span class="item-desc">Uma moeda de cobre escurecida pelo tempo, com símbolos estranhos gravados. Não parece ter valor monetário comum.</span>
+                        </li>
+                        <li>
+                            <span class="item-name">Mapa Rasgado</span>
+                            <span class="item-desc">Um pedaço de mapa que indica uma área remota da cidade, marcada com um X. O resto está ilegível.</span>
+                        </li>
+                        <li>
+                            <span class="item-name">Pena de Corvo</span>
+                            <span class="item-desc">Uma pena grande e preta, encontrada perto de um local onde o Véu estava particularmente fino. Parece absorver um pouco da sombra.</span>
+                        </li>
+                        <li>
+                            <span class="item-name">Diário em Branco</span>
+                            <span class="item-desc">Um pequeno caderno com páginas vazias. Útil para anotar suas próprias observações.</span>
+                        </li>
+                        <li>
+                            <span class="item-name">Chave Envelhecida</span>
+                            <span class="item-desc">Uma chave de metal enferrujado, sem identificação. Parece antiga e pode abrir algo importante.</span>
+                        </li>
+                    </ul>
+                    <p style="text-align: center; margin-top: 30px;">-- Fim do Inventário --</p>
+                </div>
+            </div>
+
+            <div id="sigils-section" class="content-section active">
+                <div class="scrollable-content">
+                    <h2>Meus Sigilos Conhecidos</h2>
+                    <p>Estes são os sigilos que você aprendeu a desenhar e as suas propriedades. Clique em um sigilo para selecioná-lo.</p>
+                    <div class="sigils-grid-container">
+                        <div class="sigil-box selected" data-sigil-img="https://via.placeholder.com/120x120/4CAF50/FFFFFF?text=Sigilo+1">
+                            <h3>Sigilo da Proteção</h3>
+                            <img src="https://via.placeholder.com/120x120/4CAF50/FFFFFF?text=Sigilo+1" alt="Sigilo da Proteção">
+                            <p>Cria uma barreira etérea que repele influências menores do Véu. Requer foco e uma linha perfeita.</p>
+                        </div>
+                        <div class="sigil-box" data-sigil-img="https://via.placeholder.com/120x120/8bc34a/FFFFFF?text=Sigilo+2">
+                            <h3>Sigilo da Purificação</h3>
+                            <img src="https://via.placeholder.com/120x120/8bc34a/FFFFFF?text=Sigilo+2" alt="Sigilo da Purificação">
+                            <p>Limpa a área de resíduos energéticos. Eficaz contra murmúrios de baixa intensidade.</p>
+                        </div>
+                        <div class="sigil-box" data-sigil-img="https://via.placeholder.com/120x120/b48ead/FFFFFF?text=Sigilo+3">
+                            <h3>Sigilo do Olhar Velado</h3>
+                            <img src="https://via.placeholder.com/120x120/b48ead/FFFFFF?text=Sigilo+3" alt="Sigilo do Olhar Velado">
+                            <p>Permite ver através de pequenas ilusões. Cuidado para não olhar demais no abismo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="characters-section" class="content-section">
+                <div class="content-navigation-menu">
+                    <a href="#" data-content-type="bestiary">Bestiário</a>
+                    <a href="#" data-content-type="diary">Diário de Abner</a>
+                    <a href="#" data-content-type="correspondence">Correspondências</a>
+                    <a href="#" data-content-type="notes">Anotações</a>
+                </div>
+
+                <div class="scrollable-content">
+                    <div id="bestiary-content" class="characters-sub-content active-sub-content">
+                        <h1>Bestiário: Criaturas do Véu</h1>
+                        <p>Aqui você encontrará descrições de algumas das anomalias e entidades que espreitam nas bordas da realidade.</p>
+                        <h3>O Sussurrante das Sombras</h3>
+                        <p>Uma entidade incorpórea que se manifesta como murmúrios e visões periféricas. Não possui forma física, mas sua presença causa calafrios e diminui a sanidade. É atraído por emoções fortes, especialmente medo.</p>
+                        <h3>Os Olhos da Profundeza</h3>
+                        <p>Pequenos orbes de luz fria que flutuam em áreas densas em Icor. Embora inofensivos em si, eles servem como sentinelas para algo maior e desconhecido. Observá-los por muito tempo pode induzir transe.</p>
+                        <div class="separator"></div>
+                        <p style="text-align: center; margin-top: 30px;">-- Fim do Bestiário --</p>
+                    </div>
+
+                    <div id="diary-content" class="characters-sub-content">
+                        <h1>Diário de Abner Vance: Pensamentos Fragmentados</h1>
+                        <h3>Do Diário de Abner - Dia 1</h3>
+                        <p>A tinta... ela não é uma simples mistura. É um Icor. Um sangue doentio que vaza de uma ferida no tecido da realidade, escondida nas profundezas desta cidade. Sinto seus murmúrios em meus ossos.</p>
+
+                        <h3>Do Diário de Abner - Dia 2</h3>
+                        <p>Cada sigilo é uma barreira ou uma chave. Cada linha correta fortalece o Véu. Cada erro... convida o que está do outro lado a olhar mais de perto. A prática é a única mestra aqui.</p>
+
+                        <h3>Do Diário de Abner - Dia 3</h3>
+                        <p>Eles vêm com seus próprios desenhos agora. Imitações, corrupções. Alguns são erros inocentes, frutos de mentes confusas. Outros... outros são sussurros do abismo, tentando enganar o tatuador para que ele mesmo abra a fechadura. Devo ser vigilante.</p>
+                        <div class="separator"></div>
+                        <p style="text-align: center; margin-top: 30px;">Fim dos registros do diário.</p>
+                    </div>
+
+                    <div id="correspondence-content" class="characters-sub-content">
+                        <h1>Correspondências Recebidas: Mensagens do Exterior</h1>
+                        <div class="mail-content">
+                            <h3><strong>Assunto:</strong> Um Encontro Estranho</h3>
+                            <p><strong>De:</strong> Abner | <em>Dia 0</em></p>
+                            <p>Caro Tatuador,</p>
+                            <p>Algo perturbador aconteceu. Sinto que as sombras estão se estendendo. Se você receber esta carta, significa que o Véu está mais fino do que eu esperava. Mantenha os olhos abertos. Os sigilos que você desenha... eles são mais do que apenas tinta.</p>
+                        </div>
+
+                        <div class="mail-content">
+                            <h3><strong>Assunto:</strong> Obrigado</h3>
+                            <p><strong>De:</strong> O Pescador Jonas | <em>Dia 1</em></p>
+                            <p>O selo funcionou. Dormi pela primeira vez em semanas. Os sons do mar não me atormentam mais. Obrigado pela sua arte.</p>
+                        </div>
+
+                        <div class="mail-content">
+                            <h3><strong>Assunto:</strong> Um Pedido Urgente</h3>
+                            <p><strong>De:</strong> Arthur, o Estudante | <em>Dia 2</em></p>
+                            <p>Preciso da sua ajuda com um trabalho... As exigências são estranhas, mas a recompensa é alta. Ouvi dizer que você lida com o incomum.</p>
+                        </div>
+
+                        <div class="mail-content">
+                            <h3><strong>Assunto:</strong> Sussurros na Névoa</h3>
+                            <p><strong>De:</strong> Desconhecido | <em>Dia 2</em></p>
+                            <p>Eles dizem que a tinta tem memória. Que os símbolos que você cria ecoam nos planos inferiores. Cuidado com o que você evoca.</p>
+                        </div>
+                        <p style="text-align: center; margin-top: 30px;">Fim das correspondências.</p>
+                    </div>
+
+                    <div id="notes-content" class="characters-sub-content">
+                        <h1>Minhas Anotações</h1>
+                        <p>Registros pessoais e observações sobre o mundo ao redor.</p>
+                        <div class="mail-content">
+                            <h3>Anotação Rápida - 14/07</h3>
+                            <p>O ar está mais pesado perto do velho farol. A tinta reagiu estranhamente quando passei por lá. Devo investigar.</p>
+                        </div>
+                        <div class="mail-content">
+                            <h3>Pensamento sobre o Véu</h3>
+                            <p>O Véu não é uma parede, mas uma membrana. É porosa. E cada vez que um sigilo é traçado, ele é testado. Uma dança perigosa.</p>
+                        </div>
+                        <p style="text-align: center; margin-top: 30px;">-- Fim das Anotações --</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="right-sidebar">
+                <div class="avatar-container">
+                    <img id="avatar-sigil" src="https://via.placeholder.com/120x120/4CAF50/FFFFFF?text=Sigilo+1" alt="Avatar de Sigilo">
+                </div>
+                <div class="sanity-bar-container">
+                    <div class="sanity-bar" style="width: 80%;"></div> </div>
+                <div class="sidebar-links">
+                    <a href="#" data-section="inventory">Inventário</a>
+                    <a href="#" data-section="sigils">Sigilos</a>
+                    <a href="#" data-section="characters">Vínculos</a>
+                </div>
+                <button class="sidebar-button save-button">Salvar Jogo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainGameMenuLinks = document.querySelectorAll('.main-game-menu a');
+            const contentNavigationMenu = document.querySelector('.content-navigation-menu');
+            const contentNavigationLinks = document.querySelectorAll('.content-navigation-menu a');
+            const sidebarLinks = document.querySelectorAll('.sidebar-links a');
+            const contentSections = document.querySelectorAll('.content-section');
+            const charactersSubContents = document.querySelectorAll('#characters-section .characters-sub-content'); // Sub-conteúdos de Vínculos
+            const sigilBoxes = document.querySelectorAll('.sigil-box');
+            const avatarSigil = document.getElementById('avatar-sigil');
+            const saveButton = document.querySelector('.save-button');
+
+            // Função para mostrar a seção ativa principal (Crônicas, Inventário, Sigilos, Vínculos)
+            function showMainSection(sectionId) {
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+
+                // Esconde/mostra o menu de navegação de conteúdo com base na seção ativa
+                // O menu só aparece se a seção ativa for 'characters-section' (Vínculos)
+                if (sectionId === 'characters-section') {
+                    contentNavigationMenu.classList.add('active');
+                    // Garante que o Bestiário seja o sub-conteúdo ativo ao entrar em Vínculos
+                    showCharactersSubContent('bestiary-content');
+                } else {
+                    contentNavigationMenu.classList.remove('active');
+                }
+            }
+
+            // Função para mostrar o sub-conteúdo ativo dentro da seção de Vínculos
+            function showCharactersSubContent(contentTypeId) {
+                charactersSubContents.forEach(subContent => {
+                    subContent.classList.remove('active-sub-content');
+                });
+                const targetSubContent = document.getElementById(contentTypeId);
+                if (targetSubContent) {
+                    targetSubContent.classList.add('active-sub-content');
+                }
+            }
+
+            // Função para atualizar o avatar do sigilo selecionado
+            function updateAvatarSigil(imgSrc) {
+                avatarSigil.src = imgSrc;
+            }
+
+            // Seleciona o primeiro sigilo por padrão e atualiza o avatar ao carregar
+            function initializeSigils() {
+                const firstSigil = document.querySelector('.sigil-box.selected');
+                if (firstSigil) {
+                    updateAvatarSigil(firstSigil.dataset.sigilImg);
+                }
+            }
+
+            // --- Inicialização ---
+            // Define a seção de Sigilos como ativa ao carregar a página
+            showMainSection('sigils-section');
+            initializeSigils();
+
+
+            // --- Event Listeners ---
+
+            // Event Listeners para o menu principal do jogo
+            mainGameMenuLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const sectionId = event.target.dataset.section + '-section';
+                    showMainSection(sectionId);
+                });
+            });
+
+            // Event Listeners para o menu de navegação de conteúdo (dentro de Vínculos)
+            contentNavigationLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const contentTypeId = event.target.dataset.contentType + '-content';
+                    showCharactersSubContent(contentTypeId);
+                });
+            });
+
+            // Event Listeners para o menu lateral
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const sectionId = event.target.dataset.section + '-section';
+                    showMainSection(sectionId);
+                });
+            });
+
+            // Event Listener para seleção de sigilo
+            sigilBoxes.forEach(box => {
+                box.addEventListener('click', () => {
+                    sigilBoxes.forEach(b => b.classList.remove('selected'));
+                    box.classList.add('selected');
+                    updateAvatarSigil(box.dataset.sigilImg);
+                });
+            });
+
+            // Event Listener para o botão Salvar Jogo
+            saveButton.addEventListener('click', () => {
+                alert('Jogo salvo com sucesso! (Funcionalidade de salvar ainda não implementada)');
+                // Aqui você adicionaria a lógica real para salvar o estado do jogo
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,93 +1,326 @@
-/* css/journal.css - Estilos para a página do Diário */
+/* css/journal.css - ESTILOS ESPECÍFICOS PARA A PÁGINA DO GRIMÓRIO */
 
-/* Container principal da view do Diário */
-#journal-view-container {
-    padding: 30px; /* Espaçamento interno */
-    max-width: 800px; /* Largura máxima da view */
-    width: 90%; /* Largura responsiva */
-    display: flex; /* Usa flexbox para organizar os elementos */
-    flex-direction: column; /* Organiza os elementos em coluna */
-    align-items: center; /* Centraliza os elementos horizontalmente */
-    justify-content: center; /* Centraliza os elementos verticalmente */
+/* Container principal que simula o livro aberto */
+#journal-book {
+    width: 95vw; /* Ocupa quase toda a largura da tela */
+    max-width: 1400px; /* Limite máximo para telas muito grandes */
+    height: 90vh; /* Ocupa a maior parte da altura */
+    max-height: 800px; /* Limite de altura */
+    background-color: #2c2a2a; /* Cor de fundo interna do livro */
+    background-image: url('/media/img/paper_texture.jpg'); /* Textura de papel envelhecido */
+    border: 3px solid #4a3f35; /* Borda de "couro" */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7); /* Sombra para dar profundidade e destacar da página */
+    display: flex; /* Usa flexbox para criar as duas páginas lado a lado */
+    padding: 20px;
 }
 
-/* Título principal da página do Diário */
-#journal-view-container h2 {
-    color: var(--header-color); /* Cor do título definida em base.css */
-    font-family: 'Special Elite', cursive; /* Fonte estilizada */
-    font-size: 2.2em; /* Tamanho da fonte grande */
-    margin-bottom: 15px; /* Margem inferior */
+/* --- Painel Esquerdo (Fixo) --- */
+.grimorio-left-panel {
+    flex-basis: 350px; /* Largura fixa para o painel esquerdo */
+    flex-shrink: 0; /* Impede que o painel encolha */
+    padding: 25px;
+    border-right: 2px solid #5a5a5a; /* Simula a dobra central do livro */
+    display: flex;
+    flex-direction: column; /* Organiza os itens verticalmente */
+    text-align: center;
 }
 
-/* Parágrafos de texto na página do Diário */
-#journal-view-container p {
-    font-size: 1.1em;
-    color: var(--text-color); /* Cor do texto definida em base.css */
-}
-
-/* Grade que exibe os cards de sigilo */
-#journal-grid {
-    display: grid; /* Usa CSS Grid para layout responsivo */
-    /* Cria colunas com no mínimo 180px de largura, e expandindo para preencher o espaço disponível */
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px; /* Espaço entre os cards */
-    margin-top: 20px;
+.grimorio-illustration img {
+    width: 80%;
+    max-width: 200px;
+    border-radius: 50%;
+    border: 4px solid #4a3f35;
     margin-bottom: 20px;
-    max-height: 350px; /* Altura máxima para a grade, com scroll se necessário */
-    overflow-y: auto; /* Adiciona barra de rolagem vertical se o conteúdo exceder a altura máxima */
-    padding-right: 10px; /* Espaço para a barra de rolagem */
 }
 
-/* Estilização da barra de rolagem para navegadores WebKit (Chrome, Safari) */
-#journal-grid::-webkit-scrollbar {
-    width: 8px; /* Largura da barra de rolagem */
-}
-#journal-grid::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.2); /* Cor de fundo da trilha da barra de rolagem */
-    border-radius: 4px; /* Bordas arredondadas para a trilha */
-}
-#journal-grid::-webkit-scrollbar-thumb {
-    background: var(--border-color); /* Cor da alça da barra de rolagem */
-    border-radius: 4px; /* Bordas arredondadas para a alça */
+.grimorio-title {
+    font-size: 2.5em;
+    margin-bottom: 5px;
 }
 
-/* Estilos para os cards de sigilo no diário */
+.grimorio-subtitle {
+    font-size: 1.2em;
+    color: #a4a191;
+    border-bottom: none;
+    margin-bottom: 30px;
+}
+
+/* --- Abas de Navegação --- */
+.grimorio-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaço entre as abas */
+    margin-bottom: auto; /* Empurra o status para o final */
+}
+
+.tab-button {
+    width: 100%;
+    background: none; /* Fundo transparente */
+    border: 1px solid #5a5a5a;
+    color: #a4a191;
+    text-align: left;
+    padding: 12px 20px;
+    box-shadow: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.tab-button:hover {
+    background-color: rgba(243, 209, 121, 0.1);
+    color: #f3d179;
+    transform: none; /* Remove o efeito de elevação para as abas */
+}
+
+.tab-button.active {
+    background-color: #f3d179;
+    color: #1a1a1a;
+    font-weight: bold;
+    border-color: #f3d179;
+}
+
+/* --- Status do Jogador (Sanidade) --- */
+.journal-status {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #5a5a5a;
+}
+
+.status-item {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.2em;
+    color: #a4a191;
+}
+
+#journal-sanity-value {
+    color: #f3d179;
+    font-weight: bold;
+}
+
+/* --- Painel Direito (Conteúdo Dinâmico) --- */
+.grimorio-right-panel {
+    flex-grow: 1; /* Ocupa todo o espaço restante */
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Necessário para posicionar os botões de navegação */
+}
+
+#dynamic-content-area {
+    flex-grow: 1; /* Faz esta área ocupar todo o espaço vertical disponível */
+    overflow-y: auto; /* Adiciona uma barra de rolagem se o conteúdo for muito grande */
+    padding-right: 15px; /* Espaço para a barra de rolagem */
+}
+
+/* --- Grade de Sigilos --- */
+.sigil-grid {
+    display: grid;
+    /* Cria colunas responsivas: no mínimo 220px de largura, preenchendo o espaço disponível */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
 .sigil-card {
-    border: 1px solid var(--border-color); /* Borda padrão */
-    padding: 15px; /* Espaçamento interno */
-    background-color: var(--panel-bg-color); /* Background do painel definido em base.css */
-    cursor: pointer; /* Indica que o elemento é clicável */
-    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transições suaves para interações */
-    border-radius: 5px; /* Bordas arredondadas */
-    text-align: center; /* Centraliza o texto dentro do card */
-    display: flex; /* Usa flexbox para organizar o conteúdo interno */
-    flex-direction: column; /* Organiza o conteúdo em coluna */
-    justify-content: center; /* Centraliza o conteúdo verticalmente */
-    align-items: center; /* Centraliza o conteúdo horizontalmente */
-    min-height: 120px; /* Garante uma altura mínima para todos os cards */
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 2px solid #5a5a5a;
+    padding: 15px;
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    position: relative;
 }
 
-/* Efeito hover para os cards de sigilo */
 .sigil-card:hover {
-    transform: scale(1.03); /* Efeito de zoom leve */
-    box-shadow: 0 0 15px rgba(164, 161, 145, 0.2); /* Sombra suave */
-    border-color: var(--header-color); /* Cor da borda ao passar o mouse */
+    border-color: #f3d179;
+    box-shadow: 0 0 15px rgba(243, 209, 121, 0.2);
 }
 
-/* Título dentro dos cards de sigilo */
-.sigil-card h3 {
-    margin: 0; /* Remove margem padrão */
-    font-family: 'Special Elite', cursive; /* Fonte estilizada para títulos */
-    color: var(--header-color); /* Cor do título definida em base.css */
-    font-size: 1.1em; /* Tamanho da fonte */
-    word-wrap: break-word; /* Quebra palavras longas que não cabem na linha */
-    hyphens: auto; /* Hifenização automática para melhor quebra de linha */
+.sigil-card.selected {
+    border-color: #ff5757; /* Cor de destaque para o sigilo selecionado */
+    box-shadow: 0 0 20px rgba(255, 87, 87, 0.5);
 }
 
-/* Botão "Voltar ao Jogo" */
+.sigil-name {
+    font-size: 1.2em;
+    text-align: center;
+    border-bottom: 1px solid #5a5a5a;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    color: #f3d179;
+}
+
+.sigil-drawing-area {
+    width: 100%;
+    height: 150px;
+    position: relative;
+    margin: 10px 0;
+}
+
+.sigil-lore {
+    font-size: 0.9em;
+    font-style: italic;
+    color: #b0b0b0;
+    margin-top: 10px;
+}
+
+.sigil-type-indicator {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-family: 'Special Elite', cursive;
+    font-size: 0.8em;
+    padding: 3px 6px;
+    background-color: #1a1a1a;
+    border-radius: 3px;
+}
+
+/* Cores diferentes para tipos de sigilo */
+.type-safe .sigil-type-indicator { color: #85c285; }
+.type-corrupted .sigil-type-indicator { color: #e0b0ff; }
+.type-prohibited .sigil-type-indicator { color: #ff6e6e; }
+
+/* --- Navegação e Botões de Ação --- */
+.content-navigation {
+    display: flex;
+    justify-content: space-between; /* Espaça os botões */
+    align-items: center;
+    padding: 15px 0;
+    margin-top: 15px;
+    border-top: 1px solid #5a5a5a;
+}
+
 #back-to-game-btn {
-    margin-top: 20px; /* Margem superior */
-    width: auto; /* Largura automática para caber o texto */
-    max-width: none; /* Remove a limitação de largura padrão */
-    padding: 10px 20px; /* Espaçamento interno */
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    font-size: 1.2em;
+}
+
+/* --- Estilos para a Aba de Artefatos --- */
+.artefact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.artefact-entry {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-left: 4px solid #a4a191;
+    padding: 15px 20px;
+}
+
+.artefact-name {
+    color: #f3d179;
+    font-size: 1.3em;
+    margin-bottom: 5px;
+    border-bottom: none;
+}
+
+.artefact-description {
+    font-size: 1em;
+    color: #c7bda0;
+}
+
+/* --- Estilos para a Aba de Bestiário --- */
+.bestiary-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.bestiary-card {
+    display: flex;
+    gap: 20px;
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    border: 1px solid #4a3f35;
+}
+
+.bestiary-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+    border: 2px solid #5a5a5a;
+    flex-shrink: 0; /* Impede que a imagem encolha */
+}
+
+.bestiary-name {
+    color: #ff6e6e; /* Cor vermelha para destacar o perigo */
+    font-size: 1.4em;
+    border-bottom: 1px solid #5a5a5a;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.bestiary-description {
+    font-size: 1em;
+}
+
+
+
+/* --- Estilos para a Aba de Crônicas --- */
+
+.chronicles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chronicle-entry {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid #4a3f35;
+    border-left: 5px solid #f3d179; /* Borda de destaque dourada */
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.chronicle-header {
+    font-family: 'Special Elite', cursive;
+    color: #f3d179;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #5a5a5a;
+}
+
+.chronicle-details {
+    display: grid;
+    /* Cria duas colunas para os detalhes, otimizando o espaço */
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-size: 0.9em;
+    color: #a4a191;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+
+.detail-value {
+    font-size: 1.1em;
+    color: #e0e0e0;
+    font-weight: bold;
+}
+
+/* Estilos para valores positivos (dinheiro, sanidade) */
+.detail-value.positive {
+    color: #a3d9a5; /* Verde claro */
+}
+
+/* Estilos para valores negativos (perda de sanidade) */
+.detail-value.negative {
+    color: #ff8a8a; /* Vermelho claro */
+}
+
+/* Estilos para o status da carta */
+.mail-status.has-mail {
+    color: #87cefa; /* Azul claro para indicar correspondência */
+}
+
+.mail-status.no-mail {
+    color: #888;
+    font-style: italic;
 }

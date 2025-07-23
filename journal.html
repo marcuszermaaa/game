@@ -3,24 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diário de Abner</title>
+    <title>Grimório do Tatuador</title>
+
+    <!-- Folhas de Estilo -->
     <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/journal.css"> <!-- O CSS específico do diário -->
+    <!-- O CSS específico para esta página, que estiliza a aparência do livro, abas, etc. -->
+    <link rel="stylesheet" href="/css/journal.css">
+    
+    <!-- Fontes do Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="journal-view-container">
-        <h2>O Diário de Abner</h2>
-        <p>Encontre o sigilo que corresponde à aflição do cliente.</p>
-        <div id="journal-grid">
-            <!-- Os cards de sigilo serão carregados aqui pelo journal.js -->
+    <!--
+      Container principal que envolve todo o conteúdo, estilizado para parecer um livro.
+      O JavaScript usará o ID 'journal-book' como ponto de referência principal.
+    -->
+    <div id="journal-book">
+
+        <!-- ============================================= -->
+        <!-- PÁGINA ESQUERDA (FIXA) - CAPA E ÍNDICE/TABS   -->
+        <!-- ============================================= -->
+        <div class="grimorio-left-panel">
+            <div class="grimorio-illustration">
+                <!-- Uma ilustração para dar ambientação à "capa" do livro. -->
+                <img src="/media/img/journal_cover_art.png" alt="Capa do Grimório">
+            </div>
+            <h2 class="grimorio-title">Grimório Arcano</h2>
+            <h3 class="grimorio-subtitle">Compêndio de Abner</h3>
+
+            <!--
+              Container para as abas de navegação.
+              O JavaScript irá ouvir cliques nos botões dentro desta div.
+              O atributo 'data-tab' é usado pelo JS para saber qual aba foi clicada.
+            -->
+            <div class="grimorio-tabs">
+                <button class="tab-button active" data-tab="simbolos">Símbolos</button>
+                <button class="tab-button" data-tab="bestiario">Bestiário</button>
+                <button class="tab-button" data-tab="cronicas">Crônicas</button>
+                <button class="tab-button" data-tab="artefatos">Artefatos</button>
+                <button class="tab-button" data-tab="anotacoes">Anotações</button>
+            </div>
+
+            <!-- Área para exibir status do jogador, como a sanidade. -->
+            <div class="journal-status">
+                <div class="status-item sanity-status">
+                    <span>Sanidade:</span>
+                    <!-- O JavaScript procurará este ID para atualizar o valor da sanidade. -->
+                    <span id="journal-sanity-value">--</span>
+                </div>
+                <!-- Outros status (ex: dinheiro, dia) poderiam ser adicionados aqui. -->
+            </div>
         </div>
-        <button id="back-to-game-btn">Voltar ao Jogo</button>
+
+        <!-- ============================================= -->
+        <!-- PÁGINA DIREITA (DINÂMICA) - CONTEÚDO          -->
+        <!-- ============================================= -->
+        <div class="grimorio-right-panel">
+            <!--
+              ÁREA DE CONTEÚDO PRINCIPAL
+              Este é o container mais importante para o JavaScript.
+              O JournalUIManager irá limpar e preencher esta div com o conteúdo da aba selecionada.
+            -->
+            <div id="dynamic-content-area">
+                <!-- O conteúdo (grade de sigilos, lista de crônicas, etc.) será carregado aqui dinamicamente. -->
+            </div>
+
+            <!--
+              NAVEGAÇÃO E AÇÕES
+              Container para os botões que controlam o conteúdo da página direita.
+            -->
+            <div class="content-navigation">
+                <!-- Botão para ir para a página anterior. Começa escondido. -->
+                <button id="prev-content-btn" class="nav-button" style="display: none;">< Anterior</button>
+
+                <!-- Botão para selecionar o sigilo. Fica escondido até um sigilo ser clicado. -->
+                <button id="select-sigil-btn" style="display: none;">Selecionar Sigilo</button>
+                
+                <!-- Botão para ir para a próxima página. Começa escondido. -->
+                <button id="next-content-btn" class="nav-button" style="display: none;">Próxima ></button>
+            </div>
+            
+            <!-- Botão fixo para voltar à tela principal do jogo. -->
+            <button id="back-to-game-btn">Voltar ao Estúdio</button>
+        </div>
+
     </div>
 
     <!--
-      O ÚNICO SCRIPT NECESSÁRIO.
-      Ele cuidará de importar os dados de sigilos por conta própria.
+      CARREGAMENTO DO SCRIPT
+      Este é o único script que o HTML precisa conhecer.
+      Ele é do tipo "module", o que permite que ele use 'import' para carregar os outros scripts
+      (como journalManager.js e journalUIManager.js) de que precisa.
     -->
     <script src="/js/journal.js" type="module"></script>
 </body>

@@ -3,7 +3,7 @@
 /* Container principal da view da fase noturna */
 #night-view-container {
     padding: 30px; /* Espaçamento interno */
-    max-width: 800px; /* Largura máxima da view */
+    max-width: 1240px; /* Largura máxima da view */
     width: 90%; /* Largura responsiva */
     display: flex; /* Usa flexbox para organizar os elementos */
     flex-direction: column; /* Organiza os elementos em coluna */

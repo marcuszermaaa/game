@@ -49,3 +49,6 @@ export const CLIENTS_PER_DAY = 3;
 
 // --- OUTRAS CONSTANTES GLOBAIS GENÉRICAS PODEM SER ADICIONADAS AQUI ---
 // Exemplo: const GAME_TITLE = "The Ink & Sigil";
+
+export const STARTING_INK_PER_DAY = 1;
+export const MAX_INK = 3;

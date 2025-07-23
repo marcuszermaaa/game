@@ -46,7 +46,7 @@ body {
 
 /* Painel do personagem (lado esquerdo) */
 #character-panel {
-    width: 295px; /* Largura fixa */
+    width: 285px; /* Largura fixa */
     height: 511px; /* Altura fixa */
     padding: 3px; /* Pequeno padding interno */
     padding-top: 3px;
@@ -54,7 +54,7 @@ body {
 }
 
 /* Sprite/imagem do personagem */
-#character-sprite {
+.character-sprite {
     /* background-image: url(/media/img/p1.png); /* Originalmente comentado */
     background-image: url(/media/img/background_cliente_sombra.png); /* Imagem substituída */
     background-size: cover; /* Faz a imagem cobrir todo o elemento */
@@ -63,7 +63,12 @@ body {
     height: 565px; /* Altura definida */
 
     /* Propriedades comentadas:    transform: translateX(-50%); /* Ajuste fino para centralização */
-    transition: background-image 0.2s ease-in-out, background-position 0.2s ease-in-out; /* Transição suave */
+    transition: opacity 0.75s ease-in-out; /* Mude a transição para opacidade */
+     /* NOVO: Posicionamento absoluto para sobrepô-los */
+    position: absolute;
+
+    left: 0;
+    opacity: 0; /* Por padrão, ambos começam invisíveis */
 }
 
 /* Classe para aplicar um efeito de glitch ao retrato do personagem */
@@ -74,18 +79,19 @@ body {
 
 /* Painel central que exibe eventos e diálogos */
 #event-container {
-    flex-grow: 1; /* Permite que este container ocupe o espaço restante */
-    display: flex;
-    flex-direction: column; /* Organiza os elementos internos em coluna */
-    position: relative; /* Necessário para posicionamento absoluto de filhos */
-    overflow: hidden; /* Esconde qualquer conteúdo que exceda os limites */
-    align-items: center; /* Centraliza os itens horizontalmente */
-    background-image: url(/media/img/content.png); /* Imagem de background para o painel */
-    background-repeat: no-repeat; /* Evita repetição */
-    max-width: 381px; /* Largura máxima */
-    height: 468px; /* Altura fixa */
-    background-position-x: 12px; /* Posição horizontal do background */
-    padding: 25px; /* Espaçamento interno */
+    flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  align-items: center;
+  background-image: url(/media/img/content.png);
+  background-repeat: no-repeat;
+  max-width: 390px;
+  height: 481px;
+  background-position-x: 12px;
+  padding: 36px;
+  padding-right: 21px;
 }
 
 /* Div que contém o conteúdo principal do diálogo/evento */
@@ -102,7 +108,7 @@ body {
     flex-direction: column; /* Organiza os elementos do cabeçalho em coluna */
     align-items: center; /* Centraliza os itens */
     text-align: center;
-    font-family: 'Special Elite', cursive; /* Fonte estilizada */
+    font-family: 'Cormorant Unicase'; /* Fonte estilizada */
     font-size: 12px; /* Tamanho da fonte */
     margin-bottom: 0px; /* Remove margem inferior */
     padding-top: 14%; /* Espaçamento superior */
@@ -136,13 +142,27 @@ position: relative;
 
 /* Nome do personagem/evento no cabeçalho */
 #event-header h2 {
-    font-size: 1.5em; /* Tamanho da fonte grande */
-    color: var(--header-color); /* Cor definida em base.css */
-    margin: 0; /* Remove margem */
-    width: 222px; /* Largura definida */
-    text-align: left; /* Alinha o título à esquerda */
-    padding-left: 5%;
+ font-size: 1.7em;
+  color: var(--header-color);
+  margin: 0;
+  width: 88%;
+  text-align: center;
+  padding-left: 5%;
 }
+
+#event-header h2::after {
+content: "";
+  background-image: url('../media/img/icons/hr.gif');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-width: 3px;
+  height: 10px;
+  margin-left: 1%;
+  display: inline-block;
+  width: 67%;
+  z-index: 5;
+        }
 
 /* Área que contém o texto do diálogo */
 #event-text-area {
@@ -159,8 +179,15 @@ position: relative;
     text-align: left; /* Alinha o texto à esquerda */
     padding-top: 12px; /* Espaçamento superior */
     color: papayawhip; /* Cor do texto */
-        padding-left: 5%;
+
+  /* --- ADICIONE ESTA LINHA PARA O BRILHO NA FONTE --- */
+    text-shadow: 0 0 7px rgba(255, 239, 213, 0.7); /* Efeito de brilho sutil */
+    
+    /* A transição agora pode ser para o text-shadow se você planeja mudá-lo dinamicamente */
+    transition: text-shadow 0.3s ease-in-out;
 }
+
+
 
 /* Estilos para parágrafos dentro do diálogo */
 #event-dialogue p {
@@ -193,8 +220,8 @@ position: relative;
     list-style: none;
     text-align: center;
     float: inline-end;
-    width: 80px; /* Largura da carta */
-    height: 83px; /* Altura da carta */
+    min-width: 80px;
+    min-height: 80px;
     margin-right: 33px; /* Margem à direita */
     padding-top: 0px;
     display: block;
@@ -205,10 +232,12 @@ position: relative;
 
 /* Classe para cada carta de item */
 .item-card {
-  width: 80px !important;
-    height: 83px; /* Altura */
+    min-width: 80px !important; /* Largura mínima */
+    height: 80px; /* Altura fixa */
+    max-height: 80px !important; /* Altura máxima */
+    background-position: left bottom; /* Posição do sprite da carta */
     background-image: url(/media/img/cards_s.png); /* Sprite das cartas */
- width: 80px !important;
+ 
     background-repeat: no-repeat;
     background-size: auto; /* Essencial para sprites, mantém a proporção */
     cursor: pointer; /* Indica interatividade */
@@ -217,45 +246,58 @@ position: relative;
 /* Efeito hover para as cartas de item */
 .item-card:hover {
     transform: translateY(-10px); /* Efeito de elevação */
+        min-width: 80px !important; /* Largura mínima */
+    height: 80px; /* Altura fixa */
+    max-height: 80px !important; /* Altura máxima */
 }
 
 /* Ajustes de posição de background para cartas específicas */
 #item-ink {
-    background-position: -0px 9px !important; /* Usa !important para sobrescrever */
+    background-position: -100px 9px !important; /* Usa !important para sobrescrever */
+        min-width: 80px !important; /* Largura mínima */
+    height: 80px; /* Altura fixa */
+    max-height: 80px !important; /* Altura máxima */
 }
 #item-book {
-    background-position: -206px 9px !important;
+    background-position: -95px 9px !important;
+        min-width: 80px !important; /* Largura mínima */
+    height: 80px; /* Altura fixa */
+    max-height: 80px !important; /* Altura máxima */
 }
 #item-workbench {
-    background-position: -206px 9px !important; /* Parece ser o mesmo sprite do livro */
+    background-position: 15px 8px !important;
+        min-width: 80px !important; /* Largura mínima */
+    height: 80px; /* Altura fixa */
+    max-height: 80px !important; /* Altura máxima */
 }
 
 /* Painel de ação (lado direito) */
-#side-bar{
-     
-    width: 25%; /* Largura relativa ao container pai */
-    min-width: 150px; /* Largura mínima */
+/* Nova div pai para side-bar e mesa */
+#right-panel-container {
+
     display: flex;
-    flex-direction: column; /* Organiza os elementos internos em coluna */
-    justify-content: center; /* Centraliza o conteúdo verticalmente */
-    align-items: center; /* Centraliza o conteúdo horizontalmente */
-    padding: 20px; /* Espaçamento interno */
+    flex-direction: column; /* Empilha os filhos (side-bar) verticalmente */
+    width: 25%;
+    min-width: 231px; /* Largura mínima para garantir que o conteúdo caiba */
+    padding: 20px;
     box-sizing: border-box;
-    z-index: 1; /* Fica acima do background, no mesmo nível do painel de evento */
+
 }
 
-#action-panel {
-
-    width: 300px; /* Largura relativa ao container pai */
-    min-width: 150px; /* Largura mínima */
+/* Painel de ação (lado direito) - Agora filho de #right-panel-container */
+#side-bar {
     display: flex;
-    flex-direction: column; /* Organiza os elementos internos em coluna */
-    justify-content: center; /* Centraliza o conteúdo verticalmente */
-    align-items: center; /* Centraliza o conteúdo horizontalmente */
-    padding: 20px; /* Espaçamento interno */
-    box-sizing: border-box;
-    z-index: 1; /* Fica acima do background, no mesmo nível do painel de evento */
+    flex-direction: column; /* Empilha os painéis e a mesa verticalmente */
+    align-items: center;    /* Centraliza os painéis horizontalmente */
+    width: 100%;
+    flex-grow: 1;           /* ESSENCIAL: Faz a side-bar crescer para preencher o espaço */
+    position: relative;     /* Adicionado para ser um contexto de posicionamento */
 }
+
+
+
+
+
 
 /* Barra de status inferior */
 #status-bar {
@@ -313,10 +355,6 @@ position: relative;
     font-family: monospace; /* Fonte monoespaçada */
 }
 
-/* Estilos para as views sobrepostas (Diário, Outcome, Analysis) */
-#main-view-dynamic .view {
-    /* Estilos definidos em base.css para views genéricas */
-}
 
 /* Estilos para os cards no Diário */
 .sigil-card {
@@ -432,64 +470,35 @@ position: relative;
 }
 
 /* Estilo para ícones de upgrade na UI principal */
-#mesa{
-   /*background-color: blue;*/
-  width: 300px;
-  height: 100px;
-
-  padding-top: 66%;
-
-
+#mesa {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 80px;
+    margin-top: auto; /* A MÁGICA: Em um flex container vertical, isso empurra a mesa para o fundo. */
+    padding: 10px 0;
+    box-sizing: border-box;
 }
 .upgrade-icon {
     display: none; /* Escondido por padrão */
-
-    z-index: 3;
- 
+       width: 98px;
+    height: 157px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
+
 .upgrade-icon.active {
-    display: inline-block; /* Escondido por padrão */
-
-    z-index: 3;
- 
-}
-/* Define a imagem específica para o ícone da lupa. */
-#upgrade-lupa-icon {
-    background-image: url('/media/img/icons/lupa_icon.png');
-  width: 100px;
-  height: 70px;
-  margin-left: 10px;
-  text-align: left;
-  background-position: left;
-  background-size: 101px;
-  background-repeat: no-repeat;
+    display: block; /* Mostra o ícone quando ativo */
 }
 
-/* Define a imagem específica para o ícone da lâmpada. */
-#upgrade-lamp-icon {
-    background-image: url('/media/img/icons/lamp_icon.png');
-  width: 100px;
-  height: 70px;
-  margin-left: 10px;
-  text-align: left;
-  background-position: left;
-  background-size: 101px;
-  background-repeat: no-repeat;
-}
-
-/* --- ADICIONE ESTA REGRA --- */
-/* Define a imagem específica para o ícone da munhequeira. */
+/* Garante que o brace-icon não tenha mais posicionamento absoluto */
 #upgrade-brace-icon {
- background-image: url('/media/img/icons/brace_icon.png');
-  width: 100px;
-  height: 70px;
-  margin-left: 10px;
-  text-align: left;
-  background-position: left;
-  background-size: 101px;
-  background-repeat: no-repeat;
+    background-image: url('../media/img/icons/brace_icon.png');
+    /* Certifique-se de que não há 'position: absolute;' aqui */
 }
-
 /* --- ADICIONE ESTAS REGRAS --- */
 /* Estilo para a mensagem de feedback de compra */
 #purchase-feedback {
@@ -502,4 +511,67 @@ position: relative;
     color: #aaeec2; /* Uma cor de "sucesso" */
     opacity: 0; /* Começa invisível */
     transition: opacity 0.5s ease-in-out; /* Transição suave para fade-in/fade-out */
+}
+/* Container que envolve o painel principal e o gráfico de rodapé */
+.info-panel-visual-container {
+    width: 100%; /* Adapte à largura que você quer para o painel */
+    position: relative; /* Para posicionar o gráfico de rodapé */
+    display: flex; /* Para centralizar o info-panel */
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    margin-bottom: 20px; /* Espaço entre o painel e outros elementos, se necessário */
+}
+/* Container que envolve o painel principal e o gráfico de rodapé */
+.info-panel-visual-wrapper {
+    display: flex; /* Para empilhar #info-panel e .info-panel-bottom-graphic verticalmente */
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    width: 280px; /* Adapte à largura que você quer para o painel completo */
+    margin-top: 20px; /* Um pouco de espaço se necessário */
+    position: relative; /* Se houver elementos absolutos dentro deste wrapper ou para controlar z-index */
+    /* Este wrapper pode ter display: none; e ser ativado junto com o #info-panel se preferir */
+}
+
+#info-panel {
+    /* Estilos para o topo do painel */
+    background-image: url("../media/img/bg_panel_top.PNG"); /* Use a imagem do TOPO FATEADA */
+    background-repeat: no-repeat;
+    background-size: 100% 100%; /* Estica a imagem para preencher a div */
+    background-position: center top; 
+    
+width: 77%;
+    height: auto; /* A altura da parte superior da sua imagem original */
+    min-height: 100px;
+    padding: 2em; /* Seus paddings para o conteúdo */
+    padding-top: 72px; /* Mantém o espaçamento superior para o conteúdo */
+    text-align: left;
+    z-index: 100;
+    position: relative; /* Crucial para o z-index do conteúdo */
+margin-top: -1px;    
+    /* Estilos para o conteúdo interno (flexbox para centralizar) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Alinha o conteúdo ao topo do painel */
+    /* ... outros estilos de texto, etc. ... */
+}
+
+/* O rodapé gráfico que agora está no HTML */
+.info-panel-bottom-graphic {
+    background-image: url("../media/img/bg_panel_bottom.PNG"); /* Use a imagem do RODAPÉ FATEADA */
+    background-repeat: no-repeat;
+    background-size: cover; /* Estica para preencher a largura e altura da div */
+    background-position: center bottom;
+    
+    width: 100%; /* Mesma largura do #info-panel (herdada do wrapper) */
+    height: 45px; /* Ajuste para a altura da sua imagem de rodapé fatiada */
+    margin-top: -1px; /* Puxe para cima para "colar" visualmente na borda da div acima */
+    z-index: 99; /* Fica abaixo do #info-panel se houver sobreposição */
+
+    display: none; /* OCULTO POR PADRÃO */
+}
+
+/* Classe para mostrar o rodapé gráfico */
+.info-panel-bottom-graphic.active {
+    display: block; /* Ou 'flex' se ele tiver conteúdo flexível */
 }

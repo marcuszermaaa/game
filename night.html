@@ -12,21 +12,31 @@
 <body>
     <div id="night-view-container" class="view active">
         <h2>Fim do Dia <!-- Dia será carregado via JS --></h2>
+        
+        <!-- A história (lore) de fim de dia será carregada aqui -->
         <div id="lore-reveal">
             <!-- Lore será carregada via JS -->
         </div>
+
         <h3>Loja Noturna</h3>
         <p>Use seu dinheiro para se preparar.</p>
+
+        <!-- A LOJA É RENDERIZADA DENTRO DESTA DIV. ELA É ESSENCIAL. -->
         <div id="upgrades-shop">
             <!-- Upgrades serão carregados via JS -->
         </div>
-                <div id="purchase-feedback"></div>
+        
+        <!-- Esta div é usada para mostrar feedback de compra ("Café tomado!", "Tinteiro cheio!", etc.) -->
+        <div id="purchase-feedback"></div>
 
-        <!-- O botão de voltar foi removido, pois o único caminho é para frente -->
         <button id="start-new-day-btn">Dormir e começar um novo dia</button>
     </div>
 
-    <!-- JavaScript Files - Carrega apenas o que é necessário para ESTA página -->
+    <!-- JavaScript Files -->
+    <!-- Garante que as constantes (como MAX_INK) estejam disponíveis para night.js -->
+    <script src="./js/constants.js" type="module"></script> 
+    
+    <!-- Dados para a loja -->
     <script src="./js/data/loreData.js" type="module"></script>
     <script src="./js/data/upgradeData.js" type="module"></script>
     

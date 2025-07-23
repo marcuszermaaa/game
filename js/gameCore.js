@@ -1,12 +1,13 @@
-// js/gameCore.js - Versão revisada e atualizada
+// js/gameCore.js - VERSÃO COMPLETA E REVISADA
 
-// --- IMPORTS ---
 import { CLIENTS_PER_DAY } from './constants.js';
+import { MAX_INK, STARTING_INK_PER_DAY } from './constants.js';
 import { ClientManager } from './managers/ClientManager.js';
 import { DialogueManager } from './managers/DialogueManager.js';
 import { UIManager } from './managers/uiManager.js';
-import { SIGILS } from './data/sigilData.js'; 
-import { MAILS } from './data/mailData.js'; // IMPORT ADICIONADO: Necessário para verificar novas cartas.
+import { SIGILS } from './data/sigilData.js';
+import { MAILS } from './data/mailData.js';
+
 
 class GameManager {
     static instance = null;
@@ -17,6 +18,7 @@ class GameManager {
         this.dom = {
             characterSprite: document.getElementById('character-sprite'),
             actionPanel: document.getElementById('action-panel'),
+            infoPanel: document.getElementById('info-panel'),
             eventClientName: document.getElementById('event-client-name'),
             eventDialogue: document.getElementById('event-dialogue'),
             dialogueInteractionPanel: document.getElementById('dialogue-interaction-panel'),
@@ -27,8 +29,10 @@ class GameManager {
             moneyValue: document.getElementById('money-value'),
             sanityProgressBar: document.querySelector('.brain-progress .progress-bar'),
             itemMail: document.getElementById('item-mail'),
+            inkValue: document.getElementById('ink-value'),
             itemBook: document.getElementById('item-book'),
             itemWorkbench: document.getElementById('item-workbench'),
+            analyzeRequestBtn: document.getElementById('analyze-request-btn'),
         };
         this.init();
     }
@@ -37,42 +41,57 @@ class GameManager {
         this.loadGameState();
         this.instantiateManagers();
         this.bindGlobalEvents();
-        
-        // --- LÓGICA ATUALIZADA ---
-        // Atualiza elementos visuais persistentes da UI (como ícones de upgrade e notificações de e-mail)
-        // ANTES de decidir qual tela principal renderizar.
         this.uiManager.updateCoreUIElements(this.checkForUnreadMail());
-        
         this.processPendingState();
     }
     
     loadGameState() {
         const savedState = localStorage.getItem('gameState');
         if (savedState) {
-            this.state = JSON.parse(savedState);
-            // Garante que purchasedUpgrades seja um Set para checagens eficientes (ex: .has())
-            this.state.purchasedUpgrades = new Set(this.state.purchasedUpgrades || []);
+            try {
+                this.state = JSON.parse(savedState);
+                this.state.purchasedUpgrades = new Set(Array.isArray(this.state.purchasedUpgrades) ? this.state.purchasedUpgrades : []);
+                this.state.readMailIds = new Set(Array.isArray(this.state.readMailIds) ? this.state.readMailIds : []);
+                this.state.clientHistory = Array.isArray(this.state.clientHistory) ? this.state.clientHistory : [];
+                // Carrega os sigilos descobertos, começando com um array vazio se não houver nada salvo.
+                this.state.discoveredSigils = new Set(Array.isArray(this.state.discoveredSigils) ? this.state.discoveredSigils : []);
+                this.state.craftingIngredients = new Set(Array.isArray(this.state.craftingIngredients) ? this.state.craftingIngredients : []);
+            } catch (e) {
+                console.error("GameManager: Erro ao carregar ou parsear gameState:", e);
+                this.setupInitialState();
+            }
         } else {
             this.setupInitialState();
         }
-                console.log("Estado CARREGADO do localStorage:", this.state);
-
+        console.log("GameManager: Estado do jogo carregado:", this.state);
     }
 
-    setupInitialState() {
+     setupInitialState() {
         this.state = {
-            day: 0, clientInDay: 0, sanity: 100, money: 5000,
-            showingTutorial: true, tutorialStep: 'initial_mail',
-            postTutorialSequence: false, 
-            isNewDay: false, // Flag para a tela de início de dia.
+            day: 1,
+            clientInDay: 1,
+            sanity: 100,
+            money: 50,
+            showingTutorial: true,
+            tutorialStep: 'initial_letter_prompt',
             playerSigilChoice: null, 
+            inkCharges: MAX_INK,
             purchasedUpgrades: new Set(),
-            readMailIds: [], // Inicializa a lista de e-mails lidos.
+            readMailIds: new Set(),
             lastOutcomeData: null, 
             analysisChoice: null,
+            clientHistory: [], 
+            
+            // ========================================================== //
+            //      >>> DEFINIÇÃO ATUALIZADA DOS SIGILOS INICIAIS <<<     //
+            // ========================================================== //
+            // O jogador começa conhecendo apenas a "Âncora da Realidade",
+            // o sigilo básico que Abner teria deixado mais à vista.
+            discoveredSigils: new Set(['s04']),
+            
+            craftingIngredients: new Set(),
         };
     }
-
     instantiateManagers() {
         this.clientManager = new ClientManager(this.state);
         this.dialogueManager = new DialogueManager(this.state, this);
@@ -80,48 +99,74 @@ class GameManager {
     }
     
     saveGameState() {
-        // Converte o Set de volta para um Array para ser compatível com JSON.
-        const stateToSave = { ...this.state, purchasedUpgrades: Array.from(this.state.purchasedUpgrades) };
+        const stateToSave = { 
+            ...this.state, 
+            purchasedUpgrades: Array.from(this.state.purchasedUpgrades),
+            readMailIds: Array.from(this.state.readMailIds),
+            discoveredSigils: Array.from(this.state.discoveredSigils),
+            craftingIngredients: Array.from(this.state.craftingIngredients),
+        };
         localStorage.setItem('gameState', JSON.stringify(stateToSave));
     }
     
     bindGlobalEvents() {
         this.dom.itemMail?.addEventListener('click', () => {
-            if ((this.state.showingTutorial && this.state.tutorialStep === 'initial_mail') || !this.state.showingTutorial) this.openMail();
+            if (this.state.tutorialStep === 'initial_letter_prompt') {
+                this.openMail();
+            } else if (!this.state.showingTutorial) {
+                this.openMail();
+            }
         });
+      
         this.dom.itemBook?.addEventListener('click', () => {
-             if (this.state.showingTutorial && this.state.tutorialStep !== 'read_mail_then_diary') return;
-             this.openJournal();
+            if (this.state.tutorialStep === 'journal_prompt') {
+                this.openJournal();
+            } else if (!this.state.showingTutorial) {
+                this.openJournal();
+            }
         });
+
         this.dom.itemWorkbench?.addEventListener('click', () => {
             if (!this.state.showingTutorial) this.openWorkbench();
         });
     }
 
-    /**
-     * O "roteador" principal do jogo. A ordem das verificações é a prioridade das cenas.
-     */
     processPendingState() {
         if (window.location.search) window.history.replaceState(null, '', window.location.pathname);
         
         if (this.state.showingTutorial) {
-            this.uiManager.setupTutorialUI(this.state.tutorialStep);
-            this.uiManager.updateStats();
+            this.runTutorial();
+            return;
+        }
+        
+        const currentClient = this.clientManager.getCurrentClient();
+        if (currentClient && currentClient.isNarrativeEvent) {
+            this.uiManager.displayNarrativeEvent(currentClient, () => {
+                if (currentClient.action) {
+                    this.processEventAction(currentClient.action);
+                }
+                if (currentClient.action?.type === 'add_ingredient') {
+                    this.uiManager.highlightWorkbenchIcon();
+                }
+
+                this.uiManager.showNextClientTransition(
+                    "O Professor se despede, deixando-o com suas palavras e um novo mistério. O sino da porta toca novamente.",
+                    "Atender Próximo Cliente",
+                    () => {
+                        this.state.clientInDay++;
+                        this.saveGameState();
+                        this.processPendingState();
+                    }
+                );
+            });
             return;
         }
 
-        // --- LÓGICA ATUALIZADA ---
-        // A tela de "novo dia" agora tem alta prioridade para ser exibida no início de cada dia.
         if (this.state.isNewDay) {
             this.uiManager.showStartDayView(() => {
-                this.state.isNewDay = false; // Desativa a flag após o uso.
+                this.state.isNewDay = false;
                 this.startFirstClientOfDay();
             });
-            return; // Para a execução aqui até o jogador interagir.
-        }
-
-        if (this.state.postTutorialSequence) {
-            this.uiManager.showStartDayView(() => this.startFirstClientOfDay());
             return;
         }
 
@@ -135,16 +180,69 @@ class GameManager {
             return; 
         }
 
-        if (!this.clientManager.hasClientsForDay(this.state.day)) {
-            this.endGame("Você chegou ao fim do capítulo atual.");
+        if (!this.clientManager.getCurrentClient()) {
+             if (!this.clientManager.hasClientsForDay(this.state.day) && this.state.day > 0) {
+                this.endGame("Você chegou ao fim do capítulo atual.");
+             } else {
+                 this.startEndDaySequence();
+             }
             return;
         }
 
-        // Se nenhuma condição especial foi atendida, prepara a interface para o cliente atual.
-        if (this.state.day > 0 && this.state.clientInDay > 0) {
-            this.uiManager.resetClientInterface();
-            this.uiManager.updateActionButtonBasedOnState();
-            this.uiManager.updateStats();
+        this.uiManager.resetClientInterface();
+        this.uiManager.updateActionButtonBasedOnState();
+        this.uiManager.updateStats();
+    }
+
+    processEventAction(action) {
+        switch (action.type) {
+            case 'add_ingredient':
+                this.state.craftingIngredients.add(action.payload);
+                console.log(`Ingrediente adicionado: ${action.payload}. Inventário atual:`, this.state.craftingIngredients);
+                break;
+        }
+    }
+
+    runTutorial() {
+        console.log(`Tutorial rodando no passo: ${this.state.tutorialStep}`);
+        this.uiManager.updateStats();
+
+        switch (this.state.tutorialStep) {
+            case 'initial_letter_prompt':
+                this.uiManager.showTutorialStep_LetterPrompt();
+                break;
+            
+            case 'armitage_arrival_prompt':
+                this.uiManager.showTutorialStep_ArmitageArrival(() => {
+                    this.state.tutorialStep = 'armitage_dialogue';
+                    this.saveGameState();
+                    this.runTutorial();
+                });
+                break;
+
+            case 'armitage_dialogue':
+                const armitageData = this.clientManager.getCurrentClient();
+                this.uiManager.showTutorialStep_ArmitageDialogue(armitageData, () => {
+                    this.state.tutorialStep = 'journal_prompt';
+                    this.saveGameState();
+                    this.runTutorial();
+                });
+                break;
+            
+            case 'journal_prompt':
+                this.uiManager.showTutorialStep_JournalPrompt();
+                break;
+
+            case 'final_wait':
+                this.uiManager.showTutorialStep_FinalWait(() => {
+                    console.log("TUTORIAL CONCLUÍDO. Carregando primeiro cliente real.");
+                    this.state.showingTutorial = false;
+                    this.state.tutorialStep = 'completed';
+                    this.state.clientInDay++; 
+                    this.saveGameState();
+                    this.processPendingState();
+                });
+                break;
         }
     }
     
@@ -157,33 +255,37 @@ class GameManager {
         
         let moneyChange = 0, sanityChange = 0, outcomeTitle = "", outcomeMessage = "";
         const isCorrectSigil = (this.state.playerSigilChoice === client.correctSigil);
+        let clientOutcome = '';
 
         if (outcome.success) {
             if (isCorrectSigil) {
                 outcomeTitle = "Trabalho Impecável"; moneyChange = client.successPay; sanityChange = 5;
                 outcomeMessage = `Você desenhou o sigilo correto com perfeição. O cliente parece aliviado e paga o valor total. (+${moneyChange} Moedas, +${sanityChange} Sanidade)`;
+                clientOutcome = 'success';
             } else {
                 outcomeTitle = "Erro de Julgamento"; moneyChange = client.wrongPay; sanityChange = -15;
                 outcomeMessage = `Sua mão foi firme, mas o sigilo era o errado. Consequências inesperadas podem surgir... (${moneyChange} Moedas, ${sanityChange} Sanidade)`;
+                clientOutcome = 'wrong_sigil';
             }
         } else {
             outcomeTitle = "Mão Trêmula"; moneyChange = client.failPay; sanityChange = -10;
             outcomeMessage = `Você falhou em completar o desenho. O cliente está insatisfeito. (${moneyChange} Moedas, ${sanityChange} Sanidade)`;
+            clientOutcome = 'fail_minigame';
         }
         
         this.state.money += moneyChange;
         this.changeSanity(sanityChange);
-
-        this.uiManager.showOutcomeView(outcomeTitle, outcomeMessage, () => this.advanceToNextClient());
-
+        this.state.clientHistory.push({ clientId: client.id, day: this.state.day, sigilTattooed: this.state.playerSigilChoice, outcome: clientOutcome, notes: outcomeMessage, payment: moneyChange, sanityChange: sanityChange });
         this.state.lastOutcomeData = null;
         this.state.playerSigilChoice = null;
         this.saveGameState();
+        this.uiManager.showOutcomeView(outcomeTitle, outcomeMessage, () => this.advanceToNextClient());
     }
 
     startFirstClientOfDay() {
-        this.state.postTutorialSequence = false;
-        this.advanceToNextClient();
+        this.state.clientInDay = 1;
+        this.saveGameState();
+        this.processPendingState();
     }
     
     advanceToNextClient() {
@@ -194,147 +296,175 @@ class GameManager {
         
         this.state.clientInDay++;
         this.state.playerSigilChoice = null;
+        this.state.analysisChoice = null; 
+        this.saveGameState();
         
         const nextClient = this.clientManager.getCurrentClient();
-        if (this.clientManager.shouldDisplayClient(nextClient)) {
-            this.uiManager.resetClientInterface();
-            this.uiManager.updateActionButtonBasedOnState();
-            this.uiManager.updateStats();
-        } else {
-            // Se o cliente não deve ser exibido (ex: por falta de um upgrade),
-            // avança para o próximo cliente automaticamente.
-            this.advanceToNextClient();
+        if (nextClient) {
+            this.processPendingState(); 
+        } else { 
+            this.startEndDaySequence();
         }
-        this.saveGameState();
     }
 
-    // --- Funções de Navegação e Ação ---
-    startEndDaySequence() { this.saveGameState(); window.location.href = '/night.html'; }
-    endGame(reason) { this.uiManager.showEndGameView(reason, () => { localStorage.removeItem('gameState'); window.location.reload(); }); }
-    openJournal() { this.saveGameState(); window.location.href = '/journal.html'; }
-    openMail() { this.saveGameState(); window.location.href = '/mail.html'; }
-    openWorkbench() { this.saveGameState(); window.location.href = '/workbench.html'; }
+    startEndDaySequence() {
+        this.state.isNewDay = true;
+        this.saveGameState();
+        window.location.href = '/night.html';
+    }
+    
+    endGame(reason) { 
+        this.uiManager.showEndGameView(reason, () => { 
+            localStorage.removeItem('gameState'); 
+            window.location.reload(); 
+        }); 
+    }
+    
+    openJournal() { 
+        this.saveGameState(); 
+        window.location.href = '/journal.html'; 
+    }
+    
+    openMail() { 
+        this.saveGameState(); 
+        window.location.href = '/mail.html'; 
+    }
+    
+    openWorkbench() { 
+        this.saveGameState(); 
+        window.location.href = '/workbench.html'; 
+    }
     
     startMinigame() {
-        if (this.state.playerSigilChoice) {
+        if (!this.state.playerSigilChoice) {
+            console.warn("ERRO: Tentativa de iniciar minigame sem sigilo selecionado.");
+            return; 
+        }
+        
+        if (this.state.inkCharges > 0) {
+            this.state.inkCharges--;
+            this.uiManager.updateStats(); 
+            
             this.saveGameState();
             window.location.href = `/minigame.html?sigil=${this.state.playerSigilChoice}`;
         } else {
-            // Este alerta pode ser substituído por uma mensagem na UI mais elegante.
-            alert("ERRO: Nenhum sigilo foi selecionado para tatuar.");
+            console.warn("Acabou sua Tinta!");
+            this.uiManager.showInfoPanel({
+                icon: '/media/icons/ink_empty_icon.png', 
+                title: 'Tinta Esgotada!',
+                button: {
+                    id: 'ack-no-ink-btn',
+                    text: 'Entendido',
+                    callback: () => {} 
+                }
+            });
         }
     }
     
     changeSanity(amount) {
         this.state.sanity = Math.max(0, Math.min(100, this.state.sanity + amount));
         this.uiManager.updateStats();
-        if (this.state.sanity <= 0) { this.endGame("Sua mente se despedaçou sob o peso do que viu. O abismo te consumiu."); }
+        if (this.state.sanity <= 0) { 
+            this.endGame("Sua mente se despedaçou sob o peso do que viu. O abismo te consumiu."); 
+        }
     }
 
-    /**
-     * --- NOVA FUNÇÃO ---
-     * Verifica se existem e-mails que o jogador deveria ter recebido mas ainda não leu.
-     * @returns {boolean} True se houver e-mail não lido, false caso contrário.
-     */
     checkForUnreadMail() {
+        if (!MAILS || !Array.isArray(MAILS)) return false;
         const receivedMails = MAILS.filter(mail => mail.receivedDay <= this.state.day);
         const readMailIds = new Set(this.state.readMailIds || []);
-        
-        // Usa .some() para parar a verificação assim que encontrar a primeira correspondência.
         return receivedMails.some(mail => !readMailIds.has(mail.id));
     }
 
-    /**
-     * NOVO MÉTODO: Processa a escolha feita na página de análise.
-     * Chamado quando o jogador retorna de analysis.html.
-     */
+    startAnalysisProcess() {
+        const currentClient = this.clientManager.getCurrentClient();
+        if (!currentClient || !currentClient.request) { return; }
+        const clientsForToday = this.clientManager.getClientsForDay(this.state.day);
+        const clientIndex = clientsForToday.findIndex(c => c.id === currentClient.id);
+        if (clientIndex === -1) { return; }
+        this.saveGameState();
+        window.location.href = `/analysis.html?clientIndex=${clientIndex}&day=${this.state.day}`;
+    }
+
     processAnalysisChoice() {
         const choice = this.state.analysisChoice;
         const client = this.clientManager.getCurrentClient();
         const requestedSigil = client ? SIGILS[client.request] : null;
 
         if (!choice || !client || !requestedSigil) {
-            console.warn("GameManager: Nenhuma escolha de análise ou cliente/sigilo inválido para processar.");
-            this.state.analysisChoice = null; // Limpa a escolha para evitar loops
-            this.saveGameState();
-            this.uiManager.updateActionButtonBasedOnState(); // Atualiza a UI
-            return;
+            this.state.analysisChoice = null; this.saveGameState(); this.processPendingState(); return;
         }
 
-        let outcomeTitle = "Análise Concluída";
-        let outcomeMessage = "";
-        let sanityChange = 0;
-        let moneyChange = 0;
-        let playerSigilToTattoo = null; // O sigilo que o jogador "escolheu" tatuar após a análise
+        let outcomeTitle = "Análise Concluída", outcomeMessage = "", sanityChange = 0, playerSigilToTattoo = null, clientOutcome = ''; 
 
         switch (choice) {
             case 'correct':
-                // Jogador escolheu corrigir um sigilo corrompido
-                sanityChange = 5;
-                outcomeMessage = "Você identificou e se propôs a corrigir o sigilo. Sua mente está mais clara.";
-                playerSigilToTattoo = requestedSigil.correctVersion; // Define o sigilo correto para tatuar
+                sanityChange = 5; 
+                outcomeMessage = "Você identificou e se propôs a corrigir o sigilo. Sua mente está clara.";
+                playerSigilToTattoo = requestedSigil.correctVersion; 
+                clientOutcome = 'corrected_sigil';
+
+                // Lógica para aprender o sigilo corrigido
+                const correctSigilId = requestedSigil.correctVersion;
+                if (!this.state.discoveredSigils.has(correctSigilId)) {
+                    this.state.discoveredSigils.add(correctSigilId);
+                    const learnedSigilName = SIGILS[correctSigilId]?.name || "um sigilo desconhecido";
+                    outcomeMessage += `\n\n[NOVO SIGILO APRENDIDO: "${learnedSigilName}" foi adicionado ao seu grimório.]`;
+                    console.log(`Jogador aprendeu um novo sigilo: ${correctSigilId} (${learnedSigilName})`);
+                }
                 break;
             case 'accept_corrupted':
-                // Jogador escolheu aceitar um sigilo corrompido
-                sanityChange = -20;
+                sanityChange = -20; 
                 outcomeMessage = "Você decidiu seguir o pedido corrompido. O peso da decisão recai sobre sua sanidade.";
-                playerSigilToTattoo = requestedSigil.id; // Define o sigilo corrompido para tatuar
+                playerSigilToTattoo = requestedSigil.id; 
+                clientOutcome = 'accepted_corrupted';
                 break;
             case 'refuse':
-                // Jogador escolheu recusar um sigilo proibido
-                sanityChange = 10;
+                sanityChange = 10; 
                 outcomeMessage = "Você se recusou a tatuar o símbolo proibido. Sua convicção fortalece sua mente.";
-                // Não há sigilo para tatuar, o cliente pode ir embora ou ter outro desfecho
-                // Neste caso, o cliente simplesmente vai embora e não há minigame.
+                clientOutcome = 'refused_prohibited';
                 break;
             case 'accept_prohibited':
-                // Jogador escolheu aceitar um sigilo proibido
-                sanityChange = -50;
+                sanityChange = -50; 
                 outcomeMessage = "Você cedeu à tentação e aceitou o sigilo proibido. As consequências serão terríveis.";
-                playerSigilToTattoo = requestedSigil.id; // Define o sigilo proibido para tatuar
+                playerSigilToTattoo = requestedSigil.id; 
+                clientOutcome = 'accepted_prohibited';
                 break;
             case 'accept_normal':
-                // Jogador aceitou um sigilo normal (seguro)
-                sanityChange = 0; // Geralmente não há mudança de sanidade para sigilos normais
                 outcomeMessage = "Você concordou em fazer o sigilo conforme o pedido. Um trabalho direto.";
-                playerSigilToTattoo = requestedSigil.id; // Define o sigilo normal para tatuar
+                playerSigilToTattoo = requestedSigil.id; 
+                clientOutcome = 'accepted_normal';
                 break;
             default:
-                console.warn(`GameManager: Escolha de análise desconhecida: ${choice}`);
-                outcomeMessage = "Algo inesperado aconteceu na análise.";
+                outcomeMessage = "Algo inesperado aconteceu na análise."; 
+                clientOutcome = 'unknown_analysis_outcome';
                 break;
         }
 
         this.changeSanity(sanityChange);
+        this.state.clientHistory.push({ clientId: client.id, day: this.state.day, analysisChoice: choice, sigilTattooed: playerSigilToTattoo, outcome: clientOutcome, notes: outcomeMessage, payment: 0, sanityChange: sanityChange });
+        this.state.analysisChoice = null;
 
-        // Se uma recusa ocorreu, o cliente simplesmente vai embora.
         if (choice === 'refuse') {
-            this.uiManager.showOutcomeView(outcomeTitle, outcomeMessage, () => {
-                this.state.analysisChoice = null; // Limpa a escolha
-                this.state.playerSigilChoice = null; // Garante que não há sigilo pendente
-                this.saveGameState();
-                this.advanceToNextClient(); // Avança para o próximo cliente sem minigame
-            });
+            this.state.playerSigilChoice = null;
+            this.saveGameState();
+            this.uiManager.showOutcomeView(outcomeTitle, outcomeMessage, () => { this.advanceToNextClient(); });
         } else if (playerSigilToTattoo) {
-            // Se um sigilo foi selecionado para tatuar (mesmo que corrompido/proibido)
-            this.state.playerSigilChoice = playerSigilToTattoo; // Define o sigilo para o minigame
+            this.state.playerSigilChoice = playerSigilToTattoo;
+            this.saveGameState();
+            // A transição para o minigame agora acontecerá após o jogador ler o resultado da análise
             this.uiManager.showOutcomeView(outcomeTitle, outcomeMessage, () => {
-                this.state.analysisChoice = null; // Limpa a escolha
-                this.saveGameState();
-                this.startMinigame(); // Inicia o minigame com o sigilo escolhido
+                 this.uiManager.resetClientInterface();
+                 this.uiManager.updateActionButtonBasedOnState();
+                 this.uiManager.updateStats();
             });
         } else {
-            // Caso de fallback, se não houver sigilo para tatuar e não for recusa explícita
-            this.uiManager.showOutcomeView(outcomeTitle, outcomeMessage, () => {
-                this.state.analysisChoice = null;
-                this.saveGameState();
-                this.advanceToNextClient();
-            });
+            this.saveGameState();
+            this.uiManager.showOutcomeView(outcomeTitle, outcomeMessage, () => { this.advanceToNextClient(); });
         }
     }
 }
 
-// Ponto de entrada principal do jogo.
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof window.game === 'undefined') {
         window.game = new GameManager();
