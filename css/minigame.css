@@ -1,43 +1,146 @@
-/* css/minigame.css */
-#minigame-view-container {
-    padding: 30px;
-    max-width: 800px;
-    width: 90%;
+/* css/minigame.css - VERSÃO CORRIGIDA E MELHORADA */
+
+/* Garante que o corpo e o html ocupem toda a altura da tela */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Evita barras de rolagem */
+    background-color: #1a1a1a;
+    color: #f0ead6;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+/* O contêiner principal do jogo, usando flexbox para layout */
+.game-wrapper {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box; /* Garante que o padding não aumente o tamanho total */
 }
 
-#minigame-instructions {
+/* Painel lateral para as ferramentas */
+#menu-panel {
+    flex: 0 0 250px; /* Não cresce, não encolhe, base de 250px */
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    border-radius: 5px;
+    margin-right: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    overflow-y: auto; /* Adiciona scroll se as ferramentas não couberem */
+}
+
+#active-tools-display h3 {
     text-align: center;
-    margin: 10px 0;
-    font-style: italic;
-    font-size: 1.1em;
-    color: #ccc;
-}
-
-#tattoo-canvas {
-    background-color: #c0a890;
-    border: 2px solid #5a4a3e;
-    width: 95%;
-    max-width: 760px;
-    height: auto;
-    display: block;
-    margin: 10px auto;
-}
-
-#tattoo-timer {
-    color: var(--header-color);
     font-family: 'Special Elite', cursive;
-    font-size: 1.5em;
-    margin-bottom: 5px;
+    margin-top: 0;
+    color: #e67e22;
+    border-bottom: 1px dashed #555;
+    padding-bottom: 10px;
 }
 
-/* Botão "Voltar ao Jogo" */
-#back-to-game-btn {
-    margin-top: 20px;
-    width: auto;
-    max-width: none;
-    padding: 10px 20px;
+.tool-item {
+    background: #2c2c2c;
+    border-left: 3px solid #7f8c8d; /* Cinza para usado/inativo */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.tool-item.active {
+    border-left-color: #2ecc71; /* Verde para ativo */
+}
+
+.tool-item.used {
+    border-left-color: #c0392b; /* Vermelho para sem recargas */
+    opacity: 0.7;
+}
+
+.tool-item h4 {
+    margin: 0 0 5px 0;
+}
+
+.tool-item p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #bdc3c7;
+}
+
+
+/* O contêiner do minigame, que vai crescer para ocupar o resto do espaço */
+#minigame-container {
+    flex-grow: 1; /* Permite que este elemento cresça */
+    display: flex;
+    position: relative; /* Necessário para a caixa de comentário */
+}
+
+/* O wrapper do canvas, que agora vai ocupar 100% do #minigame-container */
+#canvas-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative; /* Posição de referência para o canvas e a caixa de comentário */
+    background-image: url('../media/img/pele_textura.png'); /* Textura de pele */
+    background-size: cover;
+    border: 2px solid #5a4e46;
+    box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
+}
+
+/* O canvas em si */
+#tattoo-canvas {
+    display: block; /* Remove espaços extras abaixo do canvas */
+    width: 100%;
+    height: 100%;
+    
+    /* ✨ MUDANÇA IMPORTANTE: Esconde o cursor padrão do mouse ✨ */
+    cursor: none;
+}
+
+
+/* Caixa de comentário do cliente */
+.comment-box {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(26, 26, 26, 0.85);
+    color: #e74c3c; /* Vermelho para indicar dor/alerta */
+    padding: 15px 25px;
+    border-radius: 5px;
+    border: 1px solid #c0392b;
+    font-family: 'Special Elite', cursive;
+    font-size: 1.2em;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+    pointer-events: none; /* Garante que a caixa não interfira com o mouse */
+    z-index: 10;
+}
+
+.comment-box.visible {
+    opacity: 1;
+    visibility: visible;
+}/* ✨ NOVAS REGRAS NO FINAL DO ARQUIVO CSS ✨ */
+
+#sigil-reference-display {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #555;
+}
+
+#sigil-reference-display h4 {
+    margin: 0 0 10px 0;
+    font-family: 'Special Elite', cursive;
+    color: #e67e22;
+}
+
+#sigil-reference-canvas {
+    background-color: #f5eeda; /* Cor de pergaminho */
+    border: 1px solid #c9bda5;
+    border-radius: 3px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }

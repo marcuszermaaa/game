@@ -1,7 +1,7 @@
 /* Definições de variáveis CSS para facilitar a manutenção e consistência visual */
 :root {
-    --background-color: #121212; /* Fundo escuro geral da página */
-    --panel-bg-color: #1a1a1a; /* Fundo para painéis de UI como diálogos, menus */
+    --background-color: #000000; /* Fundo escuro geral da página */
+    --panel-bg-color: #000000; /* Fundo para painéis de UI como diálogos, menus */
     --text-color: #c5c5c5; /* Cor principal do texto, um tom claro de cinza */
     --header-color: #a4a191; /* Cor para cabeçalhos, títulos e elementos importantes */
     --accent-color: #8a0303; /* Cor de destaque, geralmente para perigo ou ênfase */
@@ -329,6 +329,16 @@ background-size: 8px;
     max-height: 80px !important; /* Altura máxima */
 }
 
+/* Class for highlighting the workbench item */
+#item-workbench.highlight-pulse {
+    min-width: 80px !important;
+    height: 80px;
+    max-height: 80px !important;
+    animation: pulseHighlight 1.5s infinite ease-in-out;
+    border-radius: 224px;
+    text-align: center;
+}
+
 /* --- ESTILOS PARA O PAINEL DE DIÁLOGO INTERATIVO --- */
 #dialogue-interaction-panel {
     position: absolute; /* Posicionado sobre o jogo principal */
@@ -412,5 +422,31 @@ background-size: 8px;
 }
 /* --- FIM ESTILOS DIÁLOGO --- */
 
+/* Adicione estas regras ao final do seu base.css */
+/* /css/base.css - ADICIONE OU SUBSTITUA NO FINAL DO ARQUIVO */
 
-/* --- END NEW CSS --- */
+/* --- REGRAS DE ZOOM DA INTERFACE --- */
+
+/* Zoom de 85% */
+body.zoom-85 #game-container,      /* Para game.html (usa ID) */
+body.zoom-85 .geral-container,     /* Para journal.html (usa classe) */
+body.zoom-85 #workbench-container, /* Para workbench.html (usa ID) */
+body.zoom-85 .message-dashboard,   /* Para mail.html (usa classe) */
+body.zoom-85 #night-view-container,  /* Para night.html (usa ID) */
+body.zoom-85 #analysis-container   /* Para analysis.html (usa ID) */
+{
+    transform: scale(0.85);
+    transform-origin: top center;
+}
+
+/* Zoom de 70% */
+body.zoom-70 #game-container,
+body.zoom-70 .geral-container,
+body.zoom-70 #workbench-container,
+body.zoom-70 .message-dashboard,
+body.zoom-70 #night-view-container,
+body.zoom-70 #analysis-container
+{
+    transform: scale(0.7);
+    transform-origin: top center;
+}

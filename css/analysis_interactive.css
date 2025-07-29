@@ -1,0 +1,70 @@
+/* css/analysis_interactive.css */
+body {
+    background-color: #362e29;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: 'Cormorant Garamond', serif;
+}
+#analysis-container {
+    width: 90%;
+    max-width: 900px;
+    height: 90vh;
+    background: #c9c4b5 url('../media/img/paper_texture.png'); /* Textura de papel */
+    border: 5px solid #5d5a50;
+    box-shadow: 0 0 25px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+header { text-align: center; }
+main { display: flex; flex-grow: 1; gap: 2rem; margin: 1rem 0; }
+#sigil-display-area {
+    flex: 2;
+    border: 2px dashed #8c8675;
+    padding: 10px;
+}
+#sigil-canvas {
+    width: 100%;
+    height: 100%;
+    cursor: default;
+}
+#sigil-canvas.lupa-active {
+    cursor: url('../media/img/lupa_cursor.png') 16 16, auto; /* Cursor de Lupa */
+}
+.corruption-point {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(255, 0, 0, 0.3);
+    border: 1px solid rgba(255,0,0,0.5);
+    cursor: pointer;
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+}
+#journal-notes-area {
+    flex: 1;
+    border-left: 1px solid #8c8675;
+    padding-left: 2rem;
+    overflow-y: auto;
+}
+#journal-notes-area .placeholder { color: #5d5a50; font-style: italic; }
+.note {
+    background-color: rgba(255,255,255,0.3);
+    padding: 10px;
+    border-left: 3px solid #e67e22;
+    margin-bottom: 1rem;
+    display: none; /* Começa escondido */
+}
+footer { display: flex; justify-content: space-between; align-items: center; }
+#tool-panel button { padding: 10px; background-color: #5d5a50; color: #f0ead6; }
+#tool-panel button.active { background-color: #e67e22; }
+#decision-panel button { margin-left: 10px; padding: 15px; }
+.hidden { display: none !important; }

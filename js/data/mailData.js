@@ -32,38 +32,24 @@ export const MAILS = [
         receivedDay: 1, // Recebida no início do Dia 1
     },
 
-    // <<< NOVO EMAIL AQUI >>>
+    // ✨ NOVO EMAIL AQUI ✨
     // --- EMAIL DO PROFESSOR (INÍCIO DO DIA 2) ---
     {
         id: 'armitage_sigil_discovery',
         sender: 'Prof. Armitage',
         senderId: 'prof_armitage',
         subject: 'Uma pequena descoberta',
-        content: 'Elias,\n\nAnalisando as anotações de Abner que guardei, encontrei o esboço de outro sigilo que ele classificava como "seguro". Parece ser um tipo de proteção contra pesadelos. Estou lhe enviando uma cópia.\n\nSinto que estamos apenas na superfície de algo muito maior. Cada nova descoberta pode trazer tanto luz quanto sombras. Tenha cuidado.',
+        content: 'Elias,\n\nAnalisando as anotações de Abner que guardei, encontrei o esboço de outro sigilo que ele classificava como "seguro". Parece ser um tipo de proteção contra olhares indesejados. Estou lhe enviando uma cópia.\n\nSinto que estamos apenas na superfície de algo muito maior. Cada nova descoberta pode trazer tanto luz quanto sombras. Tenha cuidado.',
         receivedDay: 2, // Fica disponível no início do Dia 2
         
         // Ação especial que será executada ao ler o email
         action: {
             type: 'add_sigil',
-            payload: 's01' // O ID do "Selo de Repouso Tranquilo"
+            payload: 's02' // O ID do "Glifo do Olhar Averso"
         }
     },
-    {
-        id: 'letter3',
-        sender: 'Arthur, o Estudante',
-        subject: 'Um Pedido Urgente',
-        content: 'Preciso da sua ajuda com um trabalho... As exigências são estranhas, mas a recompensa é alta. Ouvi dizer que você lida com o incomum. Encontre-me quando puder.',
-        receivedDay: 2, // Esta carta chega no Dia 2.
-        /**
-         * AÇÃO: Desbloqueia conteúdo.
-         * Ler esta carta adiciona um novo cliente potencial à "fila" de clientes do jogo.
-         * O ClientManager precisará ser ajustado para checar a lista de 'unlockedClients' do gameState.
-         */
-        action: {
-            type: 'unlock_client',
-            payload: 'arthur_pedido_especial' // O ID único do novo cliente que será desbloqueado.
-        }
-    },
+    
+
     {
         id: 'letter4',
         sender: 'Desconhecido',
@@ -116,5 +102,29 @@ export const MAILS = [
             type: 'add_upgrade',
             payload: 'brace' // ID da "Munhequeira de Couro"
         }
-    }
+    },
+    // Adicione estes objetos ao array MAILS em mailData.js
+
+    // ✨ CARTA DO DIA 4 ✨
+    {
+        id: 'kett_letter_1',
+        sender: 'Kett, a Bibliotecária',
+        subject: 'Uma preocupação... e um dever',
+        content: 'Sr. Vance,\n\nMeu nome é Kett. Eu era uma colega de seu tio Abner e ex-aluna do Professor Armitage. Tenho notado a fixação recente do professor nos trabalhos de Abner na biblioteca, e isso me preocupa.\n\nAbner me confiou este fragmento, instruindo-me a entregá-lo a você quando sentisse que o momento era certo. Ele temia que alguém com menos escrúpulos o buscasse. Acredito que esse momento chegou.\n\nTenha cuidado. Armitage não é o estudioso benevolente que parece ser.',
+        receivedDay: 4,
+          action: {
+            type: 'add_special_item',
+            payload: 'sigil_fragment_2' // Correto: Kett entrega a 2ª parte
+        }
+    },
+
+    // ✨ CARTA DO DIA 6 ✨
+    {
+        id: 'kett_letter_2',
+        sender: 'Kett, a Bibliotecária',
+        subject: 'A Verdadeira Busca de Abner',
+        content: 'Elias,\n\nPreciso ser clara. Abner não estava pesquisando o sigilo de Astaroth para usá-lo. Ele o estudava para encontrar uma fraqueza, uma forma de contê-lo. Ele o chamava de "O Olho Cego".\n\nEle estava trabalhando em um contra-sigilo, um sigilo de banimento, mas temo que não tenha tido tempo de completá-lo. As promessas de poder de Armitage são uma armadilha. Não confie nele.',
+        receivedDay: 6
+        // Esta carta é puramente informativa, sem ação de jogo.
+    },
 ];

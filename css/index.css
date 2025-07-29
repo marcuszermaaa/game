@@ -146,3 +146,118 @@ h1 {
         margin: 10px; /* Adiciona margem para não colar nas bordas */
     }
 }
+
+/* Adicione estas regras ao seu /css/index.css */
+
+#menu-options button:disabled {
+    background-color: #333; /* Fundo mais escuro */
+    color: #666; /* Texto apagado */
+    cursor: not-allowed; /* Ícone do cursor para indicar que não é clicável */
+    border-color: #444;
+}
+
+#menu-options button:disabled:hover {
+    transform: none; /* Remove o efeito de hover */
+    box-shadow: none; /* Remove a sombra do hover */
+}
+
+/* Estilo para a mensagem de feedback */
+.feedback-message {
+    margin-top: 20px;
+    color: #ccc;
+    font-size: 1em;
+    font-family: 'Cormorant Garamond', serif;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+/* /css/index.css - ADICIONE NO FINAL DO ARQUIVO */
+
+/* --- Estilização do Painel de Configurações --- */
+#settings-panel {
+    border-top: 1px solid #444;
+    padding-top: 15px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.setting-item label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1em;
+    margin-right: 15px;
+}
+
+/* --- Estilização do Dropdown Customizado --- */
+.custom-select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 180px; /* Largura do dropdown */
+}
+
+.custom-select-wrapper select {
+    /* Aparência do <select> em si */
+    width: 100%;
+    padding: 8px 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1em;
+    color: #ddd;
+    background-color: #2a2a2a;
+    border: 1px solid #555;
+    border-radius: 4px;
+    cursor: pointer;
+    
+    /* Remove a aparência padrão do navegador */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Cria uma seta customizada usando um pseudo-elemento */
+.custom-select-wrapper::after {
+    content: '▼'; /* Símbolo da seta */
+    font-size: 0.8em;
+    color: #888;
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    pointer-events: none; /* Garante que os cliques passem para o <select> abaixo */
+}
+
+/* --- Estilização dos Itens de Debug --- */
+#money-input {
+    width: 80px;
+    padding: 8px;
+    background-color: #2a2a2a;
+    border: 1px solid #555;
+    color: #ddd;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.debug-btn {
+    padding: 8px 12px;
+    font-size: 0.9em;
+    background-color: #4a2323;
+    border-color: #833d3d;
+}
+.debug-btn:hover {
+    background-color: #6d3434;
+}
+
+/* Estilo para botões e inputs de debug desabilitados */
+#money-input:disabled, .debug-btn:disabled {
+    background-color: #333;
+    color: #666;
+    cursor: not-allowed;
+    border-color: #444;
+}

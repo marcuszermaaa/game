@@ -1,19 +1,44 @@
 // js/managers/ClientManager.js - VERSÃO COMPLETA E CORRIGIDA
-
-import { CLIENTS } from '../data/clientData.js';
+// Importe os novos dados no topo do arquivo
+import { CLIENTS, CONDITIONAL_CLIENTS } from '../data/clientData.js';
 
 export class ClientManager {
     constructor(gameState) {
-        if (!CLIENTS || !Array.isArray(CLIENTS)) {
-            throw new Error("Erro crítico: Os dados dos clientes (CLIENTS) não foram carregados.");
-        }
-        
+        // ...
         this.clients = CLIENTS;
+        this.conditionalClients = CONDITIONAL_CLIENTS; // Armazena os clientes condicionais
         this.gameState = gameState;
     }
 
-    getClientsForDay(day) {
-        return this.clients.filter(c => c.day === day);
+getClientsForDay(day) {
+        // 1. Pega os clientes normais para o dia
+        let clientsForToday = this.clients.filter(c => c.day === day);
+
+        // 2. Verifica se algum cliente condicional deve aparecer
+        const history = this.gameState.clientHistory || [];
+        
+        this.conditionalClients.forEach(condClient => {
+            // Verifica se o cliente já apareceu neste evento
+            const hasAlreadyAppeared = history.some(h => h.clientId === condClient.id);
+
+            if (!hasAlreadyAppeared && day >= condClient.trigger.minDay) {
+                // Procura no histórico o evento que dispara este cliente
+                const triggerEvent = history.find(h => 
+                    h.clientId === condClient.trigger.clientId &&
+                    (h.method === condClient.trigger.method || h.outcome === condClient.trigger.outcome)
+                );
+
+                if (triggerEvent) {
+                    // Gatilho encontrado! Adiciona o cliente à lista do dia.
+                    // Ajustamos o dia do cliente para o dia atual para que ele apareça corretamente
+                    const clientToAdd = { ...condClient, day: day };
+                    clientsForToday.push(clientToAdd);
+                }
+            }
+        });
+        
+        // Ordena os clientes por segurança, caso a ordem importe
+        return clientsForToday.sort((a, b) => (a.order || 0) - (b.order || 0));
     }
     
     hasClientsForDay(day) {

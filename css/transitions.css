@@ -1,0 +1,35 @@
+/* css/transitions.css - Estilos para as transições de página */
+
+/*
+  Estado inicial para QUALQUER página que tenha um atributo [data-transition].
+  A página começa invisível e pronta para a transição.
+*/
+body.transition-fade {
+    opacity: 0;
+    transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 
+  ESTADOS ESPECÍFICOS DE "ANTES DA ANIMAÇÃO" 
+  Cada tipo de transição tem sua própria posição inicial.
+*/
+
+/* Para game.html: começa um pouco menor */
+body.transition-fade[data-transition="fade-from-center"] {
+    transform: scale(0.97);
+}
+
+/* Para journal.html: começa um pouco à direita */
+body.transition-fade[data-transition="fade-from-right"] {
+    transform: translateX(40px);
+}
+
+/*
+  ESTADO FINAL ("VISÍVEL")
+  Quando a classe .page-visible é adicionada pelo JavaScript,
+  a página transiciona para este estado: totalmente opaca e na posição normal.
+*/
+body.transition-fade.page-visible {
+    opacity: 1;
+    transform: none; /* 'none' reseta scale e translateX para seus valores padrão */
+}

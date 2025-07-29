@@ -9,10 +9,10 @@
 
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/mail.css">
-
+ <link rel="stylesheet" href="/css/transitions.css">
 </head>
-<body>
-    <div class="message-dashboard">
+<body data-transition="fade-from-right" data-music-src="../media/sfx/abner_theme.mp3">
+  <div id="mail-container>  <div class="message-dashboard">
         <div class="corner-bottom-left"></div>
         <div class="corner-bottom-right"></div>
 
@@ -55,8 +55,10 @@
             <div class="modal-content-area" id="modalContentArea">
                 </div>
         </div>
-    </div>
+    </div></div>
+        <script src="/js/applySettings.js" defer></script>
 
+ <script type="module" src="js/pageTransitions.js"></script>
     <script type="module" src="./js/managers/loreManager.js"></script>
     <script type="module" src="./js/mail.js"></script>
 

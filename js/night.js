@@ -1,178 +1,158 @@
-// js/night.js - VERSÃO COMPLETA E CORRIGIDA
+// /js/night.js - VERSÃO COM LAYOUT MELHORADO
 
-// --- IMPORTS ---
-// Importa os dados necessários para a página
-import { LORE_PAGES } from '../js/data/loreData.js';
-import { UPGRADES } from '../js/data/upgradeData.js';
-// Importa as constantes para que a loja conheça as regras do jogo
-import { MAX_INK, STARTING_INK_PER_DAY } from '../js/constants.js';
+import { UPGRADES } from './data/upgradeData.js';
+import { MAX_INK, STARTING_INK_PER_DAY } from './constants.js';
 
-// --- FUNÇÃO DE FEEDBACK ---
 let feedbackTimeout;
-/**
- * Mostra uma mensagem de feedback na tela por alguns segundos.
- * @param {string} message - A mensagem a ser exibida.
- */
+
+/** Exibe uma mensagem de feedback na tela. */
 function showPurchaseFeedback(message) {
     const feedbackEl = document.getElementById('purchase-feedback');
     if (!feedbackEl) return;
-
     clearTimeout(feedbackTimeout);
     feedbackEl.textContent = message;
-    feedbackEl.style.opacity = '1';
-
+    feedbackEl.classList.add('visible');
     feedbackTimeout = setTimeout(() => {
-        feedbackEl.style.opacity = '0';
+        feedbackEl.classList.remove('visible');
     }, 3500);
 }
 
-/**
- * Renderiza a loja de upgrades com base no estado atual do jogo.
- * @param {object} currentGameState - O estado atual do jogo.
- * @param {HTMLElement} shopElement - O elemento HTML onde a loja será renderizada.
- */
-function renderShop(currentGameState, shopElement) {
-    let shopHtml = '';
-    const purchasedUpgrades = new Set(currentGameState.purchasedUpgrades || []);
+/** ✨ ATUALIZA AS ESTATÍSTICAS DO JOGADOR NA TELA ✨ */
+function updatePlayerStats(gameState) {
+    const moneyDisplay = document.getElementById('player-money-display');
+    if (moneyDisplay) {
+        moneyDisplay.textContent = `Dinheiro: $${gameState.money}`;
+    }
+}
+
+/** Renderiza a loja, agora separada por categorias. */
+function renderShop(gameState) {
+    const permanentGrid = document.querySelector('#permanent-upgrades .card-grid');
+    const consumableGrid = document.querySelector('#consumable-items .card-grid');
+    
+    if (!permanentGrid || !consumableGrid) return;
+    
+    permanentGrid.innerHTML = '';
+    consumableGrid.innerHTML = '';
+    
+    const purchasedUpgrades = new Set(gameState.purchasedUpgrades || []);
 
     for (const key in UPGRADES) {
         const upgrade = UPGRADES[key];
-        
-        let isPurchased = purchasedUpgrades.has(key);
-        let canAfford = currentGameState.money >= upgrade.cost;
-        let buttonDisabled = '';
-        let buttonText = `Comprar ($${upgrade.cost})`;
+        const canAfford = gameState.money >= upgrade.cost;
+        let isButtonDisabled = !canAfford;
+        let buttonText = "Comprar";
 
-        // LÓGICA DE EXIBIÇÃO DO BOTÃO
-        if (key === 'refill_ink') {
-            isPurchased = false;
-            buttonText = `Comprar Tinta ($${upgrade.cost})`;
-            if (currentGameState.inkCharges >= MAX_INK) {
-                buttonDisabled = 'disabled';
-                buttonText = 'Tinteiro Cheio';
-            } else if (!canAfford) {
-                buttonDisabled = 'disabled';
-            }
-        } else if (key === 'coffee') {
-            isPurchased = false;
-            buttonText = `Tomar Café ($${upgrade.cost})`;
-            if (!canAfford) {
-                buttonDisabled = 'disabled';
-            }
-        } else { // Para upgrades permanentes
-            if (isPurchased) {
-                buttonDisabled = 'disabled';
-                buttonText = 'Adquirido';
-            } else if (!canAfford) {
-                buttonDisabled = 'disabled';
-            }
+        // Cria o card do item
+        const card = document.createElement('div');
+        card.className = 'upgrade-card';
+        card.classList.add(`card-type-${upgrade.type}`); // Adiciona classe para ícone
+
+        // Lógica de estado do botão
+        switch (upgrade.type) {
+            case 'consumable':
+                if (key === 'refill_ink' && gameState.inkCharges >= MAX_INK) {
+                    isButtonDisabled = true;
+                    buttonText = 'Tinteiro Cheio';
+                }
+                break;
+            case 'permanent':
+                if (purchasedUpgrades.has(key)) {
+                    isButtonDisabled = true;
+                    buttonText = 'Adquirido';
+                }
+                break;
         }
-        
-        shopHtml += `
-            <div class="upgrade-card">
-                <h4>${upgrade.name}</h4>
-                <p>${upgrade.description}</p>
-                <button class="upgrade-btn" data-upgrade-id="${key}" ${buttonDisabled}>
+
+        card.innerHTML = `
+            <h4>${upgrade.name}</h4>
+            <p>${upgrade.description}</p>
+            <div class="card-footer">
+                <span class="card-price">$${upgrade.cost}</span>
+                <button class="upgrade-btn" data-upgrade-id="${key}" ${isButtonDisabled ? 'disabled' : ''}>
                     ${buttonText}
                 </button>
             </div>
         `;
+
+        // Adiciona o card à categoria correta
+        if (upgrade.type === 'permanent') {
+            permanentGrid.appendChild(card);
+        } else {
+            consumableGrid.appendChild(card);
+        }
     }
     
-    shopElement.innerHTML = shopHtml;
-
-    // --- LÓGICA DE CLIQUE CORRIGIDA ---
-    shopElement.querySelectorAll('.upgrade-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const upgradeId = btn.dataset.upgradeId;
-            const upgrade = UPGRADES[upgradeId];
-            
-            let latestGameState = JSON.parse(localStorage.getItem('gameState'));
-            const currentPurchased = new Set(latestGameState.purchasedUpgrades || []);
-
-            const isConsumable = upgradeId === 'refill_ink' || upgradeId === 'coffee';
-            
-            // CONDIÇÃO DE COMPRA:
-            // 1. O jogador tem dinheiro?
-            // 2. O item é consumível OU é um item permanente que ainda não foi comprado?
-            if (latestGameState.money >= upgrade.cost && (isConsumable || !currentPurchased.has(upgradeId))) {
-                latestGameState.money -= upgrade.cost;
-
-                // Só adiciona a 'purchasedUpgrades' se for um upgrade permanente
-                if (!isConsumable) {
-                    currentPurchased.add(upgradeId);
-                    latestGameState.purchasedUpgrades = Array.from(currentPurchased);
-                }
-
-                // Aplica o efeito do upgrade
-                if (upgrade.effect) {
-                    const mockGameInstance = {
-                        changeSanity: (amount) => { latestGameState.sanity = Math.max(0, Math.min(100, latestGameState.sanity + amount)); },
-                        state: latestGameState
-                    };
-                    upgrade.effect(mockGameInstance);
-                }
-                
-                // Mostra o feedback correto
-                if (upgradeId === 'coffee') {
-                    showPurchaseFeedback("Você se sente um pouco mais lúcido. (+5 Sanidade)");
-                } else if (upgradeId === 'refill_ink') {
-                    showPurchaseFeedback("Você reabasteceu seu tinteiro.");
-                } else {
-                    showPurchaseFeedback(`"${upgrade.name}" adquirido!`);
-                }
-                
-                // Salva o novo estado e renderiza a loja novamente
-                localStorage.setItem('gameState', JSON.stringify(latestGameState));
-                renderShop(latestGameState, shopElement);
-            }
+    // Vincula os eventos de clique aos botões de compra.
+    document.querySelectorAll('.upgrade-btn:not([disabled])').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const upgradeId = e.target.dataset.upgradeId;
+            buyItem(upgradeId);
         });
     });
 }
 
-// --- PONTO DE ENTRADA PRINCIPAL ---
+/** Lógica para comprar um item. */
+function buyItem(upgradeId) {
+    let gameState = JSON.parse(localStorage.getItem('gameState'));
+    const upgrade = UPGRADES[upgradeId];
+    
+    if (gameState.money >= upgrade.cost) {
+        gameState.money -= upgrade.cost;
+
+        switch (upgrade.type) {
+            case 'ingredient':
+                if (!gameState.craftingIngredients) gameState.craftingIngredients = {};
+                gameState.craftingIngredients[upgrade.id] = (gameState.craftingIngredients[upgrade.id] || 0) + 1;
+                showPurchaseFeedback(`"${upgrade.name}" adicionado ao inventário.`);
+                break;
+            case 'permanent':
+                const purchasedSet = new Set(gameState.purchasedUpgrades || []);
+                purchasedSet.add(upgradeId);
+                gameState.purchasedUpgrades = Array.from(purchasedSet);
+                showPurchaseFeedback(`"${upgrade.name}" adquirido permanentemente!`);
+                break;
+            case 'consumable':
+                if (upgrade.effect) {
+                    upgrade.effect(gameState);
+                    showPurchaseFeedback(`Você usou "${upgrade.name}".`);
+                }
+                break;
+        }
+        
+        localStorage.setItem('gameState', JSON.stringify(gameState));
+        // Re-renderiza a loja e as estatísticas para refletir a mudança
+        renderShop(gameState);
+        updatePlayerStats(gameState);
+    }
+}
+
+// --- PONTO DE ENTRADA PRINCIPAL DA PÁGINA ---
 document.addEventListener('DOMContentLoaded', () => {
     let gameState = JSON.parse(localStorage.getItem('gameState'));
     if (!gameState) {
-        console.error("Estado do jogo não encontrado! Redirecionando para o menu.");
         window.location.href = '/index.html';
         return;
     }
     
-    // Atualiza o título da página
-    const nightViewTitle = document.querySelector('#night-view-container h2');
-    if (nightViewTitle) nightViewTitle.textContent = `Fim do Dia ${gameState.day}`;
+    const nightTitle = document.getElementById('night-title');
+    if (nightTitle) nightTitle.textContent = `Fim do Dia ${gameState.day}`;
     
-    // Carrega a história (lore)
-    const loreRevealElement = document.getElementById('lore-reveal');
-    if (loreRevealElement) {
-        loreRevealElement.innerHTML = LORE_PAGES[gameState.day] || "<h3>Noite Silenciosa</h3><p>Você limpa o estúdio e se prepara para o amanhã...</p>";
-    }
+    // Renderização inicial
+    updatePlayerStats(gameState);
+    renderShop(gameState);
     
-    // Renderiza a loja
-    const upgradesShopElement = document.getElementById('upgrades-shop');
-    if (upgradesShopElement) {
-        renderShop(gameState, upgradesShopElement);
-    }
-    
-    // Configura o botão de avançar para o novo dia
     const startNewDayBtn = document.getElementById('start-new-day-btn');
     if (startNewDayBtn) {
         startNewDayBtn.addEventListener('click', () => {
             let finalGameState = JSON.parse(localStorage.getItem('gameState'));
             
-            // Lógica de avanço de dia
             finalGameState.day += 1; 
-            finalGameState.clientInDay = 0; 
-            finalGameState.isNewDay = true; // Flag para o GameManager
-
-            // Adiciona a tinta grátis do dia, respeitando o máximo
+            finalGameState.clientInDay = 1;
+            finalGameState.isNewDay = true; 
             finalGameState.inkCharges = Math.min(MAX_INK, (finalGameState.inkCharges || 0) + STARTING_INK_PER_DAY);
+            finalGameState.purchasedUpgrades = Array.from(new Set(finalGameState.purchasedUpgrades || []));
             
-            // Garante que upgrades permaneçam como array no save
-            finalGameState.purchasedUpgrades = Array.from(finalGameState.purchasedUpgrades || []);
-            
-            // Salva e redireciona
             localStorage.setItem('gameState', JSON.stringify(finalGameState));
             window.location.href = '/game.html';
         });

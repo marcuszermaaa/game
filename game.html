@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/clients.css">
     <link rel="stylesheet" href="/css/ui.css">
+            <link rel="stylesheet" href="/css/transitions.css">
 </head>
 <body>
     <div id="game-container">
@@ -30,9 +31,9 @@
                 </div>
                 <div id="menu-bar">
                     <ul id="item-bar">
-                        <li class="item-card" id="item-mail"></li>
-                        <li class="item-card" id="item-book"></li>
-                        <li class="item-card" id="item-workbench"></li>
+                        <li class="item-card" data-sound-click="page_turn" id="item-mail"></li>
+                        <li class="item-card" data-sound-click="page_turn" id="item-book"></li>
+                        <li class="item-card" data-sound-click="page_turn" id="item-workbench"></li>
                     </ul>
                 </div>
             </div>
@@ -79,7 +80,9 @@
             <div class="status-item money-display">$<span id="money-value"></span></div>
         </div>
     </div>
-    
+        </div>      <script type="module" src="js/pageTransitions.js"></script>
+         <script src="./js/applySettings.js" defer></script>
+
     <script src="./js/gameCore.js" type="module"></script>
 </body>
 </html>

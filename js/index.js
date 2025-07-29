@@ -1,136 +1,138 @@
+// /js/index.js - VERSÃO FINAL COM DEBUG DE DINHEIRO
+
 document.addEventListener('DOMContentLoaded', () => {
-const startGameBtn = document.getElementById('start-game-btn');
-const continueGameBtn = document.getElementById('continue-game-btn');
-const clearSaveBtn = document.getElementById('clear-save-btn');
-const menuOptionsDiv = document.getElementById('menu-options');
-//Elemento para mensagens gerais
-let messageDisplay = document.createElement('h2');
-messageDisplay.id = 'menu-message';
 
-//Elemento para mensagens de confirmação de limpeza
-let confirmationMessage = null;
-let isConfirmingClear = false;// Flag para controlar o estado de confirmação
+    // --- 1. SELEÇÃO DE ELEMENTOS ---
+    const elements = {
+        startGameBtn: document.getElementById('start-game-btn'),
+        continueGameBtn: document.getElementById('continue-game-btn'),
+        clearSaveBtn: document.getElementById('clear-save-btn'),
+        settingsBtn: document.getElementById('settings-btn'),
+        menuOptions: document.getElementById('menu-options'),
+        settingsPanel: document.getElementById('settings-panel'),
+        saveSettingsBtn: document.getElementById('save-settings-btn'),
+        zoomSelect: document.getElementById('zoom-level-select'),
+        // ✨ Novos elementos de debug
+        moneyInput: document.getElementById('money-input'),
+        addMoneyBtn: document.getElementById('add-money-btn'),
+    };
 
-//Função para exibir mensagens gerais na tela
-const displayGeneralMessage = (msg, isError = false) => {
-   //Remove qualquer mensagem de confirmação anterior
-    if (confirmationMessage) {
-        confirmationMessage.remove();
-        confirmationMessage = null;
-        isConfirmingClear = false;//eseta o flag
-    }
-   //Remove qualquer mensagem geral anterior
-    const existingGeneralMessage = document.getElementById('menu-message');
-    if (existingGeneralMessage) {
-        existingGeneralMessage.remove();
-    }
+    let feedbackMessageElement = null;
 
-    messageDisplay = document.createElement('h2');//Recria o elemento para garantir que está limpo
-    messageDisplay.id = 'menu-message';
-    messageDisplay.textContent = msg;
-    if (isError) {
-        messageDisplay.style.color = 'red';
-    } else {
-        messageDisplay.style.color = '';
-    }
+    // --- 2. FUNÇÕES DE LÓGICA ---
 
-    if (menuOptionsDiv) {
-        menuOptionsDiv.insertAdjacentElement('afterend', messageDisplay);
-    }
-};
+    const updateButtonStates = () => {
+        const hasSave = localStorage.getItem('gameState') !== null;
+        if (elements.continueGameBtn) elements.continueGameBtn.disabled = !hasSave;
+        if (elements.clearSaveBtn) elements.clearSaveBtn.disabled = !hasSave;
+        // ✨ Desabilita o botão de dinheiro se não houver save
+        if (elements.addMoneyBtn) elements.addMoneyBtn.disabled = !hasSave;
+        if (elements.moneyInput) elements.moneyInput.disabled = !hasSave;
+    };
 
-//Função para exibir a mensagem de confirmação e habilitar o piscar
-const displayConfirmationMessage = () => {
-    if (!confirmationMessage) {
-        confirmationMessage = document.createElement('h2');
-        confirmationMessage.id = 'confirmation-message';
-        confirmationMessage.style.color = '#ffcc00';//Amarelo para destaque
-        confirmationMessage.style.fontWeight = 'bold';
-        confirmationMessage.style.animation = 'blink-animation 1s infinite';// Aplica a animação de piscar
-        confirmationMessage.textContent = "Tem certeza que deseja apagar o progresso do jogo salvo? Clique novamente em 'Limpar Jogo Salvo' para confirmar.";
-
-        if (menuOptionsDiv) {
-            menuOptionsDiv.insertAdjacentElement('afterend', confirmationMessage);
-        }
-    }
-    isConfirmingClear = true;//Marca que estamos no modo de confirmação
-   // Certifica-se de que o botão de limpar não está desabilitado durante a confirmação
-    if (clearSaveBtn) clearSaveBtn.disabled = false;
-};
-
-const startGame = () => {
-    console.log("Iniciando um novo jogo: Limpando save e redirecionando para introdução.");
-    localStorage.removeItem('gameState');
-    displayGeneralMessage("Novo jogo iniciado. Redirecionando...");
-    setTimeout(() => {
-        window.location.href = '/intro.html?newGame=true';
-    }, 1000);
-};
-
-const continueGame = () => {
-    const savedState = localStorage.getItem('gameState');
-    if (savedState) {
-        console.log("Continuando jogo salvo.");
-        displayGeneralMessage("Continuando jogo salvo. Redirecionando...");
+    const displayFeedbackMessage = (text, duration = 3000) => {
+        if (feedbackMessageElement) feedbackMessageElement.remove();
+        feedbackMessageElement = document.createElement('h2');
+        feedbackMessageElement.className = 'feedback-message';
+        feedbackMessageElement.textContent = text;
+        const referenceNode = elements.settingsPanel.style.display === 'none' ? elements.menuOptions : elements.settingsPanel;
+        referenceNode.insertAdjacentElement('afterend', feedbackMessageElement);
         setTimeout(() => {
-            window.location.href = '/game.html';
-        }, 1000);
-    } else {
-        displayGeneralMessage("Nenhum jogo salvo encontrado. Comece um novo jogo!", true);
-    }
-};
+            if (feedbackMessageElement) feedbackMessageElement.remove();
+            feedbackMessageElement = null;
+        }, duration);
+    };
 
-const performClearSavedGame = () => {
-    localStorage.removeItem('gameState');
-    displayGeneralMessage("Jogo salvo apagado com sucesso. Seu progresso foi resetado.");
-    updateButtonStates();// Atualiza o estado dos botões
-    isConfirmingClear = false;// Sai do modo de confirmação
-    if (confirmationMessage) {
-        confirmationMessage.remove();// Remove a mensagem de confirmação
-        confirmationMessage = null;
-    }
-};
-
-const handleClearSaveClick = () => {
-    if (isConfirmingClear) {
-       //Se já estamos no modo de confirmação, o segundo clique executa a limpeza
-        performClearSavedGame();
-    } else {
-       //Se não estamos confirmando, exibimos a mensagem de confirmação
-        displayConfirmationMessage();
-    }
-};
-
-const updateButtonStates = () => {
-    const savedState = localStorage.getItem('gameState');
-    if (continueGameBtn) {
-        continueGameBtn.disabled = !savedState;
-    }
-
-   //Remove a mensagem de confirmação se ela ainda existir quando o estado mudar
-    if (isConfirmingClear && !savedState) {
-        if (confirmationMessage) {
-            confirmationMessage.remove();
-            confirmationMessage = null;
+    const loadSettings = () => {
+        const savedZoom = localStorage.getItem('gameZoomLevel');
+        if (savedZoom && elements.zoomSelect) {
+            elements.zoomSelect.value = savedZoom;
         }
-        isConfirmingClear = false;
-    }
+    };
+    
+    // --- 3. AÇÕES DOS BOTÕES ---
 
-   //Define a mensagem inicial geral
-    if (!document.getElementById('menu-message') || !document.getElementById('menu-message').textContent) {
-         if (savedState) {
-            displayGeneralMessage("Um jogo salvo foi encontrado. Você pode continuar.");
+    const onStartGame = () => {
+        localStorage.removeItem('gameState');
+        displayFeedbackMessage("Iniciando nova aventura...");
+        setTimeout(() => window.location.href = '/intro.html?newGame=true', 1000);
+    };
+
+    const onContinueGame = () => {
+        displayFeedbackMessage("Carregando jogo salvo...");
+        setTimeout(() => window.location.href = '/game.html', 1000);
+    };
+
+    const onClearSave = () => {
+        if (elements.clearSaveBtn.dataset.confirming === 'true') {
+            localStorage.removeItem('gameState');
+            displayFeedbackMessage("Jogo salvo apagado.");
+            elements.clearSaveBtn.dataset.confirming = 'false';
+            elements.clearSaveBtn.textContent = 'Limpar Jogo Salvo';
+            updateButtonStates();
         } else {
-            displayGeneralMessage("Nenhum jogo salvo encontrado. Comece um novo jogo.");
+            displayFeedbackMessage("Tem certeza? Clique novamente para apagar.", 5000);
+            elements.clearSaveBtn.dataset.confirming = 'true';
+            elements.clearSaveBtn.textContent = 'CONFIRMAR LIMPEZA';
         }
-    }
-};
+    };
 
-//Adiciona os event listeners
-if (startGameBtn) startGameBtn.addEventListener('click', startGame);
-if (continueGameBtn) continueGameBtn.addEventListener('click', continueGame);
-if (clearSaveBtn) clearSaveBtn.addEventListener('click', handleClearSaveClick);//Mudei para handleClearSaveClick
+    const onOpenSettings = () => {
+        elements.menuOptions.style.display = 'none';
+        elements.settingsPanel.style.display = 'block';
+    };
 
-//Chama a função para definir o estado inicial
-updateButtonStates();
+    const onSaveSettings = () => {
+        localStorage.setItem('gameZoomLevel', elements.zoomSelect.value);
+        displayFeedbackMessage("Configurações salvas!");
+        elements.settingsPanel.style.display = 'none';
+        elements.menuOptions.style.display = 'block';
+    };
+
+    // ✨ Nova função para adicionar dinheiro
+    const onAddMoney = () => {
+        const savedStateJSON = localStorage.getItem('gameState');
+        if (!savedStateJSON) {
+            displayFeedbackMessage("Nenhum jogo salvo para adicionar dinheiro!", 3000);
+            return;
+        }
+        
+        try {
+            const amount = parseInt(elements.moneyInput.value, 10);
+            if (isNaN(amount)) {
+                displayFeedbackMessage("Por favor, insira um número válido.", 3000);
+                return;
+            }
+
+            const gameState = JSON.parse(savedStateJSON);
+            gameState.money = (gameState.money || 0) + amount;
+            localStorage.setItem('gameState', JSON.stringify(gameState));
+            
+            displayFeedbackMessage(`$${amount} adicionado com sucesso!`);
+        } catch (e) {
+            displayFeedbackMessage("Erro ao modificar o jogo salvo.", 3000);
+            console.error("Erro ao parsear ou salvar o gameState:", e);
+        }
+    };
+
+
+    // --- 4. INICIALIZAÇÃO ---
+    const init = () => {
+        elements.startGameBtn?.addEventListener('click', onStartGame);
+        elements.continueGameBtn?.addEventListener('click', onContinueGame);
+        elements.clearSaveBtn?.addEventListener('click', onClearSave);
+        elements.settingsBtn?.addEventListener('click', onOpenSettings);
+        elements.saveSettingsBtn?.addEventListener('click', onSaveSettings);
+        // ✨ Vincula a nova função ao botão
+        elements.addMoneyBtn?.addEventListener('click', onAddMoney);
+
+        updateButtonStates();
+        loadSettings();
+        
+        if (!localStorage.getItem('gameState')) {
+            displayFeedbackMessage("Nenhum jogo salvo. Comece uma nova aventura.");
+        }
+    };
+    
+    init();
 });

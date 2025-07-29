@@ -1,0 +1,53 @@
+/* /css/pointclick.css */
+body {
+    background-color: #000;
+}
+
+#game-container {
+    width: 1024px;
+    height: 688px;
+    background-size: cover;
+    border: 2px solid #333;
+    box-shadow: 0 0 25px rgba(0,0,0,0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ✨ CURSORES ATUALIZADOS ✨ */
+#game-container.cursor-default { cursor: url('/media/img/icons/hand_point_cursor.png') 16 16, auto; } /* Mão apontando */
+#game-container.cursor-inspect { cursor: url('/media/img/icons/eye_cursor.png') 16 16, auto; }
+#game-container.cursor-pickup { cursor: url('/media/img/icons/hand_cursor.png') 16 16, auto; } /* Mão pegando */
+#game-container.cursor-nav-right { cursor: url('/media/img/icons/nav_right_cursor.png') 16 16, auto; }
+#game-container.cursor-nav-left { cursor: url('/media/img/icons/nav_left_cursor.png') 16 16, auto; }
+
+.hotspot { position: absolute; display: none; background-color: rgba(255, 255, 100, 0.0); border: 2px dashed rgba(255, 255, 100, 0.0); transition: all 0.2s; }
+.hotspot:hover {position: absolute;
+    display: none;
+    background-color: rgba(255, 255, 100, 0.0);
+    border: 2px dashed rgba(255, 255, 100, 0.0);
+    transition: all 0.2s; }
+
+#ui-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+
+#message-box { 
+   position: absolute; 
+    /* ✨ VALOR 'bottom' ALTERADO DE 90px PARA 110px ✨ */
+    bottom: 110px; 
+    left: 0; 
+    width: 100%; 
+    text-align: center; 
+}
+#message-box span { background-color: rgba(0,0,0,0.8); color: #ccc; padding: 15px 25px; font-size: 1.2em; line-height: 1.6; border-radius: 5px; border: 1px solid #333; opacity: 0; transition: opacity 0.5s; }
+
+#inventory { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; background-color: rgba(0,0,0,0.7); padding: 10px; border-radius: 5px; border: 1px solid #444; pointer-events: all; }
+.inventory-slot { width: 64px; height: 64px; border: 2px solid #555; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; }
+.inventory-item { width: 90%; height: 90%; background-size: contain; background-repeat: no-repeat; background-position: center; cursor: pointer; }
+.inventory-item.selected { filter: drop-shadow(0 0 5px #ffc107); }
+
+/* ✨ EFEITO DE JUMP SCARE VISUAL ✨ */
+@keyframes screen-flash {
+    0% { filter: brightness(1); }
+    10% { filter: brightness(3) contrast(2); }
+    100% { filter: brightness(1); }
+}
+

@@ -1,64 +1,68 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mesa de Crafting: Sigilos Lovecraftianos</title>
-    <style>
-        body { font-family: 'Georgia', serif; background-color: #1a1a2e; color: #e0e0e0; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; line-height: 1.6; }
-        h1, h2 { color: #c084fc; text-align: center; margin-bottom: 20px; text-shadow: 0 0 5px rgba(192, 132, 252, 0.7); }
-        .container { background-color: #2a2a4a; border: 2px solid #5d3f8e; border-radius: 8px; padding: 25px; margin-bottom: 30px; width: 90%; max-width: 800px; box-shadow: 0 0 15px rgba(93, 63, 142, 0.5); }
-        .section-title { color: #a78bfa; border-bottom: 1px solid #a78bfa; padding-bottom: 5px; margin-bottom: 15px; font-size: 1.2em; }
-        #elementosDisponiveis, #tintasDisponiveis { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 20px; }
-        .item { width: 100px; height: 100px; background-color: #3f3f6c; border: 1px solid #7c68a5; border-radius: 5px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; cursor: pointer; transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s; position: relative; padding: 5px; box-sizing: border-box; font-size: 0.85em; }
-        .item:hover { background-color: #52528b; transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); }
-        .item.selected { border: 2px solid #66ff66; box-shadow: 0 0 10px #66ff66; background-color: #4a6a4a; }
-        #craftingTable { border: 2px dashed #9d52ff; background-color: #353555; padding: 20px; min-height: 120px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; align-items: center; margin-bottom: 20px; border-radius: 8px; }
-        #craftingTable .item { background-color: #555588; border: 1px solid #a78bfa; cursor: default; }
-        #craftingTable .item:hover { transform: none; box-shadow: none; }
-        button { background-color: #c084fc; color: #fff; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em; transition: background-color 0.2s, transform 0.1s; display: block; margin: 20px auto 0; }
-        button:hover { background-color: #a78bfa; transform: translateY(-2px); }
-        button:active { transform: translateY(0); }
-        #resultDisplay { border: 1px solid #7c68a5; background-color: #353555; padding: 20px; margin-top: 30px; border-radius: 8px; text-align: center; }
-        .result-status { font-weight: bold; font-size: 1.2em; text-transform: uppercase; }
-        .status-bom { color: #66ff66; } .status-ruim { color: #ffcc66; } .status-corrupto { color: #ff6666; } .status-neutro { color: #aaaaaa; }
-        .tooltip { visibility: hidden; background-color: rgba(0, 0, 0, 0.8); color: #fff; text-align: center; border-radius: 6px; padding: 5px 10px; position: absolute; z-index: 1; bottom: 100%; left: 50%; transform: translateX(-50%); white-space: nowrap; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-        .item:hover .tooltip { visibility: visible; opacity: 1; }
-    </style>
+    <title>Bancada de Trabalho Arcana</title>
+
+    <!-- Links para os arquivos CSS. Crie um workbench.css para estilizar esta página. -->
+    <link rel="stylesheet" href="./css/base.css"> <!-- Estilos base do seu jogo -->
+    <link rel="stylesheet" href="./css/workbench.css"> <!-- Estilos específicos para esta página -->
+    <link rel="stylesheet" href="./css/transitions.css"> <!-- Estilos para o fade-in -->
 </head>
-<body>
-    <h1>Mesa de Crafting: Sigilos Lovecraftianos</h1>
 
-    <div class="container">
-        <h2 class="section-title">Elementos Arcanos</h2>
-        <div id="elementosDisponiveis"></div>
+<!-- Atributo para o efeito de fade-in ao carregar a página -->
+<body data-transition="fade-from-center">
+
+    <div id="workbench-container">
+
+        <header class="workbench-header">
+            <h1>Bancada de Trabalho Arcana</h1>
+            <p>Combine os elementos para desvendar os segredos da tinta de Abner.</p>
+        </header>
+
+        <main id="crafting-area">
+
+            <!-- PAINEL DE INVENTÁRIO (O que o jogador possui) -->
+            <section class="inventory-panel">
+                <h2>Ingredientes Disponíveis</h2>
+                <div id="elementosDisponiveis" class="item-grid">
+                    <!-- O workbenchManager.js irá popular esta área com os ingredientes que o jogador tem -->
+                    <p class="placeholder-text">Carregando ingredientes...</p>
+                </div>
+            </section>
+
+            <!-- PAINEL DE AÇÃO (Onde a mágica acontece) -->
+            <section class="action-panel">
+                <h2>Mesa de Criação</h2>
+                <div id="craftingTable" class="item-grid crafting-slots">
+                    <!-- O workbenchManager.js irá popular esta área com os ingredientes selecionados -->
+                    <p class="placeholder-text">Selecione os ingredientes para combinar.</p>
+                </div>
+
+                <button id="craftButton" class="craft-btn">Criar</button>
+
+                <div class="result-panel">
+                    <h3>Resultado</h3>
+                    <div id="resultDisplay">
+                        <!-- O workbenchManager.js irá exibir o resultado da criação aqui -->
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="workbench-footer">
+            <button id="back-to-game-btn" class="back-btn">Voltar ao Jogo</button>
+        </footer>
+
     </div>
 
-    <div class="container">
-        <h2 class="section-title">Tinta Viva (Um tipo por vez)</h2>
-        <div id="tintasDisponiveis"></div>
-    </div>
+    <!-- Scripts são carregados no final. O de transições vem primeiro. -->
+         <script src="./js/applySettings.js" defer></script>
 
-    <div class="container">
-        <h2 class="section-title">Mesa de Invocação (Max: 3 Elementos + 1 Tinta)</h2>
-        <div id="craftingTable">
-            <p style="color: #bbb; font-style: italic;">Arraste ou clique nos elementos e na tinta para adicioná-los aqui.</p>
-        </div>
-        <button id="craftButton">Infundir Sigilo!</button>
-    </div>
+    <script type="module" src="./js/pageTransitions.js"></script>
+    <script type="module" src="./js/workbench.js"></script>
 
-    <div class="container">
-        <h2 class="section-title">Resultado da Invocação</h2>
-        <div id="resultDisplay">
-            <p>Aguardando a manifestação das forças cósmicas...</p>
-        </div>
-    </div>
-
-    <script type="module">
-        import { WorkbenchManager } from './js/managers/workbenchManager.js';
-        document.addEventListener('DOMContentLoaded', () => {
-            new WorkbenchManager();
-        });
-    </script>
 </body>
 </html>

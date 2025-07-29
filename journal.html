@@ -1,100 +1,106 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grimório do Tatuador</title>
+    <title>Estúdio de Tatuagem Blackwood</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Unicase:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/journal.css">
+        <link rel="stylesheet" href="./css/base.css">
+                   <link rel="stylesheet" href="/css/transitions.css">
+ 
+     
 
-    <!-- Folhas de Estilo -->
-    <link rel="stylesheet" href="/css/base.css">
-    <!-- O CSS específico para esta página, que estiliza a aparência do livro, abas, etc. -->
-    <link rel="stylesheet" href="/css/journal.css">
-    
-    <!-- Fontes do Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <!--
-      Container principal que envolve todo o conteúdo, estilizado para parecer um livro.
-      O JavaScript usará o ID 'journal-book' como ponto de referência principal.
-    -->
-    <div id="journal-book">
-
-        <!-- ============================================= -->
-        <!-- PÁGINA ESQUERDA (FIXA) - CAPA E ÍNDICE/TABS   -->
-        <!-- ============================================= -->
-        <div class="grimorio-left-panel">
-            <div class="grimorio-illustration">
-                <!-- Uma ilustração para dar ambientação à "capa" do livro. -->
-                <img src="/media/img/journal_cover_art.png" alt="Capa do Grimório">
-            </div>
-            <h2 class="grimorio-title">Grimório Arcano</h2>
-            <h3 class="grimorio-subtitle">Compêndio de Abner</h3>
-
-            <!--
-              Container para as abas de navegação.
-              O JavaScript irá ouvir cliques nos botões dentro desta div.
-              O atributo 'data-tab' é usado pelo JS para saber qual aba foi clicada.
-            -->
-            <div class="grimorio-tabs">
-                <button class="tab-button active" data-tab="simbolos">Símbolos</button>
-                <button class="tab-button" data-tab="bestiario">Bestiário</button>
-                <button class="tab-button" data-tab="cronicas">Crônicas</button>
-                <button class="tab-button" data-tab="artefatos">Artefatos</button>
-                <button class="tab-button" data-tab="anotacoes">Anotações</button>
-            </div>
-
-            <!-- Área para exibir status do jogador, como a sanidade. -->
-            <div class="journal-status">
-                <div class="status-item sanity-status">
-                    <span>Sanidade:</span>
-                    <!-- O JavaScript procurará este ID para atualizar o valor da sanidade. -->
-                    <span id="journal-sanity-value">--</span>
-                </div>
-                <!-- Outros status (ex: dinheiro, dia) poderiam ser adicionados aqui. -->
-            </div>
-        </div>
-
-        <!-- ============================================= -->
-        <!-- PÁGINA DIREITA (DINÂMICA) - CONTEÚDO          -->
-        <!-- ============================================= -->
-        <div class="grimorio-right-panel">
-            <!--
-              ÁREA DE CONTEÚDO PRINCIPAL
-              Este é o container mais importante para o JavaScript.
-              O JournalUIManager irá limpar e preencher esta div com o conteúdo da aba selecionada.
-            -->
-            <div id="dynamic-content-area">
-                <!-- O conteúdo (grade de sigilos, lista de crônicas, etc.) será carregado aqui dinamicamente. -->
-            </div>
-
-            <!--
-              NAVEGAÇÃO E AÇÕES
-              Container para os botões que controlam o conteúdo da página direita.
-            -->
-            <div class="content-navigation">
-                <!-- Botão para ir para a página anterior. Começa escondido. -->
-                <button id="prev-content-btn" class="nav-button" style="display: none;">< Anterior</button>
-
-                <!-- Botão para selecionar o sigilo. Fica escondido até um sigilo ser clicado. -->
-                <button id="select-sigil-btn" style="display: none;">Selecionar Sigilo</button>
-                
-                <!-- Botão para ir para a próxima página. Começa escondido. -->
-                <button id="next-content-btn" class="nav-button" style="display: none;">Próxima ></button>
-            </div>
+<body data-transition="fade-from-right" data-music-src="../media/sfx/abner_theme.mp3">
+    <div id="journal-book" class="geral-container">
+        <div class="palco-container">
             
-            <!-- Botão fixo para voltar à tela principal do jogo. -->
-            <button id="back-to-game-btn">Voltar ao Estúdio</button>
+            <div id="popup-item-detalhes" class="hidden">
+                <h4 id="popup-nome-item">Nome do Item</h4>
+                <p id="popup-descricao-item">Descrição detalhada do item.</p>
+            </div>
+
+            <div class="cenas-container">
+                <!-- CENA DE INVENTÁRIO -->
+                <div id="cena-inventario" class="cena hidden">
+                    <div class="conteudo-cena">
+                        <h2>Inventário</h2>
+                        <ul id="lista-inventario"></ul>
+                    </div>
+                </div>
+
+              <!-- CENA DE VÍNCULOS -->
+                <div id="cena-vinculos" class="cena hidden">
+                    <div class="conteudo-cena">
+                        <h2>Vínculos</h2>
+                        <nav class="menu-vinculos">
+                            <button data-alvo="vinculos-cronicas" class="active">Crônicas</button>
+                            <button data-alvo="vinculos-bestiario">Bestiário</button>
+                            <button data-alvo="vinculos-anotacoes">Anotações</button>
+                        </nav>
+
+                        <!-- ✨ NOVA DIV AGRUPADORA AQUI ✨ -->
+                        <div class="vinculos-conteudo-container">
+                            <div id="vinculos-cronicas" class="conteudo-vinculos-secao"></div>
+                            <div id="vinculos-bestiario" class="conteudo-vinculos-secao hidden">
+                                <div class="bestiario-container">
+                                    <div class="bestiario-display">
+                                        <img id="bestiario-display-img" src="" alt="Imagem da criatura">
+                                        <h3 id="bestiario-display-nome">Selecione uma criatura</h3>
+                                        <p id="bestiario-display-desc">A descrição aparecerá aqui.</p>
+                                    </div>
+                                    <div id="bestiario-lista" class="bestiario-lista"></div>
+                                </div>
+                            </div>
+                            <div id="vinculos-anotacoes" class="conteudo-vinculos-secao hidden"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ADICIONADO: Cena de Seleção de Sigilos como uma div fixa -->
+                <div id="cena-selecao-sigilos" class="cena hidden">
+                    <div class="conteudo-cena">
+                        <h2>Selecionar Sigilo</h2>
+                        <div id="sigil-selection-grid">
+                            <!-- Os sigilos descobertos serão gerados aqui pelo JournalManager -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <aside id="menu-lateral-direito">
+                <div class="display-sigilo">
+                    <h3 id="sigilo-ativo-nome">Nenhum Sigilo</h3>
+                    <div id="sigilo-ativo-img" alt="Sigilo Ativo"></div>
+                </div>
+                <div class="barra-sanidade-container">
+                    <h3>Sanidade</h3>
+                    <div id="bg_sanidade">
+                        <div class="barra-sanidade"><div class="barra-sanidade-progresso"></div></div>
+                    </div>
+                </div>
+   
+                <ul id="menu-navegacao-principal">
+              
+                    <!-- Cada botão agora declara o som que quer tocar -->
+                    <li id="btn-sigilos" class="btn-menu" data-sound-click="page_turn">Sigilos</li>
+                    <li id="btn-inventario" class="btn-menu" data-sound-click="page_turn">Inventário</li>
+                    <li id="btn-vinculos" class="btn-menu" data-sound-click="page_turn">Vínculos</li>
+                </ul>
+                </ul>
+                <div class="menu-footer">
+                    <button id="back-to-game-btn" class="btn-salvar">Voltar ao Jogo</button>
+                </div>
+            </aside>
         </div>
+    </div>      <script type="module" src="js/pageTransitions.js"></script>
+         <script src="./js/applySettings.js" defer></script>
 
-    </div>
+    <script type="module" src="js/journal.js"></script>
 
-    <!--
-      CARREGAMENTO DO SCRIPT
-      Este é o único script que o HTML precisa conhecer.
-      Ele é do tipo "module", o que permite que ele use 'import' para carregar os outros scripts
-      (como journalManager.js e journalUIManager.js) de que precisa.
-    -->
-    <script src="/js/journal.js" type="module"></script>
 </body>
 </html>

@@ -1,0 +1,37 @@
+body {
+    background-color: #1a1a1a;
+    color: #f0ead6;
+    font-family: 'Crimson Text', serif;
+}
+#workbench-container {
+    width: 90vw;
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #222;
+    border: 2px solid #444;
+}
+.workbench-header { text-align: center; border-bottom: 1px solid #444; padding-bottom: 20px; }
+#crafting-area { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px; }
+.inventory-panel h2, .action-panel h2 { font-family: 'Special Elite', cursive; color: #e0b06f; }
+.item-grid { display: flex; flex-wrap: wrap; gap: 10px; min-height: 150px; padding: 10px; background-color: rgba(0,0,0,0.2); border: 1px dashed #555; }
+.item { border: 1px solid #555; padding: 10px; cursor: pointer; text-align: center; }
+.item.selected { border-color: #4CAF50; box-shadow: 0 0 10px #4CAF50; }
+.craft-btn, .back-btn { display: block; width: 100%; padding: 15px; margin-top: 20px; font-size: 1.2em; cursor: pointer; }
+.result-panel { margin-top: 20px; padding: 15px; background-color: #1a1a1a; min-height: 100px; }
+.status-bom { color: #77dd77; }
+.status-ruim { color: #ff6961; }
+.status-neutro { color: #fdfd96; }
+.item.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background-color: #333;
+}.btn-danger {
+    background-color: #a01c1c; /* Vermelho escuro */
+    color: #f0e6d2;
+    border-color: #6d1414;
+}
+.btn-danger:hover {
+    background-color: #c0392b;
+    border-color: #a01c1c;
+}

@@ -3,21 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análise do Pedido</title>
+    <title>Investigando o Pedido</title>
     <link rel="stylesheet" href="/css/base.css">
-    <!-- Você pode ter um CSS específico para esta página -->
     <link rel="stylesheet" href="/css/analysis.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="analysis-view-container">
-        <!-- O conteúdo será totalmente gerado pelo analysis.js -->
-        <h2>Carregando Análise...</h2>
-    </div>
+    <div id="analysis-container">
+        <header>
+            <h1>Investigando o Pedido do Cliente</h1>
+            <p id="instruction-text">Examine o desenho em busca de anomalias.</p>
+        </header>
 
-    <!-- <<< MUDANÇA: Lista de scripts drasticamente reduzida >>> -->
-    <!-- Carregamos apenas o script que controla ESTA página. -->
-    <!-- Ele será responsável por carregar seus próprios dados. -->
+        <main>
+            <div id="sigil-display-area">
+                <canvas id="sigil-canvas"></canvas>
+            </div>
+            <div id="journal-notes-area">
+                <h3>Anotações de Abner</h3>
+                <div id="notes-content">
+                    <p class="placeholder">Use suas ferramentas para revelar anotações ocultas sobre os pontos de instabilidade...</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div id="tool-panel">
+                <!-- O JS vai adicionar a ferramenta da Lupa aqui se o jogador a possuir -->
+            </div>
+            <div id="decision-panel" class="hidden">
+                <!-- Os botões de decisão aparecerão aqui após a investigação -->
+            </div>
+        </footer>
+    </div>
+         <script src="./js/applySettings.js" defer></script>
+
     <script src="/js/analysis.js" type="module"></script>
 </body>
 </html>

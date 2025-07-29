@@ -101,7 +101,12 @@ body {
     width: 320px; /* Largura fixa */
     text-align: left; /* Alinha o texto à esquerda */
 }
-
+.cursor-default { cursor: url('/media/img/icons/hand_point_cursor.png') 16 16, auto; } /* Mão apontando */
+.cursor-interact { cursor: url('/media/img/icons/hand_cursor.png') 16 16, auto; }/* Mão pegando */
+.cursor-inspect { cursor: url('/media/img/icons/eye_cursor.png') 16 16, auto; }
+.cursor-pickup { cursor: url('/media/img/icons/hand_cursor.png') 16 16, auto; }
+.cursor-nav-right { cursor: url('/media/img/icons/nav_right_cursor.png') 32 16, auto; }
+.cursor-nav-left { cursor: url('/media/img/icons/nav_left_cursor.png') 0 16, auto; }
 /* Cabeçalho do painel de evento (estatísticas, nome do personagem) */
 #event-header {
 

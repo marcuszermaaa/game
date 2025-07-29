@@ -1,326 +1,408 @@
-/* css/journal.css - ESTILOS ESPECÍFICOS PARA A PÁGINA DO GRIMÓRIO */
 
-/* Container principal que simula o livro aberto */
-#journal-book {
-    width: 95vw; /* Ocupa quase toda a largura da tela */
-    max-width: 1400px; /* Limite máximo para telas muito grandes */
-    height: 90vh; /* Ocupa a maior parte da altura */
-    max-height: 800px; /* Limite de altura */
-    background-color: #2c2a2a; /* Cor de fundo interna do livro */
-    background-image: url('/media/img/paper_texture.jpg'); /* Textura de papel envelhecido */
-    border: 3px solid #4a3f35; /* Borda de "couro" */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7); /* Sombra para dar profundidade e destacar da página */
-    display: flex; /* Usa flexbox para criar as duas páginas lado a lado */
-    padding: 20px;
-}
-
-/* --- Painel Esquerdo (Fixo) --- */
-.grimorio-left-panel {
-    flex-basis: 350px; /* Largura fixa para o painel esquerdo */
-    flex-shrink: 0; /* Impede que o painel encolha */
-    padding: 25px;
-    border-right: 2px solid #5a5a5a; /* Simula a dobra central do livro */
+body {
+    background-color: black;
     display: flex;
-    flex-direction: column; /* Organiza os itens verticalmente */
-    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    font-family: ' Unicase';
 }
 
-.grimorio-illustration img {
-    width: 80%;
-    max-width: 200px;
-    border-radius: 50%;
-    border: 4px solid #4a3f35;
-    margin-bottom: 20px;
-}
-
-.grimorio-title {
-    font-size: 2.5em;
-    margin-bottom: 5px;
-}
-
-.grimorio-subtitle {
-    font-size: 1.2em;
-    color: #a4a191;
-    border-bottom: none;
-    margin-bottom: 30px;
-}
-
-/* --- Abas de Navegação --- */
-.grimorio-tabs {
+.geral-container {
+    height: 632.8px;
+    width: 1034px;
     display: flex;
-    flex-direction: column;
-    gap: 10px; /* Espaço entre as abas */
-    margin-bottom: auto; /* Empurra o status para o final */
-}
-
-.tab-button {
-    width: 100%;
-    background: none; /* Fundo transparente */
-    border: 1px solid #5a5a5a;
-    color: #a4a191;
-    text-align: left;
-    padding: 12px 20px;
-    box-shadow: none;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.tab-button:hover {
-    background-color: rgba(243, 209, 121, 0.1);
-    color: #f3d179;
-    transform: none; /* Remove o efeito de elevação para as abas */
-}
-
-.tab-button.active {
-    background-color: #f3d179;
-    color: #1a1a1a;
-    font-weight: bold;
-    border-color: #f3d179;
-}
-
-/* --- Status do Jogador (Sanidade) --- */
-.journal-status {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #5a5a5a;
-}
-
-.status-item {
-    font-family: 'Special Elite', cursive;
-    font-size: 1.2em;
-    color: #a4a191;
-}
-
-#journal-sanity-value {
-    color: #f3d179;
-    font-weight: bold;
-}
-
-/* --- Painel Direito (Conteúdo Dinâmico) --- */
-.grimorio-right-panel {
-    flex-grow: 1; /* Ocupa todo o espaço restante */
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-    position: relative; /* Necessário para posicionar os botões de navegação */
-}
-
-#dynamic-content-area {
-    flex-grow: 1; /* Faz esta área ocupar todo o espaço vertical disponível */
-    overflow-y: auto; /* Adiciona uma barra de rolagem se o conteúdo for muito grande */
-    padding-right: 15px; /* Espaço para a barra de rolagem */
-}
-
-/* --- Grade de Sigilos --- */
-.sigil-grid {
-    display: grid;
-    /* Cria colunas responsivas: no mínimo 220px de largura, preenchendo o espaço disponível */
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-}
-
-.sigil-card {
-    background-color: rgba(0, 0, 0, 0.2);
-    border: 2px solid #5a5a5a;
-    padding: 15px;
-    cursor: pointer;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    background-image: url("../media/img/bg_journal.png");
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: cover;
     position: relative;
 }
 
-.sigil-card:hover {
-    border-color: #f3d179;
-    box-shadow: 0 0 15px rgba(243, 209, 121, 0.2);
+.palco-container {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    width: 100%;
+    max-height: 634px;
+    gap: 20px;
 }
 
-.sigil-card.selected {
-    border-color: #ff5757; /* Cor de destaque para o sigilo selecionado */
-    box-shadow: 0 0 20px rgba(255, 87, 87, 0.5);
+.cena { grid-column: 1; grid-row: 1; display: flex; align-items: center; justify-content: center; }
+.cena.hidden { display: none; }
+
+.conteudo-cena {
+    width: 667px;
+    height: 505px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    background-image: url(../media/img/painel_journal.png);
+    background-position: center top;
+    background-size: cover;
+    padding: 50px;
+    margin-top: 13%;
 }
 
-.sigil-name {
-    font-size: 1.2em;
-    text-align: center;
-    border-bottom: 1px solid #5a5a5a;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    color: #f3d179;
+
+/* Menu Lateral Direito */
+#menu-lateral-direito {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    height: 468px;
+    margin-top: 17px;
+    padding: 29px 0 0;
+    background-image: url("../media/img/menu_topo.png");
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 296px;
 }
 
+.menu-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 317px;
+    height: 85px;
+    background-image: url("../media/img/menu_footer.png");
+    background-position: bottom;
+    background-size: cover;
+    margin-left: -10px;
+    padding-bottom: 39px;
+}
+.btn-salvar { padding: 0; font-size: 14px; font-weight: bold; background-color: var(--cor-destaque-verde); color: var(--cor-fundo-painel-escuro); border: none; border-radius: 5px; cursor: pointer; width: 103px; height: 32px; }
+.btn-salvar:hover { opacity: 0.9; }
+
+/* Display do Sigilo Ativo */
+.display-sigilo { text-align: center; margin-top: 12%; font-family: 'Cormorant Unicase', serif; }
+#sigilo-ativo-img { height: 144px; width: 98px; display: block; margin: auto; margin-bottom: 22px; position: relative; background-size: contain; background-position: center; background-repeat: no-repeat; }
+.display-sigilo h3 { color: var(--cor-texto-titulo); margin-bottom: 42px; }
+
+/* Barra de Sanidade */
+.barra-sanidade-container { text-align: center; }
+.barra-sanidade-container h3 { font-size: 14px; margin-bottom: 5px; }
+#bg_sanidade { width: 171px; height: 14px; background-image: url("../media/img/menu_journal_status.png"); background-size: contain; background-repeat: no-repeat; padding: 8%; margin: auto; background-position: center; }
+.barra-sanidade { width: 84%; height: 11px; background-color: #7a2d2d; border-radius: 12px; overflow: hidden; margin: auto; }
+.barra-sanidade-progresso { width: 80%; height: 100%; background-color: blueviolet; transition: width 0.5s; }
+
+/* Navegação Principal */
+#menu-navegacao-principal {
+display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  padding: 0;
+  width: 180px;
+
+  margin: auto;
+  text-align: center;
+  height: 80px;
+  width: 69%;     }
+.btn-menu { width: 104%;
+  font-size: 1.1em;
+  color: var(--cor-texto-principal);
+  cursor: pointer;
+  background-image: url("/media/img/menu_hr.png");
+  background-size: contain;
+  background-position: bottom;
+    background-position-y: bottom;
+  background-position-y: 12px;
+  list-style: none;
+  background-repeat: no-repeat;}
+.btn-menu:hover {   opacity: 0.18; }
+.btn-menu.active { background-color: var(--cor-destaque-verde); color: #111; }
+
+/* Conteúdo das Cenas */
+#lista-inventario { list-style: none; padding: 0; }
+.item-inventario { display: flex; align-items: center; gap: 15px; padding: 10px; border-bottom: 1px solid var(--cor-borda); cursor: help; }
+.item-inventario:hover { background-color: rgba(255,255,255,0.05); }
+.item-inventario img { width: 50px; height: 50px; }
+.menu-vinculos { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--cor-borda); padding-bottom: 15px; }
+.menu-vinculos button { background: none; border: 1px solid var(--cor-borda); color: var(--cor-texto-principal); padding: 10px 20px; cursor: pointer; }
+.menu-vinculos button.active { background-color: var(--cor-destaque-verde); color: #111; }
+#vinculos-anotacoes textarea { width: 95%; height: 50vh; background-color: #2c2c2c; color: var(--cor-texto-principal); border: 1px solid var(--cor-borda); padding: 15px; }
+.bestiario-container { display: flex; gap: 20px; }
+.bestiario-display { flex: 2; }
+.bestiario-lista { flex: 1; overflow-y: auto; }
+.bestiario-menu-item { display: flex; align-items: center; gap: 10px; padding: 10px; cursor: pointer; }
+.bestiario-menu-item.active { background-color: rgba(76, 175, 80, 0.2); }
+.chronicle-entry { background-color: rgba(0,0,0,0.2); padding: 15px; margin-bottom: 10px; border-left: 3px solid var(--cor-destaque-azul); }
+#popup-item-detalhes { position: absolute; bottom: 20px; left: 20px; background-color: #111; border: 1px solid var(--cor-destaque-azul); padding: 15px; z-index: 100; pointer-events: none; }
+#popup-item-detalhes.hidden { display: none; }
+
+/* Seleção de Sigilos (dentro da cena) */
+#sigil-selection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+.box-selecao-sigilo { padding: 15px; background-color: #2c2c2c; border: 2px solid var(--cor-borda); text-align: center; cursor: pointer; transition: all 0.2s; }
+.box-selecao-sigilo:hover { transform: translateY(-5px); border-color: var(--cor-destaque-verde); }
+.box-selecao-sigilo .sigil-drawing-area { width: 150px; height: 150px; margin: 0 auto 10px; position: relative; }
+
+/* =================================================================== */
+/*  ESTILOS PARA O DESENHO DO SIGILO (GERADO PELO JS)
+/* =================================================================== */
 .sigil-drawing-area {
     width: 100%;
-    height: 150px;
+    height: 100%;
     position: relative;
-    margin: 10px 0;
 }
 
-.sigil-lore {
-    font-size: 0.9em;
-    font-style: italic;
-    color: #b0b0b0;
-    margin-top: 10px;
-}
-
-.sigil-type-indicator {
+.sigil-line {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    font-family: 'Special Elite', cursive;
-    font-size: 0.8em;
-    padding: 3px 6px;
-    background-color: #1a1a1a;
-    border-radius: 3px;
+    height: 2px;
+    background-color: #2af1f1;
+    transform-origin: 0 0;
 }
 
-/* Cores diferentes para tipos de sigilo */
-.type-safe .sigil-type-indicator { color: #85c285; }
-.type-corrupted .sigil-type-indicator { color: #e0b0ff; }
-.type-prohibited .sigil-type-indicator { color: #ff6e6e; }
-
-/* --- Navegação e Botões de Ação --- */
-.content-navigation {
-    display: flex;
-    justify-content: space-between; /* Espaça os botões */
-    align-items: center;
-    padding: 15px 0;
-    margin-top: 15px;
-    border-top: 1px solid #5a5a5a;
-}
-
-#back-to-game-btn {
+.sigil-node {
     position: absolute;
-    bottom: 25px;
-    right: 25px;
-    font-size: 1.2em;
+    width: 5px;
+    height: 5px;
+    background-color: #50ebff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+/* --- CORREÇÃO PRINCIPAL #1 --- */
+/* Removemos o overflow daqui. Este contêiner não deve rolar. */
+.cenas-container {
+    padding: 25px;
+    border-right: 2px solid var(--cor-borda);
+    position: relative; 
 }
 
-/* --- Estilos para a Aba de Artefatos --- */
-.artefact-list {
+.cena { grid-column: 1; grid-row: 1; display: flex; align-items: center; justify-content: center; }
+.cena.hidden { display: none; }
+
+/* --- CORREÇÃO PRINCIPAL #2 --- */
+/* O painel agora não tem overflow. Ele serve apenas como moldura visual. */
+.conteudo-cena {
+    width: 667px;
+    height: 505px;
+    box-sizing: border-box;
+    background-image: url(../media/img/painel_journal.png);
+    background-position: center top;
+    background-size: cover;
+    padding: 50px;
+    margin-top: 13%;
+    
+    /* ✨ ADICIONE ESTAS LINHAS ✨ */
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: column; /* Empilha os filhos (h2, nav, container) verticalmente */
 }
 
-.artefact-entry {
-    background-color: rgba(0, 0, 0, 0.15);
-    border-left: 4px solid #a4a191;
+/* --- ADIÇÃO IMPORTANTE --- */
+/* Este novo wrapper ficará DENTRO do .conteudo-cena. */
+/* Ele ocupará o espaço interno e será o responsável pela rolagem. */
+.conteudo-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto; /* A barra de rolagem agora pertence a este elemento! */
+    padding-right: 15px; /* Espaço para a barra de rolagem não sobrepor o texto */
+}
+
+/* Estilização da barra de rolagem para o novo wrapper */
+.conteudo-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+.conteudo-wrapper::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+}
+.conteudo-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--cor-borda);
+    border-radius: 4px;
+}
+.chronicle-entry {
+     width: 73%;
+    background: midnightblue;
+    height: 144px;
+    line-height: 19px;
+    padding: 12px;
+    padding-top: 1px;
+    margin: 0px;
+    margin-bottom: 1px;
+}
+
+.chronicle-character-profile {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-left: 4px solid #b43b3b; /* Cor de destaque mais avermelhada */
     padding: 15px 20px;
+    margin-bottom: 25px; /* Mais espaço entre os perfis */
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
-.artefact-name {
-    color: #f3d179;
-    font-size: 1.3em;
-    margin-bottom: 5px;
-    border-bottom: none;
-}
-
-.artefact-description {
-    font-size: 1em;
-    color: #c7bda0;
-}
-
-/* --- Estilos para a Aba de Bestiário --- */
-.bestiary-grid {
+.profile-header {
     display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.bestiary-card {
-    display: flex;
-    gap: 20px;
-    background-color: rgba(0, 0, 0, 0.15);
-    padding: 15px;
-    border: 1px solid #4a3f35;
-}
-
-.bestiary-image {
-    width: 120px;
-    height: 120px;
-    object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
-    border: 2px solid #5a5a5a;
-    flex-shrink: 0; /* Impede que a imagem encolha */
-}
-
-.bestiary-name {
-    color: #ff6e6e; /* Cor vermelha para destacar o perigo */
-    font-size: 1.4em;
-    border-bottom: 1px solid #5a5a5a;
-    padding-bottom: 5px;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
     margin-bottom: 10px;
 }
 
-.bestiary-description {
-    font-size: 1em;
-}
-
-
-
-/* --- Estilos para a Aba de Crônicas --- */
-
-.chronicles-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.chronicle-entry {
-    background-color: rgba(0, 0, 0, 0.2);
-    border: 1px solid #4a3f35;
-    border-left: 5px solid #f3d179; /* Borda de destaque dourada */
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.chronicle-header {
-    font-family: 'Special Elite', cursive;
-    color: #f3d179;
-    font-size: 1.5em;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #5a5a5a;
-}
-
-.chronicle-details {
-    display: grid;
-    /* Cria duas colunas para os detalhes, otimizando o espaço */
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.detail-item {
-    display: flex;
-    flex-direction: column;
-}
-
-.detail-label {
-    font-size: 0.9em;
-    color: #a4a191;
-    text-transform: uppercase;
-    margin-bottom: 3px;
-}
-
-.detail-value {
-    font-size: 1.1em;
+.profile-header h3 {
+    margin: 0;
+    font-family: 'Cormorant Unicase', serif; /* Fonte mais estilizada */
+    font-size: 1.4em;
     color: #e0e0e0;
+}
+
+.encounter-count {
+    font-size: 0.9em;
     font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Estilos para valores positivos (dinheiro, sanidade) */
-.detail-value.positive {
-    color: #a3d9a5; /* Verde claro */
-}
-
-/* Estilos para valores negativos (perda de sanidade) */
-.detail-value.negative {
-    color: #ff8a8a; /* Vermelho claro */
-}
-
-/* Estilos para o status da carta */
-.mail-status.has-mail {
-    color: #87cefa; /* Azul claro para indicar correspondência */
-}
-
-.mail-status.no-mail {
-    color: #888;
+.profile-description {
     font-style: italic;
+    color: #b9b9b9;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.chronicle-character-profile details {
+    font-size: 0.9em;
+}
+
+.chronicle-character-profile summary {
+    cursor: pointer;
+    font-weight: bold;
+    color: #c5c5c5;
+    padding: 5px;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+}
+
+.chronicle-character-profile summary:hover {
+    background-color: rgba(255,255,255,0.05);
+}
+
+.chronicle-character-profile ul {
+    padding-left: 20px;
+    margin-top: 10px;
+    list-style-type: square; /* Melhora o visual da lista */
+}
+
+.chronicle-character-profile li {
+    margin-bottom: 12px; /* Mais espaço entre os eventos */
+    line-height: 1.5;
+    border-bottom: 1px dashed rgba(255,255,255,0.1); /* Divisor sutil */
+    padding-bottom: 10px;
+}
+.chronicle-character-profile li:last-child {
+    border-bottom: none; /* Remove a borda do último item */
+}
+
+.chronicle-outcome {
+    font-weight: bold;
+    margin-left: 8px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.outcome-success { color: #a3ffb4; background-color: rgba(60, 179, 113, 0.2); }
+.outcome-fail { color: #ff9f9f; background-color: rgba(179, 60, 60, 0.2); }
+.outcome-special { color: #e0b0ff; background-color: rgba(123, 60, 179, 0.2); }
+.outcome-neutral { color: #d1d1d1; background-color: rgba(119, 119, 119, 0.2); }
+
+.chronicle-notes {
+    font-size: 0.95em;
+    padding-left: 10px;
+    margin-top: 5px;
+    color: #c7c7c7;
+}
+#vinculos-cronicas,
+#vinculos-bestiario,
+#vinculos-anotacoes,
+#cena-inventario .conteudo-wrapper { /* Adicione um wrapper se o inventário precisar */
+    height: 100%;
+    width: 100%;
+}
+
+
+
+/* Para o Inventário, a rolagem é na lista */
+#lista-inventario {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 15px;
+}
+
+/* Para o Bestiário, a rolagem é na lista de criaturas */
+.bestiario-lista {
+     height: 100%;
+     overflow-y: auto;
+     padding-right: 15px;
+}
+
+/* Estilização da barra de rolagem para um visual mais temático */
+#vinculos-cronicas::-webkit-scrollbar,
+#lista-inventario::-webkit-scrollbar,
+.bestiario-lista::-webkit-scrollbar {
+    width: 8px;
+}
+
+#vinculos-cronicas::-webkit-scrollbar-track,
+#lista-inventario::-webkit-scrollbar-track,
+.bestiario-lista::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+}
+
+#vinculos-cronicas::-webkit-scrollbar-thumb,
+#lista-inventario::-webkit-scrollbar-thumb,
+.bestiario-lista::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+    border: 1px solid #222;
+}
+
+#cena-vinculos h2 {
+    flex-shrink: 0; /* Impede que o título encolha */
+}
+#cena-vinculos .menu-vinculos {
+    flex-shrink: 0; /* Impede que o menu encolha */
+    margin-bottom: 20px; /* Espaço entre o menu e o conteúdo */
+}
+
+/* O novo contêiner que agrupa os conteúdos das abas */
+.vinculos-conteudo-container {
+    flex-grow: 1; /* ✨ FAZ ESTE CONTAINER CRESCER para preencher o espaço restante */
+    min-height: 0; /* Truque de CSS para o Flexbox funcionar corretamente com overflow */
+    position: relative; /* Contexto para os filhos posicionados */
+}
+
+/* Os painéis de conteúdo individuais dentro do container */
+.conteudo-vinculos-secao {
+    /* Posicionados absolutamente para ocupar o mesmo espaço e serem trocados com JS */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto; /* ✨ A ROLAGEM ACONTECE AQUI ✨ */
+    padding-right: 15px; /* Espaço para a barra de rolagem */
+}
+.conteudo-vinculos-secao.hidden {
+    display: none !important; /* Garante que as abas ocultas não apareçam */
+}
+
+/* Estilo para a barra de rolagem interna */
+.conteudo-vinculos-secao::-webkit-scrollbar {
+    width: 8px;
+}
+.conteudo-vinculos-secao::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+}
+.conteudo-vinculos-secao::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+    border: 1px solid #222;
 }

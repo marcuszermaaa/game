@@ -3,40 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fase Noturna</title>
+    <title>Fim do Dia</title>
     <link rel="stylesheet" href="/css/base.css">
-    <!-- Você pode ter um CSS totalmente diferente aqui, como night.css -->
     <link rel="stylesheet" href="/css/night.css"> 
+    <link rel="stylesheet" href="/css/transitions.css">
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="/js/applySettings.js" defer></script>
 </head>
-<body>
-    <div id="night-view-container" class="view active">
-        <h2>Fim do Dia <!-- Dia será carregado via JS --></h2>
-        
-        <!-- A história (lore) de fim de dia será carregada aqui -->
-        <div id="lore-reveal">
-            <!-- Lore será carregada via JS -->
-        </div>
+<body data-transition="fade-from-center">
 
-        <h3>Loja Noturna</h3>
-        <p>Use seu dinheiro para se preparar.</p>
-
-        <!-- A LOJA É RENDERIZADA DENTRO DESTA DIV. ELA É ESSENCIAL. -->
-        <div id="upgrades-shop">
-            <!-- Upgrades serão carregados via JS -->
-        </div>
+    <div id="night-view-container">
         
-        <!-- Esta div é usada para mostrar feedback de compra ("Café tomado!", "Tinteiro cheio!", etc.) -->
+        <header>
+            <h2 id="night-title">Fim do Dia --</h2>
+            <!-- ✨ NOVA SEÇÃO PARA ESTATÍSTICAS DO JOGADOR ✨ -->
+            <div id="player-stats">
+                <span id="player-money-display">Dinheiro: $---</span>
+            </div>
+            <p>Os sussurros da cidade se acalmam. É hora de usar o que ganhou para se preparar para o que virá.</p>
+        </header>
+
+        <!-- ✨ ESTRUTURA DA LOJA DIVIDIDA EM SEÇÕES ✨ -->
+        <main id="shop-sections">
+            
+            <section class="shop-category" id="permanent-upgrades">
+                <h3>Melhorias Permanentes</h3>
+                <div class="card-grid">
+                    <p>Carregando...</p>
+                </div>
+            </section>
+            
+            <section class="shop-category" id="consumable-items">
+                <h3>Consumíveis e Ingredientes</h3>
+                <div class="card-grid">
+                    <p>Carregando...</p>
+                </div>
+            </section>
+            
+        </main>
+        
         <div id="purchase-feedback"></div>
 
-        <button id="start-new-day-btn">Dormir e começar um novo dia</button>
+        <footer>
+            <button id="start-new-day-btn">Dormir e começar um novo dia</button>
+        </footer>
     </div>
 
     <!-- JavaScript Files -->
     <!-- Garante que as constantes (como MAX_INK) estejam disponíveis para night.js -->
     <script src="./js/constants.js" type="module"></script> 
-    
+
     <!-- Dados para a loja -->
+         <script src="./js/applySettings.js" defer></script>
+
     <script src="./js/data/loreData.js" type="module"></script>
     <script src="./js/data/upgradeData.js" type="module"></script>
     

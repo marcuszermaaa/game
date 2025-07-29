@@ -1,340 +1,238 @@
-/* css/mail.css - Estilos para a página de Cartas (Mail) */
+/* css/mail.css - VERSÃO MELHORADA E ESTILIZADA */
 
-/* Container principal da view de Cartas */
-#mail-view-container {
-    padding: 30px; /* Espaçamento interno */
-    max-width: 800px; /* Largura máxima da view */
-    width: 90%; /* Largura responsiva */
-    display: flex; /* Usa flexbox para organizar os elementos */
-    flex-direction: column; /* Organiza os elementos em coluna */
-    align-items: center; /* Centraliza os elementos horizontalmente */
-    justify-content: center; /* Centraliza os elementos verticalmente */
-}
-
-/* Título principal da página de Cartas */
-#mail-view-container h2 {
-    color: var(--header-color); /* Cor do título definida em base.css */
-    font-family: 'Special Elite', cursive; /* Fonte estilizada */
-    font-size: 2.2em; /* Tamanho da fonte grande */
-    margin-bottom: 15px; /* Margem inferior */
+/* --- VARIÁVEIS DE COR PARA O TEMA --- */
+:root {
+    --cor-fundo-pagina: #1a1a1a;
+    --cor-fundo-diario: #f5eeda; /* Pergaminho claro */
+    --cor-borda-diario: #5d4037; /* Marrom escuro, couro */
+    --cor-texto-principal: #3e2723; /* Marrom muito escuro */
+    --cor-texto-suave: #6d4c41;
+    --cor-destaque: #e67e22; /* Laranja arcano */
+    --cor-nao-lido: #c0392b; /* Vermelho escuro */
+    --cor-lido: #7f8c8d; /* Cinza suave */
 }
 
-/* Lista que exibe os cards de cartas */
-#mail-list {
-    width: 100%; /* Ocupa toda a largura disponível */
-    max-height: 400px; /* Altura máxima para a lista de cartas */
-    overflow-y: auto; /* Adiciona barra de rolagem vertical se necessário */
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding-right: 10px; /* Espaço para a barra de rolagem */
-    text-align: left; /* Alinha o conteúdo das cartas à esquerda */
-    display: flex; /* Usa flexbox para organizar os cards */
-    flex-direction: column; /* Organiza os cards em coluna */
-    gap: 15px; /* Espaço entre os cards */
+/* --- CONFIGURAÇÃO GERAL DA PÁGINA --- */
+body {
+    background-color: var(--cor-fundo-pagina);
+    background-image: url('../media/img/dark_wood_texture.png'); /* Adiciona uma textura de mesa de madeira */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+}
+#mail-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../media/img/bg_mail.jpg'); /* Fundo de pergaminho */
+}
+/* --- O PAINEL PRINCIPAL (DIÁRIO) --- */
+.message-dashboard {
+    width: 90vw;
+    height: 90vh;
+    max-width: 1200px;
+    background-color: var(--cor-fundo-diario);
+    border: 8px solid var(--cor-borda-diario);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7), inset 0 0 15px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    display: flex;
+    position: relative;
+    color: var(--cor-texto-principal);
 }
 
-/* Estilos da barra de rolagem para navegadores WebKit (Chrome, Safari) */
-#mail-list::-webkit-scrollbar {
-    width: 8px; /* Largura da barra de rolagem */
-}
-#mail-list::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.2); /* Cor de fundo da trilha */
-    border-radius: 4px; /* Bordas arredondadas para a trilha */
-}
-#mail-list::-webkit-scrollbar-thumb {
-    background: var(--border-color); /* Cor da alça da barra de rolagem */
-    border-radius: 4px; /* Bordas arredondadas para a alça */
+/* --- PAINEL ESQUERDO (FLAVOR) --- */
+.left-panel {
+    flex-basis: 35%;
+    border-right: 2px solid #d7ccc8; /* Divisor sutil */
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Estilo para cada card de carta na lista */
-.mail-card {
-    background-color: var(--panel-bg-color); /* Background do painel definido em base.css */
-    border: 1px solid var(--border-color); /* Borda padrão */
-    padding: 15px; /* Espaçamento interno */
-    border-radius: 5px; /* Bordas arredondadas */
-    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transições suaves para interações */
-    cursor: pointer; /* Indica que a carta é clicável */
+.section-title-handwriting {
+    font-family: 'Special Elite', cursive;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--cor-texto-principal);
 }
 
-/* Estilo para cartas que já foram lidas */
+.section-subtitle {
+    text-align: center;
+    font-style: italic;
+    color: var(--cor-texto-suave);
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+.left-panel-illustration {
+    width: 100%;
+    border: 4px solid #bcaaa4;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    margin-bottom: 1.5rem;
+}
+
+.left-panel-text {
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+
+
+/* --- PAINEL DIREITO (FUNCIONAL) --- */
+.right-panel {
+    flex-basis: 65%;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    overflow-y: auto; /* Permite rolar se o conteúdo for grande */
+}
+
+.panel-section {
+    margin-bottom: 2rem;
+}
+
+.panel-section h3 {
+    font-family: 'Cormorant Unicase', serif;
+    font-size: 1.8rem;
+    border-bottom: 1px solid #bcaaa4;
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+/* Estilização das Listas */
+.panel-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilo base para itens de lista (Lore e Mail) */
+.lore-item, .mail-card {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 3px;
+    border-left: 5px solid transparent;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    background-color: rgba(0,0,0,0.02);
+}
+
+.lore-item:hover, .mail-card:hover {
+    background-color: rgba(0,0,0,0.05);
+    transform: translateX(5px);
+    border-left-color: var(--cor-destaque);
+}
+
+/* Estilo específico para itens de Lore */
+.lore-item {
+    display: flex;
+    align-items: center;
+    border-left-color: var(--cor-texto-suave);
+}
+.lore-item.active {
+    background-color: rgba(0,0,0,0.08);
+    border-left-color: var(--cor-destaque);
+}
+
+.item-icon-ink {
+    margin-right: 1rem;
+    filter: grayscale(100%) opacity(0.6);
+}
+
+/* Estilo específico para Cartas (E-mails) */
+.mail-card h3 { margin: 0 0 0.5rem 0; }
+.mail-card p { margin: 0 0 0.75rem 0; }
+.mail-footer { font-style: italic; font-size: 0.9em; color: var(--cor-texto-suave); text-align: right; }
+
+.mail-card.unread {
+    border-left-color: var(--cor-nao-lido);
+    font-weight: bold;
+}
+
 .mail-card.read {
-    opacity: 0.7; /* Cartas lidas podem ter um visual mais sutil */
-    cursor: default; /* Não clicável se já lida */
+    border-left-color: var(--cor-lido);
+    opacity: 0.7;
 }
 
-/* Efeito hover para cartas não lidas */
-.mail-card:not(.read):hover {
-    transform: scale(1.03); /* Efeito de zoom leve */
-    box-shadow: 0 0 15px 7px rgba(164, 161, 145, 0.2); /* Sombra suave */
-    border-color: var(--header-color); /* Cor da borda ao passar o mouse */
+.new-badge {
+    background-color: var(--cor-nao-lido);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    font-family: 'Roboto Mono', monospace;
 }
 
-/* Título dentro do card da carta */
-.mail-card h3 {
-    margin-top: 0; /* Remove margem superior padrão */
-    font-family: 'Special Elite', cursive; /* Fonte estilizada para títulos */
-    color: var(--header-color); /* Cor do título definida em base.css */
-    font-size: 1.3em; /* Tamanho da fonte */
-    margin-bottom: 10px; /* Margem inferior */
+/* --- MODAL PARA LER O LORE --- */
+.modal-overlay {
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(5px);
 }
 
-/* Parágrafo com o resumo do conteúdo da carta */
-.mail-card p {
-    font-size: 0.95em; /* Tamanho da fonte */
-    line-height: 1.5; /* Espaçamento entre linhas */
-    color: var(--text-color); /* Cor do texto definida em base.css */
-    margin-bottom: 5px; /* Espaço antes do footer */
+.message-modal {
+    width: 60%;
+    max-width: 800px;
+    max-height: 80vh;
+    background: var(--cor-fundo-diario) url('../media/img/paper_texture.png');
+    border: 5px solid var(--cor-borda-diario);
+    box-shadow: 0 0 40px black;
+    padding: 2.5rem;
+    position: relative;
 }
 
-/* Rodapé do card da carta (remetente, dia) */
-.mail-card .mail-footer {
-    font-size: 0.8em; /* Tamanho da fonte menor */
-    color: #888; /* Cor do texto do rodapé */
-    text-align: right; /* Alinha o texto à direita */
-    border-top: 1px dashed var(--border-color); /* Linha divisória sutil */
-    padding-top: 5px; /* Espaçamento interno superior */
+.modal-content-area {
+    color: var(--cor-texto-principal);
+    overflow-y: auto;
+    max-height: calc(80vh - 8rem); /* Altura do modal menos o padding */
 }
 
-/* Botão "Voltar ao Jogo" */
+.modal-content-area h2, .modal-content-area h3 {
+    font-family: 'Cormorant Unicase', serif;
+}
+
+.modal-close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid var(--cor-borda-diario);
+    background: var(--cor-fundo-diario);
+    color: var(--cor-borda-diario);
+    font-weight: bold;
+    font-size: 1rem;
+}
+.modal-close-button:hover {
+    background: var(--cor-borda-diario);
+    color: var(--cor-fundo-diario);
+}
+
+
+/* --- BOTÃO DE VOLTAR --- */
 #back-to-game-btn {
-    margin-top: 20px; /* Margem superior */
-    width: auto; /* Largura automática para caber o texto */
-    max-width: none; /* Remove a limitação de largura padrão */
-    padding: 10px 20px; /* Espaçamento interno */
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 0.8rem 1.5rem;
+    font-family: 'Special Elite', cursive;
+    font-size: 1.2rem;
+    background-color: var(--cor-borda-diario);
+    color: var(--cor-fundo-diario);
+    border: 2px solid transparent;
+    border-radius: 3px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    transition: all 0.2s ease-in-out;
 }
 
-  /* Base e Fundo do Jogo */
-
-        /* --- Painel Principal --- */
-        .message-dashboard {
-            width: 1024px;
-            height: 680px;
-            background-color: #f5deb3;
-            background-image: url('path/to/parchment-texture-bw.png'); /* Substituir com a imagem real */
-            background-size: cover;
-            border: 2px solid #333;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-            display: flex; /* Mantém como flex para colunas */
-            position: relative;
-            overflow: hidden;
-            border-radius: 5px;
-        }
-
-        /* Cantos decorativos */
-        .message-dashboard::before, .message-dashboard::after,
-        .message-dashboard .corner-bottom-left, .message-dashboard .corner-bottom-right {
-            content: '';
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            background-repeat: no-repeat;
-            background-size: contain;
-            z-index: 1;
-        }
-        .message-dashboard::before { top: -10px; left: -10px; background-image: url('https://via.placeholder.com/120/d0c0a0/3e2723?text=TL'); /* Substituir */ }
-        .message-dashboard::after { top: -10px; right: -10px; background-image: url('https://via.placeholder.com/120/d0c0a0/3e2723?text=TR'); /* Substituir */ }
-        .message-dashboard .corner-bottom-left { bottom: -10px; left: -10px; background-image: url('https://via.placeholder.com/120/d0c0a0/3e2723?text=BL'); /* Substituir */ }
-        .message-dashboard .corner-bottom-right { bottom: -10px; right: -10px; background-image: url('https://via.placeholder.com/120/d0c0a0/3e2723?text=BR'); /* Substituir */ }
-
-        /* --- Painel Esquerdo (Agora para UI/Contexto) --- */
-        .left-panel {
-            width: 320px;
-            background-color: #e0d0b0;
-            border-right: 2px solid #5a4a3a;
-            display: flex;
-            flex-direction: column;
-            padding: 20px 15px;
-            box-sizing: border-box;
-            position: relative;
-        }
-        .left-panel::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('https://via.placeholder.com/320x680/e0d0b0/e0d0b0?text=Paper+Texture'); /* Substituir */
-            background-size: cover;
-            opacity: 0.7;
-            z-index: 0;
-        }
-        .left-panel > * { position: relative; z-index: 1; }
-
-        .header-section { text-align: center; padding-bottom: 25px; border-bottom: 1px dashed #5a4a3a; margin-bottom: 15px; position: relative; }
-        .section-title-handwriting { font-family: 'Permanent Marker', cursive; font-size: 2em; color: #3e2723; margin: 0; line-height: 1.2; text-shadow: 1px 1px 1px rgba(0,0,0,0.2); }
-        .section-subtitle { font-size: 0.9em; color: #5a4a3a; font-style: italic; margin-top: 5px; line-height: 1.3; }
-        .header-section::after { content: ''; display: block; width: 50px; height: 2px; background-color: #5a4a3a; margin: 10px auto 0; }
-
-        /* Estilos para outros elementos no painel esquerdo (ex: imagem, texto de dicas) */
-        .left-panel-content {
-            flex-grow: 1;
-            padding: 20px 0;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between; /* Para empurrar elementos para cima/baixo */
-            align-items: center;
-        }
-        .left-panel-illustration {
-            max-width: 90%;
-            height: auto;
-            margin-bottom: 20px;
-            border: 1px solid #5a4a3a;
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.4);
-        }
-        .left-panel-text {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9em;
-            color: #3e2723;
-            padding: 0 10px;
-            text-align: justify;
-        }
-
-        /* --- Painel Direito (Agora contém as listas de mensagens) --- */
-        .right-panel {
-            flex-grow: 1; /* Ocupa o restante do espaço */
-            padding: 30px 40px;
-            overflow-y: auto; /* Permite rolagem para as listas */
-            color: #3e2723;
-            line-height: 1.7;
-            box-sizing: border-box;
-            position: relative;
-            background-image: url('https://via.placeholder.com/700x680/f5deb3/f5deb3?text=Lined+Paper'); /* Substituir */
-            background-size: cover;
-            display: flex; /* Para organizar as listas verticalmente */
-            flex-direction: column;
-        }
-        .right-panel::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('https://via.placeholder.com/700x680/f5deb3/f5deb3?text=Lined+Paper'); /* Substituir */
-            background-size: cover;
-            opacity: 0.7;
-            z-index: 0;
-        }
-        .right-panel > * { position: relative; z-index: 1; }
-
-        /* Estilos para as listas de mensagens dentro do painel direito */
-        .lore-list-container,
-        .mail-container { /* Changed from current-messages-container */
-            margin-bottom: 30px; /* Espaço entre as seções de lista */
-            padding-bottom: 15px; /* Espaço interno inferior */
-        }
-        .lore-list-container h3,
-        .mail-container h3 { /* Changed from current-messages-container */
-            font-family: 'Permanent Marker', cursive;
-            font-size: 1.8em; /* Ajustado para ser um pouco menor que o título principal */
-            color: #3e2723;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .mail-container h3::before { /* Changed from current-messages-container */ content: ''; display: block; width: 80%; height: 1px; background: linear-gradient(to right, transparent, #5a4a3a, transparent); margin: 0 auto 15px; }
-
-
-        .panel-list { list-style: none; padding: 0; margin: 0; }
-        .panel-list li {
-            padding: 10px 15px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, border-left 0.2s ease;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px dashed #5a4a3a; /* Linhas pontilhadas entre os itens */
-            margin-bottom: 5px;
-            border-radius: 3px;
-        }
-        .panel-list li:last-child { border-bottom: none; margin-bottom: 0; }
-        .panel-list li:hover { background-color: rgba(0, 0, 0, 0.07); }
-        .panel-list li.active {
-            background-color: rgba(0, 100, 100, 0.15);
-            border-left: 5px solid #00ffff;
-            padding-left: 10px;
-            box-shadow: 2px 2px 8px rgba(0,255,255,0.2);
-        }
-
-        .panel-list li a { text-decoration: none; color: #3e2723; display: block; flex-grow: 1; font-size: 1.1em; font-family: 'Roboto Mono', monospace; }
-        .item-icon-ink { width: 25px; height: 25px; margin-right: 12px; filter: grayscale(100%) brightness(0.6); }
-        .new-indicator-cyan {
-            background-color: #00ffff;
-            color: #3e2723;
-            font-size: 0.8em;
-            font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-left: auto; /* Empurra para a direita */
-            text-transform: uppercase;
-            box-shadow: 0 0 5px rgba(0,255,255,0.5);
-            animation: pulse-new 1.5s infinite alternate; /* Animação de pulso */
-        }
-
-        @keyframes pulse-new {
-            from { opacity: 1; transform: scale(1); }
-            to { opacity: 0.7; transform: scale(1.03); }
-        }
-
-
-        /* --- Modal para a Carta Completa (Mantido como antes) --- */
-        .modal-overlay {
-            display: none; /* Escondido por padrão */
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.85); /* Overlay escuro */
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .message-modal {
-            background-color: #f5deb3;
-            background-image: url('path/to/modal-parchment-texture.png');
-            background-size: cover;
-            width: 700px;
-            max-height: 90vh;
-            border: 3px solid #3e2723;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), inset 0 0 10px rgba(0,0,0,0.2);
-            position: relative;
-            padding: 40px;
-            box-sizing: border-box;
-            overflow: hidden;
-            border-radius: 8px;
-        }
-
-        .modal-close-button {
-            position: absolute; top: 15px; right: 15px; width: 35px; height: 35px;
-            background-color: #3e2723; border: 2px solid #5a4a3a; border-radius: 50%;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5em; color: #f0ead6; line-height: 1; text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
-            transition: background-color 0.2s;
-        }
-        .modal-close-button:hover { background-color: #5a4a3a; }
-
-        .modal-content-area {
-            max-height: calc(90vh - 120px);
-            overflow-y: auto;
-            padding-right: 15px;
-            box-sizing: border-box;
-        }
-
-        .modal-content-area h2 {
-            font-family: 'Permanent Marker', cursive; font-size: 2.8em; color: #2a1a17;
-            margin-top: 0; margin-bottom: 30px; text-align: center; text-shadow: 2px 2px 3px rgba(0,0,0,0.3); line-height: 1.2;
-        }
-
-        .modal-content-area p {
-            font-family: 'Roboto Mono', monospace; font-size: 1.15em; margin-bottom: 1.5em;
-            text-indent: 2em; text-align: justify; color: #3e2723;
-        }
-
-        .modal-content-area img.inline-illustration {
-            display: block; margin: 25px auto; max-width: 90%; height: auto;
-            border: 1px solid #3e2723; box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
-        }
-
-        /* Estilo da barra de rolagem para o modal e right-panel */
-        .modal-content-area::-webkit-scrollbar,
-        .right-panel::-webkit-scrollbar { width: 10px; }
-        .modal-content-area::-webkit-scrollbar-track,
-        .right-panel::-webkit-scrollbar-track { background: #d0c0a0; border-left: 1px solid #5a4a3a; }
-        .modal-content-area::-webkit-scrollbar-thumb,
-        .right-panel::-webkit-scrollbar-thumb { background: #00ffff; border-radius: 5px; border: 1px solid #00ccff; }
-        .modal-content-area::-webkit-scrollbar-thumb:hover,
-        .right-panel::-webkit-scrollbar-thumb:hover { background: #00e0e0; }
+#back-to-game-btn:hover {
+    background-color: var(--cor-texto-principal);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+}

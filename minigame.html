@@ -3,21 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minigame de Tatuagem</title>
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/minigame.css">
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+    <title>Minigame - Tatuagem Arcana</title>
+    <link rel="stylesheet" href="./css/minigame.css">
+    <link rel="stylesheet" href="./css/transitions.css">
 </head>
-<body>
-    <div id="minigame-view-container" class="view active">
-        <h1 id="minigame-title">Desenhe o Sigilo</h1>
-        <p id="minigame-instructions"></p> <!-- As instruções ainda serão preenchidas por JS -->
-        <canvas id="tattoo-canvas"></canvas>
-        <!-- O botão de voltar não é mais necessário, o redirecionamento será automático -->
-    </div>
 
-    <!-- Carrega APENAS a lógica do minigame, como um módulo.
-         Este script agora vai controlar toda a página. -->
-    <script src="/js/minigame.js" type="module"></script>
+<body data-transition="fade-from-center">
+    <div class="game-wrapper">
+        <!-- Painel de Ferramentas -->
+        <div id="menu-panel">
+
+            <!-- ✨ NOVO BLOCO DE CÓDIGO AQUI ✨ -->
+            <div id="sigil-reference-display">
+                <h4>Referência do Sigilo</h4>
+                <canvas id="sigil-reference-canvas" width="150" height="150"></canvas>
+            </div>
+            <!-- ✨ FIM DO NOVO BLOCO ✨ -->
+
+            <div id="active-tools-display">
+                <!-- O minigame.js vai gerar o conteúdo da HUD de ferramentas aqui -->
+            </div>
+        </div>
+        
+        <!-- Contêiner do Jogo -->
+        <div id="minigame-container">
+            <div id="canvas-wrapper">
+                <canvas id="tattoo-canvas"></canvas>
+                <div id="client-comment-box" class="comment-box"></div>
+            </div>
+        </div>
+    </div>
+         <script src="./js/applySettings.js" defer></script>
+
+    <script type="module" src="./js/pageTransitions.js"></script>
+    <script type="module" src="./js/minigame.js"></script>
 </body>
 </html>

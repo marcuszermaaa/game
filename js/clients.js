@@ -11,7 +11,7 @@ import { IS_TOUCH_DEVICE, CHARACTER_SPRITE_URLS, CLIENT_TRANSITION_BACKGROUND } 
 // import { MAILS } from './mailData.js';
 
 // --- IMPORTS DE GERENCIADORES ---
-import { ClientManager } from './managers/ClientManager.js';
+import { ClientManager } from './managers/clientManager.js';
 import { DialogueManager } from './managers/DialogueManager.js';
 import { UIManager } from './managers/uiManager.js'; // Nosso novo gerente de UI.
 

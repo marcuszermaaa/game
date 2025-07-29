@@ -1,19 +1,5 @@
-// js/data/sigilData.js - Definições de todos os Sigilos no jogo.
+// js/data/sigilData.js - VERSÃO ATUALIZADA COM DIÁLOGO NARRATIVO
 
-/**
- * Definições de todos os Sigilos no jogo.
- * Cada sigilo é um objeto com:
- *  - id: Um identificador único (string).
- *  - name: O nome do sigilo.
- *  - type: O tipo de sigilo ('safe', 'corrupted', 'prohibited').
- *      - 'safe': Sigilo normal e seguro.
- *      - 'corrupted': Sigilo que foi alterado/corrompido. Tem uma `correctVersion`.
- *      - 'prohibited': Sigilo perigoso, que Abner desaprova e não deve ser usado.
- *  - lore: Uma breve descrição ou contexto sobre o sigilo.
- *  - nodes: Um array de objetos `{x: number, y: number}` representando os pontos
- *           para desenhar o sigilo. As coordenadas são normalizadas (0 a 1).
- *  - correctVersion: (Opcional) O ID do sigilo na sua forma correta, se este sigilo for 'corrupted'.
- */
 export const SIGILS = {
     // --- Sigilos Seguros (Safe) ---
     s01: {
@@ -21,8 +7,12 @@ export const SIGILS = {
         name: "Selo de Repouso Tranquilo",
         type: 'safe',
         lore: "Para acalmar sonhos turbulentos e garantir uma noite de descanso.",
-        nodes: [
-            {x:0.2,y:0.5}, {x:0.33,y:0.25}, {x:0.46,y:0.5}, {x:0.33,y:0.75}, {x:0.2,y:0.5}
+        startNode: { x: 0.2, y: 0.5 },
+        segments: [
+            { type: 'curve', end: { x: 0.5, y: 0.2 }, control: { x: 0.35, y: 0.2 }, painEvent: false },
+            { type: 'curve', end: { x: 0.8, y: 0.5 }, control: { x: 0.65, y: 0.2 }, painEvent: false },
+            { type: 'curve', end: { x: 0.5, y: 0.8 }, control: { x: 0.65, y: 0.8 }, painEvent: false },
+            { type: 'curve', end: { x: 0.2, y: 0.5 }, control: { x: 0.35, y: 0.8 }, painEvent: false }
         ]
     },
     s02: {
@@ -30,8 +20,11 @@ export const SIGILS = {
         name: "Glifo do Olhar Averso",
         type: 'safe',
         lore: "Desvia a má sorte e os olhares indesejados.",
-        nodes: [
-            {x:0.53,y:0.25}, {x:0.4,y:0.75}, {x:0.66,y:0.75}, {x:0.53,y:0.25}
+        startNode: { x: 0.5, y: 0.2 },
+        segments: [
+            { type: 'line', end: { x: 0.3, y: 0.8 }, painEvent: false },
+            { type: 'line', end: { x: 0.7, y: 0.8 }, painEvent: false },
+            { type: 'line', end: { x: 0.5, y: 0.2 }, painEvent: false }
         ]
     },
     s03: {
@@ -39,17 +32,32 @@ export const SIGILS = {
         name: "Espiral da Percepção",
         type: 'safe',
         lore: "Abre a mente para conhecimentos ocultos e percepções aguçadas.",
-        nodes: [
-            {x:0.5,y:0.5}, {x:0.55,y:0.45}, {x:0.52,y:0.35}, {x:0.45,y:0.4}, {x:0.42,y:0.5}, {x:0.45,y:0.6}, {x:0.52,y:0.65}, {x:0.58,y:0.6}, {x:0.6,y:0.5}
+        startNode: { x: 0.5, y: 0.5 },
+        segments: [
+            { type: 'curve', end: { x: 0.6, y: 0.4 }, control: { x: 0.58, y: 0.55 }, painEvent: false },
+            { type: 'curve', end: { x: 0.5, y: 0.3 }, control: { x: 0.65, y: 0.32 }, painEvent: false },
+            { type: 'curve', end: { x: 0.4, y: 0.4 }, control: { x: 0.42, y: 0.28 }, painEvent: false },
+            
+            // ✨ DIÁLOGO ATUALIZADO AQUI PARA A NARRATIVA DO DIA 7 ✨
+            { type: 'curve', end: { x: 0.3, y: 0.6 }, control: { x: 0.3, y: 0.5 }, painEvent: true, dialogue: "Sim! O mestre ficará satisfeito! Estou vendo!" },
+            
+            { type: 'curve', end: { x: 0.5, y: 0.7 }, control: { x: 0.35, y: 0.75 }, painEvent: false },
+            { type: 'curve', end: { x: 0.7, y: 0.6 }, control: { x: 0.65, y: 0.78 }, painEvent: false }
         ]
     },
     s04: {
         id: 's04',
         name: "Âncora da Realidade",
         type: 'safe',
-        lore: "Fortalece a conexão com o mundo tangível e ancora a mente.",
-        nodes: [
-            {x:0.5, y:0.2}, {x:0.45, y:0.35}, {x:0.55, y:0.35}, {x:0.5, y:0.55}, {x:0.4, y:0.75}, {x:0.6, y:0.75}, {x:0.5, y:0.55}
+        lore: "Fortalece a conexão com o mundo tangível. A haste principal deve sempre apontar para baixo, em direção ao chão, para ancorar a mente com firmeza.",
+        startNode: { x: 0.5, y: 0.2 },
+        segments: [
+            { type: 'line', end: { x: 0.5, y: 0.6 }, painEvent: false },
+            { type: 'line', end: { x: 0.3, y: 0.5 }, painEvent: false },
+            { type: 'line', end: { x: 0.5, y: 0.6 }, painEvent: false },
+            { type: 'line', end: { x: 0.7, y: 0.5 }, painEvent: false },
+            { type: 'line', end: { x: 0.5, y: 0.6 }, painEvent: false },
+            { type: 'line', end: { x: 0.5, y: 0.8 }, painEvent: true, dialogue: "Mais firme... preciso que seja firme!" }
         ]
     },
 
@@ -58,10 +66,19 @@ export const SIGILS = {
         id: 's06_corrupted',
         name: "Selo de Proteção (Corrompido)",
         type: 'corrupted',
-        correctVersion: 's04', // A versão correta é a Âncora da Realidade (s04)
+        correctVersion: 's04',
         lore: "Um sigilo de proteção com a âncora invertida. Não ancora a alma, a arranca. Abner alerta para sua instabilidade.",
-        nodes: [ /* Desenho do sigilo corrompido */
-            {x:0.26,y:0.35}, {x:0.26,y:0.65}, {x:0.23,y:0.35}, {x:0.29,y:0.35}, {x:0.26,y:0.65}
+        startNode: { x: 0.5, y: 0.8 },
+        segments: [
+            { type: 'line', end: { x: 0.5, y: 0.4 }, painEvent: true, dialogue: "Arde! Por que está ardendo tanto?!" },
+            { type: 'line', end: { x: 0.3, y: 0.5 }, painEvent: false },
+            { type: 'line', end: { x: 0.5, y: 0.4 }, painEvent: false },
+            { type: 'line', end: { x: 0.7, y: 0.5 }, painEvent: false },
+            { type: 'line', end: { x: 0.5, y: 0.4 }, painEvent: false },
+            { type: 'line', end: { x: 0.5, y: 0.2 }, painEvent: true, dialogue: "Está errado... sinto que está errado!" }
+        ],
+        corruptionPoints: [
+            { x: 0.5, y: 0.6, note: "A haste está invertida. Uma âncora que aponta para cima não ancora nada, apenas expõe a alma ao abismo." }
         ]
     },
 
@@ -70,11 +87,17 @@ export const SIGILS = {
         id: 's05_prohibited',
         name: "O Olho que se Abre",
         type: 'prohibited',
-        lore: "Abner foi enfático: NUNCA. TATUAR. ISTO. EM. NINGUÉM. Abre uma porta que não pode ser fechada. O conhecimento que ele oferece é perigoso.",
-        nodes: [ /* Desenho do sigilo proibido */
-            {x:0.5,y:0.35}, {x:0.66,y:0.5}, {x:0.5,y:0.65}, {x:0.34,y:0.5}, {x:0.5,y:0.35}
+        lore: "Abner foi enfático: NUNCA. TATUAR. ISTO. EM. NINGUÉM. Abre uma porta que não pode ser fechada.",
+        startNode: { x: 0.5, y: 0.2 },
+        segments: [
+            { type: 'curve', end: { x: 0.8, y: 0.5 }, control: { x: 0.75, y: 0.2 }, painEvent: true, dialogue: "Estou vendo... oh, deuses, estou vendo!" },
+            { type: 'curve', end: { x: 0.5, y: 0.8 }, control: { x: 0.8, y: 0.75 }, painEvent: true, dialogue: "Pare! É demais!" },
+            { type: 'curve', end: { x: 0.2, y: 0.5 }, control: { x: 0.2, y: 0.75 }, painEvent: true, dialogue: "Eles estão olhando de volta!" },
+            { type: 'curve', end: { x: 0.5, y: 0.2 }, control: { x: 0.25, y: 0.2 }, painEvent: true, dialogue: "NÃO! FECHE O OLHO!" }
+        ],
+        corruptionPoints: [
+            { x: 0.5, y: 0.5, note: "O ponto focal deste sigilo é uma fenda, não uma lente. Ele não permite ver, ele permite ser visto por... algo do outro lado." },
+            { x: 0.65, y: 0.25, note: "Esta curva canaliza a vontade do portador diretamente para a fenda, como um sacrifício. A perda de sanidade é inevitável e permanente." }
         ]
     },
-
-    // --- ADICIONE MAIS SIGILOS ABAIXO CONFORME NECESSÁRIO ---
 };

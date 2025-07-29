@@ -1,96 +1,131 @@
-/* css/night.css - Estilos para a fase noturna do jogo */
+/* /css/night.css - VERSÃO COM LAYOUT CORRIGIDO PARA ROLAGEM */
 
-/* Container principal da view da fase noturna */
+body {
+    background-color: #1a1a1a;
+    color: #b0b0b0;
+    /* Impede a rolagem do corpo da página inteira */
+    overflow: hidden; 
+}
+
 #night-view-container {
-    padding: 30px; /* Espaçamento interno */
-    max-width: 1240px; /* Largura máxima da view */
-    width: 90%; /* Largura responsiva */
-    display: flex; /* Usa flexbox para organizar os elementos */
-    flex-direction: column; /* Organiza os elementos em coluna */
-    align-items: center; /* Centraliza os elementos horizontalmente */
-    justify-content: center; /* Centraliza os elementos verticalmente */
+    max-width: 900px;
+    margin: 2vh auto; /* Usa vh para se adaptar à altura da tela */
+    padding: 30px 40px;
+    background-color: #252525;
+    border: 1px solid #444;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    
+    /* ✨ --- MUDANÇAS PRINCIPAIS AQUI --- ✨ */
+    height: 96vh; /* Define a altura do contêiner para quase toda a tela */
+    display: flex; /* Adiciona display flex para controlar o layout verticalmente */
+    flex-direction: column; /* Empilha os filhos (header, main, footer) */
 }
 
-/* Título principal da fase noturna */
-#night-view-container h2 {
-    color: var(--header-color); /* Cor do título definida em base.css */
-    font-family: 'Special Elite', cursive; /* Fonte estilizada */
-    font-size: 2.2em; /* Tamanho da fonte grande */
-    margin-bottom: 10px; /* Margem inferior */
+/* --- HEADER --- */
+#night-view-container header {
+    flex-shrink: 0; /* Impede que o header encolha */
+    border-bottom: 1px solid #444;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
 }
 
-/* Subtítulos na fase noturna */
-#night-view-container h3 {
-    color: var(--header-color); /* Cor do título definida em base.css */
-    margin-top: 25px; /* Margem superior */
-    margin-bottom: 10px; /* Margem inferior */
+#night-title {
+    font-family: 'Special Elite', cursive;
+    font-size: 2.5em;
+    color: #e0e0e0;
+    margin-bottom: 10px;
 }
 
-/* Área que revela o texto de Lore */
-#lore-reveal {
-    border: 1px dashed var(--border-color); /* Borda pontilhada */
-    padding: 15px; /* Espaçamento interno */
-    margin-bottom: 20px; /* Margem inferior */
-    background-color: rgba(0,0,0,0.3); /* Fundo ligeiramente escuro */
-    border-radius: 5px; /* Bordas arredondadas */
-    max-height: 150px; /* Altura máxima para o lore */
-    overflow-y: auto; /* Adiciona scroll vertical se o conteúdo exceder a altura */
-    text-align: left; /* Alinha o texto à esquerda */
-    font-size: 1.05em; /* Tamanho da fonte */
-    line-height: 1.5; /* Espaçamento entre linhas */
-}
-#lore-reveal h3 { margin-top: 0; } /* Remove margem superior do H3 dentro do lore-reveal */
-
-/* Container para a loja de upgrades */
-#upgrades-shop {
-    display: flex; /* Usa flexbox para organizar os cards de upgrades */
-    flex-wrap: wrap; /* Permite que os cards quebrem em novas linhas */
-    justify-content: center; /* Centraliza os cards horizontalmente */
-    gap: 15px; /* Espaço entre os cards */
-    margin-top: 10px; /* Margem superior */
+#player-stats {
+    background-color: #1f1f1f;
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+    padding: 8px 15px;
+    display: inline-block;
+    margin-bottom: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #d1a33a;
 }
 
-/* Estilo para cada card de upgrade */
-.upgrade-card {
-    background-color: rgba(0,0,0,0.4); /* Background ligeiramente escuro */
-    border: 1px solid var(--border-color); /* Borda padrão */
-    padding: 15px; /* Espaçamento interno */
-    border-radius: 5px; /* Bordas arredondadas */
-    text-align: center; /* Centraliza o texto */
-    width: 200px; /* Largura fixa para os cards */
-    display: flex; /* Usa flexbox para organizar o conteúdo interno */
-    flex-direction: column; /* Organiza o conteúdo em coluna */
-    justify-content: space-between; /* Distribui espaço para empurrar o botão para baixo */
+header p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2em;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
 }
 
-/* Título dentro do card de upgrade */
-.upgrade-card h4 {
-    color: var(--header-color); /* Cor do título definida em base.css */
-    font-family: 'Special Elite', cursive; /* Fonte estilizada */
-    margin-top: 0; /* Remove margem superior padrão */
-    margin-bottom: 10px; /* Margem inferior */
+/* --- ÁREA PRINCIPAL DA LOJA (COM ROLAGEM) --- */
+main#shop-sections {
+    flex-grow: 1; /* ✨ Faz a área da loja crescer para preencher o espaço disponível */
+    overflow-y: auto; /* ✨ A MÁGICA: Adiciona a barra de rolagem vertical APENAS quando necessário */
+    padding-right: 15px; /* Adiciona um espaço para a barra de rolagem não cobrir o conteúdo */
+    margin-right: -15px; /* Compensa o padding para manter o alinhamento visual */
 }
 
-/* Parágrafo com a descrição do upgrade */
-.upgrade-card p {
-    font-size: 0.9em; /* Tamanho da fonte */
-    margin-bottom: 15px; /* Margem inferior */
-    flex-grow: 1; /* Permite que o parágrafo ocupe o espaço disponível, empurrando o botão para baixo */
+
+/* --- SEÇÕES DA LOJA --- */
+.shop-category {
+    margin-bottom: 40px;
 }
 
-/* Botão "Voltar ao Jogo" */
-#back-to-game-btn {
-    margin-top: 20px; /* Margem superior */
-    width: auto; /* Largura automática */
-    max-width: none; /* Remove a limitação de largura padrão */
-    padding: 10px 20px; /* Espaçamento interno */
+.shop-category h3 {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.8em;
+    color: #c5c5c5;
+    text-align: left;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #3a3a3a;
 }
 
-/* Botão de iniciar novo dia */
-#start-new-day-btn {
-    margin-top: auto; /* Empurra o botão para o fim do container flex (caso ele seja o último elemento) */
-    width: auto; /* Largura automática */
-    max-width: none; /* Remove a limitação de largura padrão */
-    padding: 10px 20px; /* Espaçamento interno */
-    font-size: 1.1em; /* Tamanho da fonte */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* O resto do CSS permanece igual... */
+.upgrade-card { background-color: #1f1f1f; border: 1px solid #3a3a3a; border-radius: 6px; padding: 15px; display: flex; flex-direction: column; text-align: left; position: relative; padding-left: 50px; }
+.upgrade-card::before { font-family: 'Times New Roman', Times, serif; position: absolute; top: 20px; left: 15px; font-size: 24px; color: #666; }
+.card-type-permanent::before { content: '★'; color: #d1a33a; }
+.card-type-consumable::before { content: '⚗'; }
+.card-type-ingredient::before { content: '🌿'; }
+.upgrade-card h4 { font-size: 1.3em; color: #c5c5c5; margin: 0 0 10px; }
+.upgrade-card p { font-family: 'Cormorant Garamond', serif; font-size: 1.1em; line-height: 1.5; color: #999; margin: 0 0 15px; flex-grow: 1; }
+.card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #333; padding-top: 10px; margin-top: auto; }
+.card-price { font-size: 1.3em; font-weight: bold; color: #d1a33a; }
+.upgrade-btn { padding: 8px 12px; font-family: 'Special Elite', cursive; font-size: 1em; background-color: #3e3e3e; color: #e0e0e0; border: 1px solid #5e5e5e; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; }
+.upgrade-btn:not([disabled]):hover { background-color: #d1a33a; color: #1a1a1a; border-color: #e0e0e0; }
+.upgrade-btn:disabled { background-color: #2a2a2a; color: #555; border-color: #444; cursor: not-allowed; }
+
+/* --- FOOTER --- */
+#night-view-container footer {
+    flex-shrink: 0; /* Impede que o rodapé encolha */
+    padding-top: 20px;
+    margin-top: 10px;
+}
+#start-new-day-btn { padding: 12px 25px; font-family: 'Special Elite', cursive; font-size: 1.2em; background-color: #a33a3a; color: #fff; border: 1px solid #d35f5f; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; }
+#start-new-day-btn:hover { background-color: #c74848; }
+#purchase-feedback { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: rgba(209, 163, 58, 0.95); color: #1a1a1a; padding: 12px 25px; border-radius: 50px; font-family: 'Cormorant Garamond', serif; font-weight: bold; font-size: 1.1em; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); opacity: 0; visibility: hidden; transition: all 0.4s ease; }
+#purchase-feedback.visible { opacity: 1; visibility: visible; }
+
+/* --- (OPCIONAL) ESTILO CUSTOMIZADO PARA A BARRA DE ROLAGEM --- */
+main#shop-sections::-webkit-scrollbar {
+  width: 8px;
+}
+main#shop-sections::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+main#shop-sections::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 4px;
+  border: 2px solid #2a2a2a;
+}
+main#shop-sections::-webkit-scrollbar-thumb:hover {
+  background-color: #d1a33a;
 }
